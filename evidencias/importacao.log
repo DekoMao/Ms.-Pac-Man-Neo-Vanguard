@@ -14,33 +14,21 @@ Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
 [  33% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
 [92m[ DONE ][39m [1mupdate_scripts_classes[22m
 [0m
-[   0% ] [90m[1m_update_scan_actions[22m | Started Scanning actions... (6 steps)[39m[0m
-[   0% ] [90m[1m_update_scan_actions[22m | circuito_extras_030.png[39m[0m
-[  14% ] [90m[1m_update_scan_actions[22m | circuito_fase1_030.png[39m[0m
-[  28% ] [90m[1m_update_scan_actions[22m | circuito_fase2_030.png[39m[0m
-[  42% ] [90m[1m_update_scan_actions[22m | circuito_fase3_030.png[39m[0m
-[  57% ] [90m[1m_update_scan_actions[22m | circuito_final_030.png[39m[0m
-[  71% ] [90m[1m_update_scan_actions[22m | circuito_menu_030.png[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | Started Scanning actions... (2 steps)[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | arcade_fantasmas_040.png[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | arcade_jogo_040.png[39m[0m
 [92m[ DONE ][39m [1m_update_scan_actions[22m
 [0m
-[   0% ] [90m[1mreimport[22m | Started (Re)Importing Assets (6 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importing Assets (2 steps)[39m[0m
 [   0% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
-[  14% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
-[  28% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
-[  42% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
-[  57% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
-[  71% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  33% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
 [   0% ] [90m[1mreimport[22m | Executing pre-reimport operations...[39m[0m
-[   0% ] [90m[1mreimport[22m | circuito_extras_030.png[39m[0m
-[  14% ] [90m[1mreimport[22m | circuito_fase1_030.png[39m[0m
-[  28% ] [90m[1mreimport[22m | circuito_fase2_030.png[39m[0m
-[  42% ] [90m[1mreimport[22m | circuito_fase3_030.png[39m[0m
-[  57% ] [90m[1mreimport[22m | circuito_final_030.png[39m[0m
-[  71% ] [90m[1mreimport[22m | circuito_menu_030.png[39m[0m
-[  85% ] [90m[1mreimport[22m | Finalizing Asset Import...[39m[0m
+[   0% ] [90m[1mreimport[22m | arcade_fantasmas_040.png[39m[0m
+[  33% ] [90m[1mreimport[22m | arcade_jogo_040.png[39m[0m
+[  66% ] [90m[1mreimport[22m | Finalizing Asset Import...[39m[0m
 [92m[ DONE ][39m [1mreimport[22m
 [0m
-[   0% ] [90m[1mreimport[22m | Started (Re)Importing Assets (6 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importing Assets (2 steps)[39m[0m
 [   0% ] [90m[1mreimport[22m | Executing post-reimport operations...[39m[0m
 [92m[ DONE ][39m [1mreimport[22m
 [0m

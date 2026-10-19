@@ -115,37 +115,45 @@ static func player() -> Node3D:
 
 static func ghost_mesh(phase: float = 0.0) -> ArrayMesh:
 	var st:=SurfaceTool.new();st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	var rings:=16;var slices:=48
+	var rings:=20;var slices:=48
 	for ring in rings:
 		for slice in slices:
 			var points:Array=[]
 			for ij in [Vector2(ring,slice),Vector2(ring+1,slice),Vector2(ring+1,slice+1),Vector2(ring,slice+1)]:
 				var q:float=ij.x/rings;var a:float=TAU*ij.y/slices
-				var rad:=0.43
-				var y:float=q*0.55
-				if q>0.5:
-					var dome:float=(q-0.5)*PI
-					rad=0.43*cos(dome);y=0.45+0.43*sin(dome)
+				var rad:=0.36
+				var y:float=0.04+q*0.98
+				if q>0.55:
+					var dome:float=(q-0.55)/0.45*PI*0.5
+					rad=0.36*cos(dome);y=0.58+0.36*sin(dome)
 				else:
-					y=q*0.9+0.06*sin(a*6+phase)*pow(1-q*2,2)
+					y=0.07+q/0.55*0.51+0.065*cos(a*6+phase)*pow(1-q/0.55,2)
 				points.append(Vector3(cos(a)*rad,y,sin(a)*rad))
 			for ids in [[0,2,1],[0,3,2]]:
 				for id in ids:
 					var p:Vector3=points[id]
-					var normal:=Vector3(p.x,maxf(0,p.y-0.45),p.z).normalized()
+					var normal:=Vector3(p.x,maxf(0,p.y-0.58),p.z).normalized()
 					st.set_normal(normal);st.add_vertex(p)
 	return st.commit()
 
 static func ghost(color: Color) -> Node3D:
 	var root:=Node3D.new();root.name="Fantasma"
-	var mat:=material(Color(color,0.76),0.85,0.15)
-	mat.roughness=0.23
+	var mat:=material(color,0.16,0.08)
+	mat.roughness=0.28
 	mat.cull_mode=BaseMaterial3D.CULL_BACK
 	var shell:=mesh_node(ghost_mesh(),mat);shell.name="Body";root.add_child(shell)
-	var core:=mesh_node(sphere(0.29),material(Color(color,0.27),1.6),Vector3(0,0.46,0));core.name="Core";core.scale.y=1.25;core.visible=false;root.add_child(core)
-	for side in [-1.0,1.0]:
-		var eye:=mesh_node(sphere(0.12),material(Color("ebfcff"),0.35),Vector3(0.33,0.55,side*0.17));eye.scale=Vector3(0.65,1.3,1.0);root.add_child(eye)
-		root.add_child(mesh_node(sphere(0.054),material(Color("091535")),Vector3(0.4,0.55,side*0.17)))
+	for i in 2:
+		var side:float=-1.0 if i==0 else 1.0
+		var eye:=mesh_node(sphere(0.125),material(Color("f5fbff"),0.05),Vector3(0.31,0.60,side*0.155))
+		eye.name="Eye%d"%i;eye.scale=Vector3(0.65,1.3,0.95);root.add_child(eye)
+		var pupil:=mesh_node(sphere(0.056),material(Color("142451")),Vector3(0.395,0.60,side*0.155))
+		pupil.name="Pupil%d"%i;pupil.scale=Vector3(0.6,1.05,1);root.add_child(pupil)
+		var glint:=mesh_node(sphere(0.017),material(Color.WHITE),Vector3(0.43,0.626,side*0.155-0.017))
+		glint.name="Glint%d"%i;root.add_child(glint)
+	var mouth:=Node3D.new();mouth.name="Mouth";mouth.visible=false;root.add_child(mouth)
+	for i in 5:
+		var lip=mesh_node(bevel_box(Vector3(0.035,0.024,0.083),0.006),material(Color("f5fbff"),0.1),Vector3(0.345,0.30,-0.16+i*0.08))
+		lip.rotation.x=0.42 if i%2==0 else -0.42;mouth.add_child(lip)
 	return root
 
 static func reflected(source: Node3D, color: Color) -> Node3D:
@@ -157,3 +165,4 @@ static func reflected(source: Node3D, color: Color) -> Node3D:
 		node.material_override=mat;node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	duplicate.scale.y=-1.0
 	return duplicate
+

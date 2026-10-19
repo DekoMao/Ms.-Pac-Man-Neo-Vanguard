@@ -1,0 +1,33 @@
+{
+  "version": "0.4.0-arcade",
+  "base_commit": "be7e4113b12997770379198f5a8dac2cea6c1a04",
+  "tests": {
+    "executed": 196,
+    "passed": 196,
+    "failed": 0
+  },
+  "zip": {
+    "filename": "NeoGrid_0.4_EssenciaArcade_Windows_x64.zip",
+    "bytes": 37620360,
+    "sha256": "cbb8b5e1d7ddae059f57875472c9bae18792368fc2c2c3fef05cc7a0edf874a1",
+    "entries": 18,
+    "crc_ok": true
+  },
+  "exe": {
+    "bytes": 105885992,
+    "sha256": "30538a08bc334d1b5f96f03a7f413432289e3f5d52edb27e78afcf25dc288bcc",
+    "machine": "AMD64",
+    "version": "0.4.0.0",
+    "embedded_pack_smoke_on_linux": true,
+    "native_windows_tested": false
+  },
+  "visual_inspection": {
+    "host": "Linux/Xvfb",
+    "renderer": "gl_compatibility",
+    "adapter": "llvmpipe",
+    "controlled_capture_setup": true,
+    "detail_camera_differs_from_game_camera": true,
+    "physical_gpu_tested": false
+  },
+  "gameplay_balance_human_tested": false
+}

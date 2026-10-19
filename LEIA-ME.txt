@@ -1,4 +1,12 @@
-NEO-GRID — CIRCUITO NEON 0.3.0
+NEO-GRID — ESSENCIA ARCADE 0.4.0
+
+NOVO NESTA VERSAO
+HUD fora da area 3D; camera mostra o labirinto inteiro.
+Menus centralizados, texto ajustado e rolagem para conteudo longo.
+Saidas laterais nas duas alturas iluminadas levam para a borda oposta.
+Fantasmas tambem usam tuneis. Chegar do outro lado nao da invulnerabilidade.
+Casa central: olhos retornam, corpo regenera e fantasma sai pela porta.
+O jogador nao entra na casa. Novos corpos, olhos e expressao de vulnerabilidade.
 
 Extraia o ZIP inteiro e abra MsPacMan_Aperfeicoado.exe.
 Nao precisa instalar Godot, Python, MAME ou ROMs para jogar.
@@ -15,9 +23,9 @@ P/Esc: pausa. Foco perdido pausa; escolha Continuar.
 Reiniciar circuito volta a fase 1.
 
 FASES, DESAFIOS E EXTRAS
-Portico Neon: 109 itens; desafio de capturar 2 fantasmas; alvo 110s.
-Jardim Ionico: 112 itens; desafio de nao perder vidas; alvo 125s.
-Reator Solar: 105 itens; desafio de vencer uma aposta Q; alvo 140s.
+Portico Neon: 103 itens; desafio de capturar 2 fantasmas; alvo 110s.
+Jardim Ionico: 107 itens; desafio de nao perder vidas; alvo 125s.
+Reator Solar: 101 itens; desafio de vencer uma aposta Q; alvo 140s.
 Colete tudo para avancar pelo botao Proxima fase. Fruta e Power contam.
 Avanco carrega os pontos e devolve uma vida ate o limite de tres.
 Desafio e tempo sao opcionais. Tres medalhas por fase: limpeza, desafio,
@@ -28,10 +36,10 @@ e tres vidas. Save guarda fases/medalhas/configuracoes, sem retomar partidas.
 O recorde anterior MV foi preservado, separado do recorde do Circuito Neon.
 
 VALIDACAO
-163 verificacoes automaticas aprovadas no Godot 4.6.3 / Linux.
+196 verificacoes automaticas aprovadas no Godot 4.6.3 / Linux.
 Inclui coleta dos tres mapas via movimento com inimigos desativados, testes
 de poderes, transicoes e migracao do save. Windows x64, PCK embutido, icone
-e versao 0.3.0.0, sem assinatura. Smoke do PCK passou no motor Linux:
+e versao 0.4.0.0, sem assinatura. Smoke do PCK passou no motor Linux:
 isso nao executa o PE no Windows. Windows nativo e GPU fisica pendentes.
 Dificuldade e tempos precisam de teste humano. Imagens sao preparacoes de
 QA no motor Linux Compatibility/llvmpipe, sem comprovar acabamento Forward+.

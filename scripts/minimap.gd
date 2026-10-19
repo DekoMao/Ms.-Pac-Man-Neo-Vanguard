@@ -22,6 +22,13 @@ func _draw() -> void:
 			draw_rect(Rect2(origin + Vector2(c)*cell, Vector2.ONE*maxf(0.0,cell-0.7)),
 				Color("20384b") if sim.floors.has(c) else Color("0a1020"))
 	var last_items:bool = sim.pickups.size() > 0 and sim.pickups.size() <= LAST_ITEMS
+	if sim.campaign:
+		draw_rect(Rect2(origin+Vector2(6.5,4.5)*cell,Vector2(3,2)*cell),Color("7b8ac5"),false,1.0)
+		for row in sim.TUNNEL_ROWS:
+			for x in [0,16]:
+				var p:Vector2=origin+(Vector2(x,row)+Vector2.ONE*0.5)*cell
+				var sign:float=-1.0 if x==0 else 1.0
+				draw_polyline(PackedVector2Array([p+Vector2(-sign*cell*0.2,-cell*0.25),p+Vector2(sign*cell*0.2,0),p+Vector2(-sign*cell*0.2,cell*0.25)]),Color("88e9ef"),maxf(1.0,cell*0.1))
 	for c in sim.pickups:
 		var center:Vector2 = origin + (Vector2(c)+Vector2.ONE*0.5)*cell
 		var radius := maxf(1.3,cell*0.14)
@@ -39,11 +46,11 @@ func _draw() -> void:
 			_:
 				draw_circle(center, radius, Color("f8e5b0"))
 	for ghost in sim.ghosts:
-		var center:Vector2 = origin + (ghost.pos+Vector2.ONE*0.5)*cell
+		var center:Vector2 = origin + (Vector2(clampf(ghost.pos.x,0,16),ghost.pos.y)+Vector2.ONE*0.5)*cell
 		var color := Color("75dfff") if ghost.state == "vulnerable" else Color("df7ca8")
 		if ghost.state in ["house","returning"]: color = Color("94a7bd")
 		draw_circle(center, maxf(1.5,cell*0.21), color)
-	var player_center:Vector2 = origin + (sim.player.pos+Vector2.ONE*0.5)*cell
+	var player_center:Vector2 = origin + (Vector2(clampf(sim.player.pos.x,0,16),sim.player.pos.y)+Vector2.ONE*0.5)*cell
 	var r := cell*0.34
 	var direction:Vector2 = Vector2(sim.player.dir)
 	if direction == Vector2.ZERO: direction = Vector2.UP

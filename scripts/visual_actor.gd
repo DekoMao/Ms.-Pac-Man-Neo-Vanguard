@@ -25,11 +25,20 @@ func animate(t:float, direction:Vector2i, state:String="", power_time:float=0.0,
 	reflection.position.y=-model.position.y
 	if ghost_actor:
 		var color:=tint
-		if state=="vulnerable":color=Color("3eaeff") if reduce_motion or power_time>1.5 or int(t*3)%2==0 else Color("c5e9ff")
+		if state=="vulnerable":color=Color("2455c4") if reduce_motion or power_time>1.5 or int(t*3)%2==0 else Color("cadbff")
 		if state=="returning":color=Color("9daabf")
 		var mat:StandardMaterial3D=body.material_override
-		mat.albedo_color=Color(color,0.74);mat.emission=color
+		mat.albedo_color=Color(color,1.0);mat.emission=color
 		body.visible=state!="returning"
 		reflected_body.visible=body.visible
 		var refmat:StandardMaterial3D=reflected_body.material_override
-		refmat.albedo_color=Color(color,0.22)
+		refmat.albedo_color=Color(color,0.13)
+		model.get_node("Mouth").visible=state=="vulnerable"
+		reflection.get_node("Mouth").visible=state=="vulnerable"
+		var look:Vector3=global_basis.inverse()*Vector3(direction.x,0,direction.y)
+		for i in 2:
+			var side:float=-1.0 if i==0 else 1.0
+			model.get_node("Pupil%d"%i).position=Vector3(0.395,0.60+look.x*0.018,side*0.155+look.z*0.03)
+			model.get_node("Glint%d"%i).visible=state!="vulnerable"
+			reflection.get_node("Glint%d"%i).visible=state!="vulnerable"
+

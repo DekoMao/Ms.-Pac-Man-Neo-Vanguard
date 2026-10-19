@@ -20,15 +20,15 @@ func navigate_to_nearest(r) -> Vector2i:
 	for cell in queue:
 		if r.pickups.has(cell):return first[cell]
 		for d in Rules.DIRS:
-			var next:Vector2i=cell+d
-			if r.floors.has(next) and not first.has(next):
+			var next:Vector2i=r.neighbor(cell,d)
+			if r.walkable(next) and not first.has(next):
 				first[next]=d if cell==start else first[cell]
 				queue.append(next)
 	return Vector2i.ZERO
 func solve_without_enemies(r) -> bool:
 	for frame in 40000:
 		if r.status=="won":return true
-		if r.player.pos.distance_to(r.player.pos.round())<0.04:
+		if r.player.pos.x>=0 and r.player.pos.x<=16 and r.player.pos.distance_to(r.player.pos.round())<0.04:
 			r.request_direction(navigate_to_nearest(r))
 		r.tick()
 	return false
@@ -39,7 +39,7 @@ func run() -> void:
 		fingerprints.append(str(stage.grid))
 		check("STAGE-%d-connected"%i,stage.topology_valid(stage.floors))
 		check("STAGE-%d-item-spawn-contract"%i,stage.floors.has(Vector2i(1,9)) and stage.pickups.values().count("power")==5 and stage.pickups.values().count("fruit")==1 and stage.pickup_progress().remaining==stage.initial_pellets)
-		var candidate=stage.floors.duplicate();candidate[Rules.OPEN_CELL]=true;candidate.erase(Rules.CLOSE_CELL)
+		var candidate=stage.floors.duplicate();candidate[stage.open_cell]=true;candidate.erase(stage.close_cell)
 		check("STAGE-%d-safe-topology"%i,stage.topology_valid(candidate))
 		check("STAGE-%d-complete-via-movement"%i,solve_without_enemies(stage) and stage.pickups.is_empty() and stage.pickup_progress().percent==100)
 	check("STAGE-distinct-layouts",fingerprints[0]!=fingerprints[1] and fingerprints[1]!=fingerprints[2] and fingerprints[0]!=fingerprints[2])

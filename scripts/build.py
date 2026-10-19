@@ -67,6 +67,11 @@ def main():
         campaign=json.loads((evidence/'testes_circuito.json').read_text())
         if campaign['executed']<1 or campaign['failed']:
             raise RuntimeError('Campaign tests did not execute and pass')
+        (evidence/'testes_arcade.json').unlink(missing_ok=True)
+        run('testes_arcade',['--script','res://tests/test_arcade.gd'],90)
+        arcade=json.loads((evidence/'testes_arcade.json').read_text())
+        if arcade['executed']<1 or arcade['failed']:
+            raise RuntimeError('Arcade navigation and layout tests did not pass')
         run('smoke_headless',['--fixed-fps','60','--quit-after','240','--','--smoke'],45)
         run('export_windows',['--export-release','Windows Desktop',str(target)],180)
         resources=embed(target,ROOT/'assets/icon.ico')

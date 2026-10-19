@@ -1,3 +1,14 @@
+# MV essência arcade 0.4.0 — clareza, túneis e regeneração
+
+- HUD e área 3D em retângulos separados, com câmera de visão geral.
+- Menus centralizados e limitados à tela; texto ajustável e rolagem.
+- Paredes escuras com contornos neon, sem os grandes blocos emissivos.
+- Três mapas remodelados em torno da casa central e dois pares de túneis.
+- Túneis também usados pela IA; trajetos não colidem através do centro da tela.
+- Casa bloqueada ao jogador: olhos retornam, corpo regenera e sai pela porta.
+- Fantasmas opacos, corpo mais alto, barra ondulada, olhos direcionais e rosto de medo.
+- 33 novas verificações de navegação, casa, interface e apresentação.
+
 # MV circuito 0.3.0 — fases, desafios e poderes
 
 - Três mapas autorais: Pórtico Neon, Jardim Iônico e Reator Solar; paletas próprias.
