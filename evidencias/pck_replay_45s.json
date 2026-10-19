@@ -1,0 +1,24 @@
+{
+	"events": {
+		"capture": 10,
+		"dash": 15,
+		"drift": 50,
+		"fruit": 1,
+		"near_miss": 2,
+		"pellet": 99,
+		"power": 5,
+		"power_end": 3,
+		"power_warning": 4,
+		"pressure": 3,
+		"pressure_warning": 3,
+		"risk_start": 1,
+		"risk_success": 1,
+		"topology": 1,
+		"warning": 1
+	},
+	"lives": 3,
+	"score": 6500,
+	"simulation_seconds": 44.9999999999981,
+	"status": "playing",
+	"ticks": 5400
+}

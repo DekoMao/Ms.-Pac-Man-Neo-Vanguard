@@ -1,0 +1,92 @@
+{
+	"executed": 21,
+	"failed": 0,
+	"passed": 21,
+	"results": [
+		{
+			"id": "AUDIO-01-full-musical-loop",
+			"passed": true
+		},
+		{
+			"id": "UI-01-title-and-menu",
+			"passed": true
+		},
+		{
+			"id": "SCENE-01-real-actors",
+			"passed": true
+		},
+		{
+			"id": "UI-02-enter-start",
+			"passed": true
+		},
+		{
+			"id": "UI-03-pause-stops-time",
+			"passed": true
+		},
+		{
+			"id": "UI-04-explicit-resume",
+			"passed": true
+		},
+		{
+			"id": "UI-05-camera-toggle",
+			"passed": true
+		},
+		{
+			"id": "UI-06-focus-pauses",
+			"passed": true
+		},
+		{
+			"id": "UI-07-help",
+			"passed": true
+		},
+		{
+			"id": "UI-08-settings",
+			"passed": true
+		},
+		{
+			"id": "UI-09-records",
+			"passed": true
+		},
+		{
+			"id": "UI-10-restart-clears-run",
+			"passed": true
+		},
+		{
+			"id": "UI-11-quit-confirmation",
+			"passed": true
+		},
+		{
+			"id": "UI-12-window-close-while-paused",
+			"passed": true
+		},
+		{
+			"id": "AUDIO-02-pause-all-synchronized-layers",
+			"passed": true
+		},
+		{
+			"id": "AUDIO-03-resume-all-layers",
+			"passed": true
+		},
+		{
+			"id": "AUDIO-04-independent-cue-voices",
+			"passed": true
+		},
+		{
+			"id": "ACCESS-02-reduced-camera-zero-impulse",
+			"passed": true
+		},
+		{
+			"id": "ACCESS-03-slider-zero-fov-fixed",
+			"passed": true
+		},
+		{
+			"id": "INPUT-01-risk-wager-key",
+			"passed": true
+		},
+		{
+			"id": "ACCESS-04-restart-clears-cosmetic-state",
+			"passed": true
+		}
+	],
+	"suite": "MV scene and input routing (headless, synthetic keys)"
+}

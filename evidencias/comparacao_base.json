@@ -1,0 +1,1212 @@
+{
+	"caution": 1.5,
+	"duration_requested": 45.0,
+	"event_log": [
+		{
+			"pos": "(1.0, 9.0)",
+			"tick": 0,
+			"time": 0.00833333333333333,
+			"type": "drift"
+		},
+		{
+			"pos": "(1.0, 11.0)",
+			"tick": 63,
+			"time": 0.533333333333334,
+			"type": "power"
+		},
+		{
+			"pos": "(1.0, 11.0)",
+			"tick": 72,
+			"time": 0.608333333333334,
+			"type": "drift"
+		},
+		{
+			"pos": "(1.01066, 11.0)",
+			"tick": 73,
+			"time": 0.616666666666667,
+			"type": "dash"
+		},
+		{
+			"pos": "(4.0, 11.0)",
+			"tick": 124,
+			"time": 1.04166666666667,
+			"type": "drift"
+		},
+		{
+			"pos": "(4.0, 9.054235)",
+			"tick": 195,
+			"time": 1.63333333333333,
+			"type": "dash"
+		},
+		{
+			"pos": "(4.0, 7.0)",
+			"tick": 214,
+			"time": 1.79166666666666,
+			"type": "drift"
+		},
+		{
+			"pos": "(3.0, 5.0)",
+			"tick": 324,
+			"time": 2.70833333333333,
+			"type": "drift"
+		},
+		{
+			"pos": "(4.0, 4.978668)",
+			"tick": 360,
+			"time": 3.00833333333333,
+			"type": "dash"
+		},
+		{
+			"pos": "(4.0, 3.0)",
+			"tick": 445,
+			"time": 3.71666666666666,
+			"type": "drift"
+		},
+		{
+			"pos": "(4.998217, 3.0)",
+			"tick": 481,
+			"time": 4.01666666666666,
+			"type": "dash"
+		},
+		{
+			"pos": "(12.0, 3.0)",
+			"tick": 686,
+			"time": 5.72500000000007,
+			"type": "drift"
+		},
+		{
+			"pos": "(12.0, 2.988453)",
+			"tick": 687,
+			"time": 5.73333333333341,
+			"type": "dash"
+		},
+		{
+			"pos": "(6.680006, 1.0)",
+			"tick": 904,
+			"time": 7.54166666666683,
+			"type": "dash"
+		},
+		{
+			"pos": "(1.0, 1.0)",
+			"tick": 1051,
+			"time": 8.76666666666681,
+			"type": "power"
+		},
+		{
+			"pos": "(15.0, 1.0)",
+			"tick": 1568,
+			"time": 13.0749999999999,
+			"type": "power"
+		},
+		{
+			"pos": "(15.0, 1.0)",
+			"tick": 1604,
+			"time": 13.3749999999999,
+			"type": "drift"
+		},
+		{
+			"pos": "(15.0, 2.202403)",
+			"tick": 1624,
+			"time": 13.5416666666665,
+			"type": "capture"
+		},
+		{
+			"pos": "(15.0, 1.997334)",
+			"tick": 1639,
+			"time": 13.6666666666665,
+			"type": "dash"
+		},
+		{
+			"pos": "(12.0, 5.0)",
+			"tick": 1899,
+			"time": 15.8333333333331,
+			"type": "drift"
+		},
+		{
+			"pos": "(12.0, 3.0)",
+			"tick": 1971,
+			"time": 16.433333333333,
+			"type": "drift"
+		},
+		{
+			"pos": "(6.0, 3.0)",
+			"tick": 2194,
+			"time": 18.2916666666663,
+			"type": "drift"
+		},
+		{
+			"pos": "(6.0, 4.045317)",
+			"tick": 2231,
+			"time": 18.5999999999996,
+			"type": "dash"
+		},
+		{
+			"pos": "(6.0, 5.0)",
+			"tick": 2407,
+			"time": 20.0666666666662,
+			"type": "death"
+		},
+		{
+			"pos": "(1.0, 11.0)",
+			"tick": 2680,
+			"time": 22.341666666666,
+			"type": "drift"
+		},
+		{
+			"pos": "(5.0, 5.0)",
+			"tick": 3006,
+			"time": 25.0583333333326,
+			"type": "warning"
+		},
+		{
+			"pos": "(13.22399, 11.0)",
+			"tick": 3136,
+			"time": 26.1416666666658,
+			"type": "dash"
+		},
+		{
+			"pos": "(15.0, 11.0)",
+			"tick": 3149,
+			"time": 26.2499999999992,
+			"type": "power"
+		},
+		{
+			"pos": "(5.0, 5.0)",
+			"tick": 3195,
+			"time": 26.6333333333325,
+			"type": "topology"
+		},
+		{
+			"pos": "(15.0, 7.0)",
+			"tick": 3632,
+			"time": 30.2749999999989,
+			"type": "drift"
+		},
+		{
+			"pos": "(14.00267, 7.0)",
+			"tick": 3667,
+			"time": 30.5666666666656,
+			"type": "dash"
+		},
+		{
+			"pos": "(12.0, 7.0)",
+			"tick": 3742,
+			"time": 31.1916666666655,
+			"type": "drift"
+		},
+		{
+			"pos": "(12.14352, 9.0)",
+			"tick": 3793,
+			"time": 31.6166666666655,
+			"type": "capture"
+		},
+		{
+			"pos": "(12.0, 11.0)",
+			"tick": 3939,
+			"time": 32.8333333333321,
+			"type": "drift"
+		},
+		{
+			"pos": "(4.0, 11.0)",
+			"tick": 4236,
+			"time": 35.308333333332,
+			"type": "drift"
+		},
+		{
+			"pos": "(4.0, 11.0)",
+			"tick": 4329,
+			"time": 36.0833333333319,
+			"type": "drift"
+		},
+		{
+			"pos": "(1.0, 11.0)",
+			"tick": 4582,
+			"time": 38.1916666666651,
+			"type": "drift"
+		},
+		{
+			"pos": "(1.0, 7.0)",
+			"tick": 4837,
+			"time": 40.316666666665,
+			"type": "drift"
+		},
+		{
+			"pos": "(1.997334, 7.0)",
+			"tick": 4872,
+			"time": 40.6083333333317,
+			"type": "dash"
+		},
+		{
+			"pos": "(3.55289, 7.0)",
+			"tick": 4885,
+			"time": 40.716666666665,
+			"type": "death"
+		},
+		{
+			"pos": "(1.0, 7.0)",
+			"tick": 5180,
+			"time": 43.1749999999982,
+			"type": "drift"
+		}
+	],
+	"events": {
+		"capture": 2,
+		"dash": 11,
+		"death": 2,
+		"drift": 20,
+		"pellet": 69,
+		"power": 4,
+		"topology": 1,
+		"warning": 1
+	},
+	"initial": {
+		"dir": "(1, 0)",
+		"energy": 100.0,
+		"ghosts": [
+			{
+				"dir": "(0, -1)",
+				"pos": "(7.0, 5.0)",
+				"release": 2.5,
+				"state": "house"
+			},
+			{
+				"dir": "(0, -1)",
+				"pos": "(8.0, 5.0)",
+				"release": 3.7,
+				"state": "house"
+			},
+			{
+				"dir": "(0, -1)",
+				"pos": "(9.0, 5.0)",
+				"release": 4.9,
+				"state": "house"
+			},
+			{
+				"dir": "(0, -1)",
+				"pos": "(8.0, 6.0)",
+				"release": 6.1,
+				"state": "house"
+			}
+		],
+		"lives": 3,
+		"pickups": [
+			[
+				1,
+				1,
+				"power"
+			],
+			[
+				2,
+				1,
+				"pellet"
+			],
+			[
+				3,
+				1,
+				"pellet"
+			],
+			[
+				4,
+				1,
+				"pellet"
+			],
+			[
+				5,
+				1,
+				"pellet"
+			],
+			[
+				6,
+				1,
+				"pellet"
+			],
+			[
+				7,
+				1,
+				"pellet"
+			],
+			[
+				8,
+				1,
+				"pellet"
+			],
+			[
+				9,
+				1,
+				"pellet"
+			],
+			[
+				10,
+				1,
+				"pellet"
+			],
+			[
+				11,
+				1,
+				"pellet"
+			],
+			[
+				12,
+				1,
+				"pellet"
+			],
+			[
+				13,
+				1,
+				"pellet"
+			],
+			[
+				14,
+				1,
+				"pellet"
+			],
+			[
+				15,
+				1,
+				"power"
+			],
+			[
+				1,
+				2,
+				"pellet"
+			],
+			[
+				4,
+				2,
+				"pellet"
+			],
+			[
+				7,
+				2,
+				"pellet"
+			],
+			[
+				9,
+				2,
+				"pellet"
+			],
+			[
+				12,
+				2,
+				"pellet"
+			],
+			[
+				15,
+				2,
+				"pellet"
+			],
+			[
+				1,
+				3,
+				"pellet"
+			],
+			[
+				2,
+				3,
+				"pellet"
+			],
+			[
+				3,
+				3,
+				"pellet"
+			],
+			[
+				4,
+				3,
+				"pellet"
+			],
+			[
+				5,
+				3,
+				"pellet"
+			],
+			[
+				6,
+				3,
+				"pellet"
+			],
+			[
+				7,
+				3,
+				"pellet"
+			],
+			[
+				9,
+				3,
+				"pellet"
+			],
+			[
+				10,
+				3,
+				"pellet"
+			],
+			[
+				11,
+				3,
+				"pellet"
+			],
+			[
+				12,
+				3,
+				"pellet"
+			],
+			[
+				13,
+				3,
+				"pellet"
+			],
+			[
+				14,
+				3,
+				"pellet"
+			],
+			[
+				15,
+				3,
+				"pellet"
+			],
+			[
+				1,
+				4,
+				"pellet"
+			],
+			[
+				4,
+				4,
+				"pellet"
+			],
+			[
+				6,
+				4,
+				"pellet"
+			],
+			[
+				10,
+				4,
+				"pellet"
+			],
+			[
+				12,
+				4,
+				"pellet"
+			],
+			[
+				15,
+				4,
+				"pellet"
+			],
+			[
+				1,
+				5,
+				"pellet"
+			],
+			[
+				2,
+				5,
+				"pellet"
+			],
+			[
+				3,
+				5,
+				"pellet"
+			],
+			[
+				4,
+				5,
+				"pellet"
+			],
+			[
+				6,
+				5,
+				"pellet"
+			],
+			[
+				10,
+				5,
+				"pellet"
+			],
+			[
+				12,
+				5,
+				"pellet"
+			],
+			[
+				13,
+				5,
+				"pellet"
+			],
+			[
+				14,
+				5,
+				"pellet"
+			],
+			[
+				15,
+				5,
+				"pellet"
+			],
+			[
+				3,
+				6,
+				"pellet"
+			],
+			[
+				7,
+				6,
+				"pellet"
+			],
+			[
+				9,
+				6,
+				"pellet"
+			],
+			[
+				13,
+				6,
+				"pellet"
+			],
+			[
+				1,
+				7,
+				"pellet"
+			],
+			[
+				2,
+				7,
+				"pellet"
+			],
+			[
+				3,
+				7,
+				"pellet"
+			],
+			[
+				4,
+				7,
+				"pellet"
+			],
+			[
+				6,
+				7,
+				"pellet"
+			],
+			[
+				7,
+				7,
+				"pellet"
+			],
+			[
+				8,
+				7,
+				"pellet"
+			],
+			[
+				9,
+				7,
+				"pellet"
+			],
+			[
+				10,
+				7,
+				"pellet"
+			],
+			[
+				12,
+				7,
+				"pellet"
+			],
+			[
+				13,
+				7,
+				"pellet"
+			],
+			[
+				14,
+				7,
+				"pellet"
+			],
+			[
+				15,
+				7,
+				"pellet"
+			],
+			[
+				1,
+				8,
+				"pellet"
+			],
+			[
+				4,
+				8,
+				"pellet"
+			],
+			[
+				6,
+				8,
+				"pellet"
+			],
+			[
+				10,
+				8,
+				"pellet"
+			],
+			[
+				12,
+				8,
+				"pellet"
+			],
+			[
+				15,
+				8,
+				"pellet"
+			],
+			[
+				2,
+				9,
+				"pellet"
+			],
+			[
+				3,
+				9,
+				"fruit"
+			],
+			[
+				4,
+				9,
+				"pellet"
+			],
+			[
+				5,
+				9,
+				"power"
+			],
+			[
+				6,
+				9,
+				"pellet"
+			],
+			[
+				7,
+				9,
+				"pellet"
+			],
+			[
+				8,
+				9,
+				"pellet"
+			],
+			[
+				9,
+				9,
+				"pellet"
+			],
+			[
+				10,
+				9,
+				"pellet"
+			],
+			[
+				11,
+				9,
+				"pellet"
+			],
+			[
+				12,
+				9,
+				"pellet"
+			],
+			[
+				13,
+				9,
+				"pellet"
+			],
+			[
+				14,
+				9,
+				"pellet"
+			],
+			[
+				15,
+				9,
+				"pellet"
+			],
+			[
+				1,
+				10,
+				"pellet"
+			],
+			[
+				4,
+				10,
+				"pellet"
+			],
+			[
+				7,
+				10,
+				"pellet"
+			],
+			[
+				9,
+				10,
+				"pellet"
+			],
+			[
+				12,
+				10,
+				"pellet"
+			],
+			[
+				15,
+				10,
+				"pellet"
+			],
+			[
+				1,
+				11,
+				"power"
+			],
+			[
+				2,
+				11,
+				"pellet"
+			],
+			[
+				3,
+				11,
+				"pellet"
+			],
+			[
+				4,
+				11,
+				"pellet"
+			],
+			[
+				5,
+				11,
+				"pellet"
+			],
+			[
+				6,
+				11,
+				"pellet"
+			],
+			[
+				7,
+				11,
+				"pellet"
+			],
+			[
+				8,
+				11,
+				"pellet"
+			],
+			[
+				9,
+				11,
+				"pellet"
+			],
+			[
+				10,
+				11,
+				"pellet"
+			],
+			[
+				11,
+				11,
+				"pellet"
+			],
+			[
+				12,
+				11,
+				"pellet"
+			],
+			[
+				13,
+				11,
+				"pellet"
+			],
+			[
+				14,
+				11,
+				"pellet"
+			],
+			[
+				15,
+				11,
+				"power"
+			]
+		],
+		"player": "(1.0, 9.0)",
+		"seed": 73021
+	},
+	"lives": 1,
+	"max_combo": 1,
+	"max_flow": 1.5,
+	"samples": [
+		{
+			"flow": 1.0,
+			"lives": 3,
+			"pos": "(1.0, 9.026667)",
+			"score": 0,
+			"seconds": 0.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 3,
+			"pos": "(3.908438, 11.0)",
+			"score": 90,
+			"seconds": 1.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 3,
+			"pos": "(3.216, 7.0)",
+			"score": 140,
+			"seconds": 2.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 3,
+			"pos": "(4.0, 4.867557)",
+			"score": 170,
+			"seconds": 3.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 3,
+			"pos": "(4.998217, 3.0)",
+			"score": 210,
+			"seconds": 4.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 3,
+			"pos": "(9.718216, 3.0)",
+			"score": 240,
+			"seconds": 5.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 3,
+			"pos": "(11.56, 1.0)",
+			"score": 290,
+			"seconds": 6.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 3,
+			"pos": "(8.360004, 1.0)",
+			"score": 320,
+			"seconds": 7.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 3,
+			"pos": "(3.640006, 1.0)",
+			"score": 370,
+			"seconds": 8.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 3,
+			"pos": "(1.773341, 1.0)",
+			"score": 440,
+			"seconds": 9.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 3,
+			"pos": "(4.973338, 1.0)",
+			"score": 440,
+			"seconds": 10.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 3,
+			"pos": "(8.173335, 1.0)",
+			"score": 440,
+			"seconds": 11.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 3,
+			"pos": "(11.37333, 1.0)",
+			"score": 440,
+			"seconds": 12.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 3,
+			"pos": "(14.57333, 1.0)",
+			"score": 460,
+			"seconds": 13.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.5,
+			"lives": 3,
+			"pos": "(15.0, 4.721778)",
+			"score": 755,
+			"seconds": 14.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.5,
+			"lives": 3,
+			"pos": "(12.07822, 5.0)",
+			"score": 815,
+			"seconds": 15.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.5,
+			"lives": 3,
+			"pos": "(12.0, 4.357338)",
+			"score": 815,
+			"seconds": 16.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.5,
+			"lives": 3,
+			"pos": "(10.08535, 3.0)",
+			"score": 830,
+			"seconds": 17.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.5,
+			"lives": 3,
+			"pos": "(6.885349, 3.0)",
+			"score": 830,
+			"seconds": 18.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 3,
+			"pos": "(6.0, 5.0)",
+			"score": 855,
+			"seconds": 19.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 3,
+			"pos": "(6.0, 5.0)",
+			"score": 855,
+			"seconds": 20.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 2,
+			"pos": "(1.0, 9.0)",
+			"score": 855,
+			"seconds": 21.0,
+			"status": "respawning"
+		},
+		{
+			"flow": 1.0,
+			"lives": 2,
+			"pos": "(1.0, 9.959999)",
+			"score": 855,
+			"seconds": 22.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 2,
+			"pos": "(3.223999, 11.0)",
+			"score": 855,
+			"seconds": 23.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 2,
+			"pos": "(6.423996, 11.0)",
+			"score": 875,
+			"seconds": 24.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 2,
+			"pos": "(9.623993, 11.0)",
+			"score": 905,
+			"seconds": 25.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 2,
+			"pos": "(12.82399, 11.0)",
+			"score": 945,
+			"seconds": 26.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 2,
+			"pos": "(15.0, 8.706669)",
+			"score": 1025,
+			"seconds": 27.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 2,
+			"pos": "(15.0, 7.0)",
+			"score": 1045,
+			"seconds": 28.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 2,
+			"pos": "(15.0, 7.0)",
+			"score": 1045,
+			"seconds": 29.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 2,
+			"pos": "(15.0, 7.0)",
+			"score": 1045,
+			"seconds": 30.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 2,
+			"pos": "(12.0, 7.0)",
+			"score": 1075,
+			"seconds": 31.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.5,
+			"lives": 2,
+			"pos": "(12.0, 9.703993)",
+			"score": 1300,
+			"seconds": 32.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.5,
+			"lives": 2,
+			"pos": "(11.35734, 11.0)",
+			"score": 1315,
+			"seconds": 33.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.5,
+			"lives": 2,
+			"pos": "(8.149342, 11.0)",
+			"score": 1315,
+			"seconds": 34.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.5,
+			"lives": 2,
+			"pos": "(4.949345, 11.0)",
+			"score": 1315,
+			"seconds": 35.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.5,
+			"lives": 2,
+			"pos": "(4.0, 11.0)",
+			"score": 1315,
+			"seconds": 36.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 2,
+			"pos": "(1.0, 11.0)",
+			"score": 1315,
+			"seconds": 37.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 2,
+			"pos": "(1.0, 11.0)",
+			"score": 1315,
+			"seconds": 38.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 2,
+			"pos": "(1.0, 8.296007)",
+			"score": 1315,
+			"seconds": 39.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 2,
+			"pos": "(1.0, 7.0)",
+			"score": 1335,
+			"seconds": 40.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 1,
+			"pos": "(1.0, 9.0)",
+			"score": 1345,
+			"seconds": 41.0,
+			"status": "respawning"
+		},
+		{
+			"flow": 1.0,
+			"lives": 1,
+			"pos": "(1.0, 9.0)",
+			"score": 1345,
+			"seconds": 42.0,
+			"status": "respawning"
+		},
+		{
+			"flow": 1.0,
+			"lives": 1,
+			"pos": "(1.0, 7.0)",
+			"score": 1345,
+			"seconds": 43.0,
+			"status": "playing"
+		},
+		{
+			"flow": 1.0,
+			"lives": 1,
+			"pos": "(1.730667, 7.0)",
+			"score": 1345,
+			"seconds": 44.0,
+			"status": "playing"
+		}
+	],
+	"score": 1345,
+	"simulation_seconds": 44.9999999999981,
+	"status": "playing",
+	"tape_replayed": true,
+	"ticks": 5400
+}
