@@ -1,0 +1,89 @@
+{
+	"engine": "4.6.3-stable (official)",
+	"executed": 16,
+	"failed": 0,
+	"passed": 16,
+	"results": [
+		{
+			"detail": "{ \"total\": 109, \"collected\": 0, \"remaining\": 109, \"pellets\": 103, \"powers\": 5, \"fruits\": 1, \"percent\": 0 }",
+			"id": "PROGRESS-01-initial-counts",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "PROGRESS-02-independent-of-score-flow",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "PROGRESS-03-normal-pellet",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "PROGRESS-04-duplicate-contact-idempotent",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "PROGRESS-05-fruit-is-required-item",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "PROGRESS-06-power-count",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "PROGRESS-07-death-keeps-collected-state",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "PROGRESS-08-restart-restores-counts",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "PROGRESS-09-dash-collects-once",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "PROGRESS-10-pause-keeps-counts",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "PROGRESS-11-last-ten-exact",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "PROGRESS-12-not-complete-with-one-left",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "PROGRESS-13-last-pickup-wins",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "MAP-SCALE-235x156",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "MAP-SCALE-510x390",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "MAP-SCALE-400x230",
+			"passed": true
+		}
+	],
+	"suite": "Map pickup progress and layout"
+}

@@ -1,0 +1,31 @@
+{
+  "version": "0.2.1-map",
+  "base_commit": "96618c46cb593c99c9ad617cda9febdefe6fbb16",
+  "tests": {
+    "executed": 113,
+    "passed": 113,
+    "failed": 0
+  },
+  "zip": {
+    "filename": "NeoGrid_0.2.1_Mapa_Windows_x64.zip",
+    "bytes": 37399339,
+    "sha256": "48e33a7acc42c323dae8a5eaca0fe11b14dd66a2729fcb064a1a2a93d4427104",
+    "entries": 14,
+    "crc_ok": true
+  },
+  "exe": {
+    "bytes": 105863760,
+    "sha256": "231b4b3e865040addfb2deb3fba921ed9d1837042481283a524d5411d2e1f9c8",
+    "machine": "AMD64",
+    "version": "0.2.1.0",
+    "embedded_pack_smoke_on_linux": true,
+    "native_windows_tested": false
+  },
+  "visual_inspection": {
+    "host": "Linux/Xvfb",
+    "renderer": "gl_compatibility",
+    "adapter": "llvmpipe",
+    "synthetic_last_ten_setup": true,
+    "physical_gpu_tested": false
+  }
+}

@@ -1,4 +1,9 @@
-# NeoGrid — MV ação 0.2.0
+# NeoGrid — MV mapa 0.2.1
+
+Correção da orientação e do progresso de coleta: o HUD agora informa quantos itens
+faltam, o minimapa mostra todos eles e **M** abre o mapa ampliado com pausa.
+Os últimos dez itens recebem um círculo branco fixo. Detalhes e validação desta
+revisão em [Correção do mapa](docs/CORRECAO_MAPA.md).
 
 Refinamento da primeira versão aprovada: o mesmo demonstrador Godot 3D recebe
 perseguição progressiva anunciada, resposta audiovisual de dash/escape, reversão
@@ -17,7 +22,8 @@ Extraia o pacote Windows inteiro, leia `LEIA-ME.txt` e execute
 - WASD/setas: mover e antecipar curvas; Espaço: dash (40E).
 - Q durante Power com pelo menos 2s restantes e 20E: aposta opcional.
   Duas novas capturas na mesma janela rendem +600 pontos/+35E; uma tentativa por fase.
-- C: câmera oblíqua/superior; P/Esc: pausa; F11: tela cheia.
+- C: câmera oblíqua/superior; M: mapa ampliado com pausa; P/Esc: pausa; F11: tela cheia.
+- HUD: itens restantes, coletados/total, percentual e contagem de pontos/Power/frutas.
 - Configurações: câmera 0–100%; zero desativa impulsos/FOV. “Reduzir efeitos e
   movimento” também elimina anéis, partículas, bobbing e piscadas decorativas.
 - Fantasmas que voltaram à cor original já são perigosos, mesmo durante Power.
@@ -33,7 +39,7 @@ com PCK embutido em `export_presets.cfg`.
 python scripts/build.py --godot godot
 ```
 
-O builder importa, executa as três suítes, faz smoke do projeto, exporta e
+O builder importa, executa as quatro suítes, faz smoke do projeto, exporta e
 verifica o PCK do próprio executável em diretório temporário fora das fontes.
 Em Windows, também existe `scripts/build_windows.ps1`.
 
@@ -51,6 +57,7 @@ Para testar separadamente:
 godot --headless --path . --script res://tests/test_rules.gd
 godot --headless --path . --script res://tests/test_action.gd
 godot --headless --path . --script res://tests/test_integration.gd
+godot --headless --path . --script res://tests/test_map_progress.gd
 ```
 
 O ambiente de cada tarefa já é isolado; use o checkout existente, sem criar
@@ -60,7 +67,10 @@ Metadados `.import` são configurações de importação Godot, não caches bin�
 
 ## Evidências e limites
 
-**87 verificações aprovadas, zero falhas.** Mais smoke do projeto, do pacote e
+O histórico abaixo se refere à entrega **0.2.0**; os resultados e limites da
+correção **0.2.1** estão em [CORRECAO_MAPA.md](docs/CORRECAO_MAPA.md).
+
+**87 verificações aprovadas, zero falhas na 0.2.0.** Mais smoke do projeto, do pacote e
 replay completo de 45s pelo PCK do EXE, carregado no Godot Linux. A gravação real
 contínua tem **45,166667s**, 1084 frames, 1280×720/24fps e áudio AAC; controle
 é automatizado, renderer Forward+/Vulkan no llvmpipe. Não é filmagem do Gemini.
@@ -77,3 +87,4 @@ sobre diversão. Windows nativo, GPU física e desempenho 60fps permanecem pende
 
 O material Gemini em `referencias/` foi inspecionado como direção visual e é
 excluído do executável. As capturas e a música entregues são do jogo implementado.
+

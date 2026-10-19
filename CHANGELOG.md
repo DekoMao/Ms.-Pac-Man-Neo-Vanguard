@@ -22,3 +22,14 @@
   do motor Linux Forward+ em llvmpipe. Nenhuma homologação Windows alegada.
 - Sem Clássico histórico, expansão de fases, Time Attack, Rogue ou multiplayer.
   O gate visual/performance MV ainda está parcial; M1–M3 não iniciados.
+
+# MV mapa 0.2.1 — clareza da coleta
+
+- HUD mostra itens restantes, coletados/total, percentual e barra de progresso.
+- Contagem separa pontos, Power Pellets e frutas exigidos pela fase atual.
+- Minimapa mostra todos os itens restantes e usa a topologia atual do labirinto.
+- Últimos dez itens recebem círculos brancos fixos nos dois mapas.
+- M abre mapa ampliado e pausa tempo/música; M, Esc ou botão retomam a partida.
+- Preservados movimento, pontuação, Flow, áudio e direção visual da versão aprovada.
+- Adicionadas verificações de coleta e integração do mapa ao builder.
+

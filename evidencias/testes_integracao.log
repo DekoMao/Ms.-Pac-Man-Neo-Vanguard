@@ -1,6 +1,6 @@
 Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
 
-NEOGRID_RUNTIME {"active_renderer":"forward_plus","adapter":"","display":"headless","driver":"vulkan","engine":"4.6.3-stable (official)","os":"Linux","requested_renderer":"forward_plus","version":"0.2.0-action"}
+NEOGRID_RUNTIME {"active_renderer":"forward_plus","adapter":"","display":"headless","driver":"vulkan","engine":"4.6.3-stable (official)","os":"Linux","requested_renderer":"forward_plus","version":"0.2.1-map"}
 PASS AUDIO-01-full-musical-loop
 PASS UI-01-title-and-menu
 PASS SCENE-01-real-actors
@@ -22,4 +22,14 @@ PASS ACCESS-02-reduced-camera-zero-impulse
 PASS ACCESS-03-slider-zero-fov-fixed
 PASS INPUT-01-risk-wager-key
 PASS ACCESS-04-restart-clears-cosmetic-state
-MV_INTEGRATION_RESULT executed=21 failed=0
+PASS MAP-UI-01-live-counter
+PASS MAP-UI-02-key-opens-paused-map
+PASS MAP-UI-03-map-freezes-simulation
+PASS MAP-UI-04-shared-live-state
+PASS MAP-UI-05-map-fits-reference-viewport
+PASS MAP-UI-06-escape-resumes
+PASS MAP-UI-07-m-closes-map
+PASS MAP-UI-08-restart-clears-overlay
+PASS MAP-UI-09-last-item-caption
+PASS MAP-UI-10-complete-caption
+MV_INTEGRATION_RESULT executed=31 failed=0

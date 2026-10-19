@@ -127,6 +127,17 @@ static func actor(pos: Vector2, dir: Vector2i) -> Dictionary:
 func start() -> void:
 	if status == "ready": status = "playing"
 
+func pickup_progress() -> Dictionary:
+	# All three pickup kinds are required by the current area's win condition.
+	# Read live pickups: score, Flow and captured ghosts are unrelated.
+	var counts := {"pellet":0, "power":0, "fruit":0}
+	for kind in pickups.values():
+		counts[kind] = counts.get(kind, 0) + 1
+	var fraction := clampf(float(collected) / initial_pellets, 0.0, 1.0) if initial_pellets > 0 else 1.0
+	return {"total":initial_pellets, "collected":collected, "remaining":pickups.size(),
+		"pellets":counts.pellet, "powers":counts.power, "fruits":counts.fruit,
+		"percent":100 if pickups.is_empty() else mini(99, floori(fraction * 100.0))}
+
 func request_direction(dir: Vector2i) -> void:
 	if not DIRS.has(dir) or paused or status != "playing": return
 	buffer_dir = dir
@@ -502,3 +513,4 @@ func update_topology() -> void:
 		topology.clear()
 		topology_done = true
 		events.append({"type":"topology_cancel", "pos":Vector2(OPEN_CELL)})
+

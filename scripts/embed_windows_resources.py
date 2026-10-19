@@ -31,10 +31,10 @@ def version_block(key, value=b'', children=(), string=False):
 
 
 def version_resource():
-    fixed = struct.pack('<13I', 0xFEEF04BD, 0x00010000, 2, 0, 2, 0, 0x3F, 0, 0x40004, 1, 0, 0, 0)
+    fixed = struct.pack('<13I', 0xFEEF04BD, 0x00010000, 2, 0x00010000, 2, 0x00010000, 0x3F, 0, 0x40004, 1, 0, 0, 0)
     strings = {
         'FileDescription': 'Neo-Grid MV',
-        'FileVersion': '0.2.0.0',
+        'FileVersion': '0.2.1.0',
         'ProductName': 'Neo-Grid',
     }
     table = version_block('040904b0', children=[
@@ -149,3 +149,4 @@ if __name__=='__main__':
     parser.add_argument('icon')
     args=parser.parse_args()
     print(json.dumps(embed(args.executable,args.icon),indent=2))
+

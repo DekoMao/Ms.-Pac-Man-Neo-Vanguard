@@ -62,8 +62,33 @@ func run() -> void:
 	await press(KEY_Q)
 	check("INPUT-01-risk-wager-key",game.sim.risk.state=="active" and game.sim.energy==80)
 	game.start_game();check("ACCESS-04-restart-clears-cosmetic-state",game.feedback.impact==0 and game.feedback.effects.is_empty())
+	game.update_hud()
+	var count_before:Dictionary=game.sim.pickup_progress()
+	check("MAP-UI-01-live-counter",game.collection_label.text=="FALTAM %d ITENS"%count_before.remaining and game.collection_bar.value==0)
+	await press(KEY_M)
+	check("MAP-UI-02-key-opens-paused-map",game.current_screen=="map" and game.map_overlay.visible and game.sim.paused and game.music.stream_paused)
+	var map_time:float=game.sim.time
+	var map_count:Dictionary=game.sim.pickup_progress()
+	await physics_frame;await physics_frame
+	check("MAP-UI-03-map-freezes-simulation",game.sim.time==map_time and game.sim.pickup_progress()==map_count)
+	check("MAP-UI-04-shared-live-state",game.overview_map.sim==game.sim and game.minimap.sim==game.sim)
+	check("MAP-UI-05-map-fits-reference-viewport",game.map_overlay.position.y>=0 and game.map_overlay.position.y+game.map_overlay.size.y<=game.map_overlay.get_parent().size.y)
+	await press(KEY_ESCAPE)
+	check("MAP-UI-06-escape-resumes",game.current_screen=="playing" and not game.map_overlay.visible and not game.sim.paused and not game.music.stream_paused)
+	await press(KEY_M);await press(KEY_M)
+	check("MAP-UI-07-m-closes-map",game.current_screen=="playing" and not game.map_overlay.visible)
+	game.pause_game();game.show_map();game.start_game();game.update_hud()
+	check("MAP-UI-08-restart-clears-overlay",not game.map_overlay.visible and game.collection_bar.value==0)
+	for c in game.sim.pickups.keys():
+		if game.sim.pickups.size()<=1:break
+		game.sim.collect(c,game.sim.time)
+	game.update_hud()
+	check("MAP-UI-09-last-item-caption",game.collection_label.text=="ÚLTIMO ITEM")
+	game.sim.collect(game.sim.pickups.keys()[0],game.sim.time);game.update_hud()
+	check("MAP-UI-10-complete-caption",game.collection_label.text=="ÁREA LIMPA" and game.collection_bar.value==game.collection_bar.max_value)
 	var file=FileAccess.open("res://evidencias/testes_integracao.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify({"suite":"MV scene and input routing (headless, synthetic keys)","executed":checks.size(),"passed":checks.size()-failures,"failed":failures,"results":checks},"\t"));file.close()
 	game.queue_free();await process_frame
 	print("MV_INTEGRATION_RESULT executed=",checks.size()," failed=",failures)
 	quit(1 if failures else 0)
+
