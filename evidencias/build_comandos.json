@@ -2,67 +2,81 @@
   {
     "id": "importacao",
     "command": [
-      "godot",
+      "/tmp/neogrid-build-1w8aj9dt/engine/Godot_v4.6.3-stable_linux.x86_64",
       "--headless",
       "--path",
-      "/workspace/NeoGrid_Refino",
+      "/workspace/scratch/7740f940f7a4/neogrid-map",
       "--editor",
       "--import",
       "--quit"
     ],
-    "cwd": "/workspace/NeoGrid_Refino",
+    "cwd": "/workspace/scratch/7740f940f7a4/neogrid-map",
     "exit_code": 0,
-    "duration_seconds": 6.14
+    "duration_seconds": 7.599
   },
   {
     "id": "testes_logica",
     "command": [
-      "godot",
+      "/tmp/neogrid-build-1w8aj9dt/engine/Godot_v4.6.3-stable_linux.x86_64",
       "--headless",
       "--path",
-      "/workspace/NeoGrid_Refino",
+      "/workspace/scratch/7740f940f7a4/neogrid-map",
       "--script",
       "res://tests/test_rules.gd"
     ],
-    "cwd": "/workspace/NeoGrid_Refino",
+    "cwd": "/workspace/scratch/7740f940f7a4/neogrid-map",
     "exit_code": 0,
-    "duration_seconds": 0.261
+    "duration_seconds": 0.365
   },
   {
     "id": "testes_integracao",
     "command": [
-      "godot",
+      "/tmp/neogrid-build-1w8aj9dt/engine/Godot_v4.6.3-stable_linux.x86_64",
       "--headless",
       "--path",
-      "/workspace/NeoGrid_Refino",
+      "/workspace/scratch/7740f940f7a4/neogrid-map",
       "--script",
       "res://tests/test_integration.gd"
     ],
-    "cwd": "/workspace/NeoGrid_Refino",
+    "cwd": "/workspace/scratch/7740f940f7a4/neogrid-map",
     "exit_code": 0,
-    "duration_seconds": 0.732
+    "duration_seconds": 1.112
   },
   {
     "id": "testes_acao",
     "command": [
-      "godot",
+      "/tmp/neogrid-build-1w8aj9dt/engine/Godot_v4.6.3-stable_linux.x86_64",
       "--headless",
       "--path",
-      "/workspace/NeoGrid_Refino",
+      "/workspace/scratch/7740f940f7a4/neogrid-map",
       "--script",
       "res://tests/test_action.gd"
     ],
-    "cwd": "/workspace/NeoGrid_Refino",
+    "cwd": "/workspace/scratch/7740f940f7a4/neogrid-map",
     "exit_code": 0,
-    "duration_seconds": 0.258
+    "duration_seconds": 0.296
+  },
+  {
+    "id": "testes_mapa",
+    "command": [
+      "/tmp/neogrid-build-1w8aj9dt/engine/Godot_v4.6.3-stable_linux.x86_64",
+      "--headless",
+      "--path",
+      "/workspace/scratch/7740f940f7a4/neogrid-map",
+      "--script",
+      "res://tests/test_map_progress.gd"
+    ],
+    "cwd": "/workspace/scratch/7740f940f7a4/neogrid-map",
+    "exit_code": 0,
+    "duration_seconds": 0.578
   },
   {
     "id": "smoke_headless",
     "command": [
-      "godot",
+      "/tmp/neogrid-build-1w8aj9dt/engine/Godot_v4.6.3-stable_linux.x86_64",
       "--headless",
       "--path",
-      "/workspace/NeoGrid_Refino",
+      "/workspace/scratch/7740f940f7a4/neogrid-map",
       "--fixed-fps",
       "60",
       "--quit-after",
@@ -70,32 +84,32 @@
       "--",
       "--smoke"
     ],
-    "cwd": "/workspace/NeoGrid_Refino",
+    "cwd": "/workspace/scratch/7740f940f7a4/neogrid-map",
     "exit_code": 0,
-    "duration_seconds": 0.918
+    "duration_seconds": 1.302
   },
   {
     "id": "export_windows",
     "command": [
-      "godot",
+      "/tmp/neogrid-build-1w8aj9dt/engine/Godot_v4.6.3-stable_linux.x86_64",
       "--headless",
       "--path",
-      "/workspace/NeoGrid_Refino",
+      "/workspace/scratch/7740f940f7a4/neogrid-map",
       "--export-release",
       "Windows Desktop",
-      "/workspace/NeoGrid_Refino/entrega/MsPacMan_Aperfeicoado/MsPacMan_Aperfeicoado.exe"
+      "/workspace/scratch/7740f940f7a4/neogrid-map/entrega/MsPacMan_Aperfeicoado/MsPacMan_Aperfeicoado.exe"
     ],
-    "cwd": "/workspace/NeoGrid_Refino",
+    "cwd": "/workspace/scratch/7740f940f7a4/neogrid-map",
     "exit_code": 0,
-    "duration_seconds": 5.167
+    "duration_seconds": 6.019
   },
   {
     "id": "pacote_embutido",
     "command": [
-      "godot",
+      "/tmp/neogrid-build-1w8aj9dt/engine/Godot_v4.6.3-stable_linux.x86_64",
       "--headless",
       "--main-pack",
-      "/tmp/NeoGrid Teste vers\u00e3o sdagq5w0/MsPacMan_Aperfeicoado.exe",
+      "/tmp/NeoGrid Teste vers\u00e3o xda2tkwy/MsPacMan_Aperfeicoado.exe",
       "--fixed-fps",
       "60",
       "--quit-after",
@@ -103,8 +117,8 @@
       "--",
       "--smoke"
     ],
-    "cwd": "/tmp/NeoGrid Teste vers\u00e3o sdagq5w0",
+    "cwd": "/tmp/NeoGrid Teste vers\u00e3o xda2tkwy",
     "exit_code": 0,
-    "duration_seconds": 0.831
+    "duration_seconds": 1.221
   }
 ]

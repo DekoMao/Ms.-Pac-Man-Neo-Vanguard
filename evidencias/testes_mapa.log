@@ -1,0 +1,19 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PASS PROGRESS-01-initial-counts { "total": 109, "collected": 0, "remaining": 109, "pellets": 103, "powers": 5, "fruits": 1, "percent": 0 }
+PASS PROGRESS-02-independent-of-score-flow 
+PASS PROGRESS-03-normal-pellet 
+PASS PROGRESS-04-duplicate-contact-idempotent 
+PASS PROGRESS-05-fruit-is-required-item 
+PASS PROGRESS-06-power-count 
+PASS PROGRESS-07-death-keeps-collected-state 
+PASS PROGRESS-08-restart-restores-counts 
+PASS PROGRESS-09-dash-collects-once 
+PASS PROGRESS-10-pause-keeps-counts 
+PASS PROGRESS-11-last-ten-exact 
+PASS PROGRESS-12-not-complete-with-one-left 
+PASS PROGRESS-13-last-pickup-wins 
+PASS MAP-SCALE-235x156 
+PASS MAP-SCALE-510x390 
+PASS MAP-SCALE-400x230 
+MAP_TEST_RESULT executed=16 failed=0

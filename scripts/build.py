@@ -57,6 +57,11 @@ def main():
         action=json.loads((evidence/'testes_acao.json').read_text())
         if action['executed']<1 or action['failed']:
             raise RuntimeError('Action tests did not execute and pass')
+        (evidence/'testes_mapa.json').unlink(missing_ok=True)
+        run('testes_mapa',['--script','res://tests/test_map_progress.gd'],90)
+        map_tests=json.loads((evidence/'testes_mapa.json').read_text())
+        if map_tests['executed']<1 or map_tests['failed']:
+            raise RuntimeError('Map progress tests did not execute and pass')
         run('smoke_headless',['--fixed-fps','60','--quit-after','240','--','--smoke'],45)
         run('export_windows',['--export-release','Windows Desktop',str(target)],180)
         resources=embed(target,ROOT/'assets/icon.ico')
@@ -77,3 +82,4 @@ def main():
 
 if __name__=='__main__':
     main()
+

@@ -1,7 +1,7 @@
 {
-	"executed": 21,
+	"executed": 31,
 	"failed": 0,
-	"passed": 21,
+	"passed": 31,
 	"results": [
 		{
 			"id": "AUDIO-01-full-musical-loop",
@@ -85,6 +85,46 @@
 		},
 		{
 			"id": "ACCESS-04-restart-clears-cosmetic-state",
+			"passed": true
+		},
+		{
+			"id": "MAP-UI-01-live-counter",
+			"passed": true
+		},
+		{
+			"id": "MAP-UI-02-key-opens-paused-map",
+			"passed": true
+		},
+		{
+			"id": "MAP-UI-03-map-freezes-simulation",
+			"passed": true
+		},
+		{
+			"id": "MAP-UI-04-shared-live-state",
+			"passed": true
+		},
+		{
+			"id": "MAP-UI-05-map-fits-reference-viewport",
+			"passed": true
+		},
+		{
+			"id": "MAP-UI-06-escape-resumes",
+			"passed": true
+		},
+		{
+			"id": "MAP-UI-07-m-closes-map",
+			"passed": true
+		},
+		{
+			"id": "MAP-UI-08-restart-clears-overlay",
+			"passed": true
+		},
+		{
+			"id": "MAP-UI-09-last-item-caption",
+			"passed": true
+		},
+		{
+			"id": "MAP-UI-10-complete-caption",
 			"passed": true
 		}
 	],

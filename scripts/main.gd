@@ -27,6 +27,13 @@ var energy_bar:ProgressBar
 var power_bar:ProgressBar
 var toast:Label
 var minimap:Control
+var collection_label:Label
+var collection_detail:Label
+var collection_caption:Label
+var collection_bar:ProgressBar
+var map_overlay:PanelContainer
+var overview_map:Control
+var overview_caption:Label
 var sound:AudioStreamPlayer
 var music:AudioStreamPlayer
 var sounds:Dictionary={}
@@ -78,13 +85,13 @@ func _ready() -> void:
 	setup_audio()
 	apply_settings()
 	show_title()
-	runtime_info={"version":"0.2.0-action","engine":Engine.get_version_info().string,"os":OS.get_name(),"display":DisplayServer.get_name(),"requested_renderer":ProjectSettings.get_setting("rendering/renderer/rendering_method"),"active_renderer":RenderingServer.get_current_rendering_method(),"driver":RenderingServer.get_current_rendering_driver_name(),"adapter":RenderingServer.get_video_adapter_name()}
+	runtime_info={"version":"0.2.1-map","engine":Engine.get_version_info().string,"os":OS.get_name(),"display":DisplayServer.get_name(),"requested_renderer":ProjectSettings.get_setting("rendering/renderer/rendering_method"),"active_renderer":RenderingServer.get_current_rendering_method(),"driver":RenderingServer.get_current_rendering_driver_name(),"adapter":RenderingServer.get_video_adapter_name()}
 	print("NEOGRID_RUNTIME ",JSON.stringify(runtime_info))
 	if demo or smoke:start_game()
 	get_tree().auto_accept_quit=false
 
 func setup_input() -> void:
-	var mapping={"p1_up":[KEY_W,KEY_UP],"p1_down":[KEY_S,KEY_DOWN],"p1_left":[KEY_A,KEY_LEFT],"p1_right":[KEY_D,KEY_RIGHT],"p1_dash":[KEY_SPACE],"risk_wager":[KEY_Q],"pause_game":[KEY_P,KEY_ESCAPE],"confirm_game":[KEY_ENTER],"toggle_camera":[KEY_C],"toggle_fullscreen":[KEY_F11]}
+	var mapping={"p1_up":[KEY_W,KEY_UP],"p1_down":[KEY_S,KEY_DOWN],"p1_left":[KEY_A,KEY_LEFT],"p1_right":[KEY_D,KEY_RIGHT],"p1_dash":[KEY_SPACE],"risk_wager":[KEY_Q],"pause_game":[KEY_P,KEY_ESCAPE],"confirm_game":[KEY_ENTER],"toggle_camera":[KEY_C],"toggle_fullscreen":[KEY_F11],"toggle_map":[KEY_M]}
 	for action in mapping:
 		if not InputMap.has_action(action):InputMap.add_action(action)
 		for code in mapping[action]:
@@ -168,8 +175,12 @@ func _unhandled_input(event:InputEvent) -> void:
 		settings.camera_top=not settings.camera_top;apply_settings();return
 	if event.is_action_pressed("pause_game"):
 		if current_screen=="playing":pause_game()
-		elif current_screen=="pause":resume_game()
+		elif current_screen in ["pause","map"]:resume_game()
 		else:show_title()
+		return
+	if event.is_action_pressed("toggle_map"):
+		if current_screen in ["playing","pause"]:show_map()
+		elif current_screen=="map":resume_game()
 		return
 	if current_screen!="playing":
 		if event.is_action_pressed("confirm_game") and current_screen=="title":start_game()
@@ -427,24 +438,50 @@ func build_ui() -> void:
 	var row:=HBoxContainer.new();row.add_theme_constant_override("separation",28);top.add_child(row)
 	var col:=VBoxContainer.new();row.add_child(col);col.add_child(label("NEO—GRID  /  MV",13,Color("5de0eb")));score_label=label("000000",30);col.add_child(score_label)
 	var livescol:=VBoxContainer.new();row.add_child(livescol);livescol.add_child(label("VIDAS",11,Color("97a9c4")));life_label=label("● ● ●",22,Color("ffce68"));livescol.add_child(life_label)
-	var minimap_panel=panel();minimap_panel.position=Vector2(1090,20);hud.add_child(minimap_panel)
+	var minimap_panel=panel();hud.add_child(minimap_panel)
+	minimap_panel.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	minimap_panel.offset_left=-300;minimap_panel.offset_right=-25;minimap_panel.offset_top=20
+	minimap_panel.custom_minimum_size=Vector2(275,0)
+	var map_box:=VBoxContainer.new();map_box.add_theme_constant_override("separation",5);minimap_panel.add_child(map_box)
+	collection_label=label("COLETA",18,Color("ffe19a"));map_box.add_child(collection_label)
+	collection_caption=label("",12,Color("c6d9e9"));map_box.add_child(collection_caption)
+	collection_bar=ProgressBar.new();collection_bar.show_percentage=false;collection_bar.custom_minimum_size=Vector2(235,7);map_box.add_child(collection_bar)
+	collection_detail=label("",11,Color("b8cddd"));map_box.add_child(collection_detail)
 	var phase_panel=panel();phase_panel.position=Vector2(420,20);phase_panel.custom_minimum_size=Vector2(420,0);hud.add_child(phase_panel)
 	phase_label=label("FUGA  /  RITMO 0",18,Color.WHITE);phase_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;phase_panel.add_child(phase_label)
-	var risk_panel=panel();risk_panel.position=Vector2(955,170);risk_panel.custom_minimum_size=Vector2(300,0);hud.add_child(risk_panel)
+	var risk_panel=panel();hud.add_child(risk_panel)
+	risk_panel.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	risk_panel.offset_left=-325;risk_panel.offset_right=-25;risk_panel.offset_top=320
+	risk_panel.custom_minimum_size=Vector2(300,0)
 	risk_label=label("APOSTA OPCIONAL",12,Color("bce8ff"));risk_label.custom_minimum_size.x=260;risk_panel.add_child(risk_label)
-	minimap=Control.new();minimap.set_script(load("res://scripts/minimap.gd"));minimap.sim=sim;minimap.custom_minimum_size=Vector2(136,104);minimap_panel.add_child(minimap)
+	minimap=Control.new();minimap.set_script(load("res://scripts/minimap.gd"));minimap.sim=sim;minimap.custom_minimum_size=Vector2(235,156);map_box.add_child(minimap)
+	map_box.add_child(label("M · ampliar mapa e pausar",11,Color("92e0f0")))
 	var bottom=panel();bottom.position=Vector2(25,625);bottom.custom_minimum_size.x=420;hud.add_child(bottom)
 	var box:=VBoxContainer.new();bottom.add_child(box)
 	flow_label=label("FLOW ×1.0",16,Color("ffb5df"));box.add_child(flow_label)
 	energy_bar=ProgressBar.new();energy_bar.show_percentage=false;energy_bar.custom_minimum_size=Vector2(370,10);energy_bar.max_value=100;box.add_child(energy_bar)
-	status_label=label("ESPAÇO · DASH    C · CÂMERA    P · PAUSA",11,Color("9aacc4"));box.add_child(status_label)
+	status_label=label("ESPAÇO · DASH   C · CÂMERA   M · MAPA   P · PAUSA",10,Color("9aacc4"));box.add_child(status_label)
 	var power_panel=panel();power_panel.position=Vector2(1000,637);power_panel.custom_minimum_size.x=250;hud.add_child(power_panel)
 	var pbox:=VBoxContainer.new();power_panel.add_child(pbox);power_caption=label("POWER PELLET",11,Color("91e2ff"));pbox.add_child(power_caption);power_bar=ProgressBar.new();power_bar.show_percentage=false;power_bar.custom_minimum_size=Vector2(200,8);power_bar.max_value=6;pbox.add_child(power_bar)
 	toast=label("",19,Color("fcdd8c"));toast.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;toast.position=Vector2(300,110);toast.size=Vector2(680,50);hud.add_child(toast)
 	menu=panel();menu.position=Vector2(65,100);menu.custom_minimum_size=Vector2(400,0);root.add_child(menu)
 	menu_content=VBoxContainer.new();menu_content.add_theme_constant_override("separation",12);menu.add_child(menu_content)
+	map_overlay=panel();root.add_child(map_overlay)
+	map_overlay.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	map_overlay.anchor_left=0.5;map_overlay.anchor_right=0.5
+	map_overlay.offset_left=-275;map_overlay.offset_right=275;map_overlay.offset_top=20
+	map_overlay.custom_minimum_size=Vector2(550,0);map_overlay.visible=false
+	var overview_box:=VBoxContainer.new();overview_box.add_theme_constant_override("separation",8);map_overlay.add_child(overview_box)
+	overview_box.add_child(label("MAPA DA ÁREA",22,Color("ffe19a")))
+	overview_caption=label("",15);overview_box.add_child(overview_caption)
+	overview_map=Control.new();overview_map.set_script(load("res://scripts/minimap.gd"));overview_map.sim=sim
+	overview_map.custom_minimum_size=Vector2(510,390);overview_box.add_child(overview_map)
+	overview_box.add_child(label("• Pontos   ◉ Power   ◆ Fruta   ▲ Você",13,Color("cee5f3")))
+	overview_box.add_child(label("Últimos 10 itens: círculo branco. Tempo pausado.",12,Color("a3ccda")))
+	overview_box.add_child(button("Retomar · M / Esc",resume_game))
 
 func clear_menu(title:String,subtitle:String="") -> void:
+	map_overlay.visible=false
 	for c in menu_content.get_children():menu_content.remove_child(c);c.queue_free()
 	menu.visible=true
 	menu_content.add_child(label(title,35,Color("ffdb76")))
@@ -459,9 +496,10 @@ func show_title() -> void:
 	menu_content.add_child(button("Configurações",show_settings))
 	menu_content.add_child(button("Recorde  ·  %06d"%settings.record,show_records))
 	menu_content.add_child(button("Sair",func():get_tree().quit()))
-	menu_content.add_child(label("MV 0.2  •  AÇÃO E FLOW",10,Color("7787a2")))
+	menu_content.add_child(label("MV 0.2.1  •  AÇÃO, FLOW E MAPA",10,Color("7787a2")))
 
 func start_game() -> void:
+	map_overlay.visible=false
 	sim.reset();sim.start();sim.paused=false;current_screen="playing";hud.visible=true;menu.visible=false;terminal_reported=false;previous_graph=0;music.stream_paused=false
 	feedback.reset();observed_events.clear();first_frame=true
 	for track in [music,tension_music,hunt_music]:track.stop();track.stream_paused=false;track.play(0.0)
@@ -475,9 +513,15 @@ func start_game() -> void:
 func pause_game() -> void:
 	current_screen="pause";sim.paused=true;key_stack.clear();sim.held_dir=Vector2i.ZERO;sim.buffer_dir=Vector2i.ZERO;pause_music(true)
 	clear_menu("PAUSA","Seu tempo está preservado.")
-	menu_content.add_child(button("Continuar",resume_game));menu_content.add_child(button("Reiniciar",start_game));menu_content.add_child(button("Configurações",show_settings));menu_content.add_child(button("Voltar à abertura",show_title));menu_content.add_child(button("Sair",show_quit_confirm))
+	menu_content.add_child(button("Continuar",resume_game));menu_content.add_child(button("Mapa da área · M",show_map));menu_content.add_child(button("Reiniciar",start_game));menu_content.add_child(button("Configurações",show_settings));menu_content.add_child(button("Voltar à abertura",show_title));menu_content.add_child(button("Sair",show_quit_confirm))
+
+func show_map() -> void:
+	pause_game()
+	current_screen="map";menu.visible=false;map_overlay.visible=true
+	update_hud()
 
 func resume_game() -> void:
+	map_overlay.visible=false
 	current_screen="playing";sim.paused=false;menu.visible=false;hud.visible=true;pause_music(false)
 
 func show_help() -> void:
@@ -487,6 +531,7 @@ func show_help() -> void:
 	menu_content.add_child(label("Q durante Power · aposte 20E em 2 capturas: +600 / +35E.",13))
 	menu_content.add_child(label("Uma aposta por fase. Não altera vidas nem colisões.",13))
 	menu_content.add_child(label("Ritmo sobe após aviso. Quase colisão só conta ao escapar.",13))
+	menu_content.add_child(label("M · mapa ampliado com pausa. O HUD mostra todos os itens restantes.",13))
 	menu_content.add_child(label("Fantasmas que voltaram à cor original já são perigosos.",13))
 	menu_content.add_child(button("Voltar",show_title))
 
@@ -517,6 +562,17 @@ func show_quit_confirm() -> void:
 	menu_content.add_child(button("Continuar jogando",resume_game));menu_content.add_child(button("Sair",func():get_tree().quit()))
 
 func update_hud() -> void:
+	var progress:Dictionary=sim.pickup_progress()
+	var remaining:int=progress.remaining
+	if remaining==0:collection_label.text="ÁREA LIMPA"
+	elif remaining==1:collection_label.text="ÚLTIMO ITEM"
+	elif remaining<=10:collection_label.text="ÚLTIMOS %d ITENS"%remaining
+	else:collection_label.text="FALTAM %d ITENS"%remaining
+	collection_label.modulate=Color("ffdf92") if remaining>10 else Color("b8f2ff")
+	collection_caption.text="COLETADOS %d / %d  ·  %d%%"%[progress.collected,progress.total,progress.percent]
+	collection_detail.text="Pontos %d  •  Power %d  •  Frutas %d"%[progress.pellets,progress.powers,progress.fruits]
+	collection_bar.max_value=maxi(1,progress.total);collection_bar.value=progress.collected
+	overview_caption.text="%d itens restantes  ·  %d / %d coletados"%[remaining,progress.collected,progress.total]
 	score_label.text="%06d"%sim.score
 	life_label.text="● ".repeat(maxi(0,sim.lives))
 	flow_label.text="FLOW ×%.1f    ·    DASH %d%%"%[sim.flow,sim.energy]
@@ -531,6 +587,7 @@ func update_hud() -> void:
 		"success":risk_label.text="APOSTA VENCIDA\n+600 pontos  /  +35 energia"
 		"failed":risk_label.text="APOSTA ENCERRADA\nSua partida continua. Sem perder vida."
 	minimap.queue_redraw()
+	if map_overlay.visible:overview_map.queue_redraw()
 
 func _exit_tree() -> void:
 	if is_instance_valid(sound):sound.stop();sound.stream=null
@@ -548,3 +605,4 @@ func _exit_tree() -> void:
 			metrics.p99_ms=frame_times[mini(frame_times.size()-1,int(frame_times.size()*0.99))]
 		var file=FileAccess.open(report_path,FileAccess.WRITE)
 		if file!=null:file.store_string(JSON.stringify(metrics,"\t"));file.close()
+

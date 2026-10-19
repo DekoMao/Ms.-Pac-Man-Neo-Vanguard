@@ -1,7 +1,11 @@
-MS. PAC-MAN: NEO-GRID — MV ACAO 0.2.0
+MS. PAC-MAN: NEO-GRID — MV MAPA 0.2.1
 REFINO DA BASE APROVADA
 
 NOVIDADES E CONTROLES
+HUD: itens restantes, coletados/total, percentual e contagem por tipo.
+O minimapa mostra pontos, Power Pellets e frutas ainda presentes.
+Os ultimos dez itens recebem circulos brancos fixos para facilitar a busca.
+M: abre o mapa ampliado com tempo e musica pausados. M/Esc: retoma.
 Ritmo de perseguicao sobe em tres niveis, sempre com aviso previo.
 Dash, quase colisoes e capturas recebem resposta de camera e audio.
 Q com pelo menos 2s de Power restantes: aposta opcional de 20 de energia.
@@ -24,7 +28,7 @@ Não foi executado nativamente no Windows nesta sessão. Não está assinado.
 CONTROLES
 Enter: iniciar/confirmar. Setas/WASD: mover; a direção continua até a parede.
 Espaço: dash (custo 40, energia recuperada com pellets). C: câmera 3D.
-P/Esc: pausa. F11: tela cheia. Reinício pelo menu de pausa.
+M: mapa ampliado com pausa. P/Esc: pausa. F11: tela cheia. Reinício pelo menu de pausa.
 Foco perdido pausa a partida; escolha Continuar para retomar.
 Configurações: Baixa/Média/Alta, volume/mudo, câmera e redução de efeitos/bob.
 
@@ -68,4 +72,5 @@ VALIDAÇÃO MANUAL PENDENTE
 Em Windows x64, extrair em caminho com espaço/acento, abrir por duplo clique,
 jogar a área completa, testar pausa/foco/controles/som/tela cheia e reabrir.
 Homologar 720p/1080p, ficar 20 minutos em sessão real e medir GPU/SSR.
-A pasta D:\Ms PACMan e o checkpoint M0 foram preservados; nada foi publicado.
+A pasta D:\Ms PACMan e o checkpoint M0 nao foram alterados nesta revisao.
+
