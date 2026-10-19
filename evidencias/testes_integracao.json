@@ -1,7 +1,7 @@
 {
-	"executed": 31,
+	"executed": 45,
 	"failed": 0,
-	"passed": 31,
+	"passed": 45,
 	"results": [
 		{
 			"id": "AUDIO-01-full-musical-loop",
@@ -125,6 +125,62 @@
 		},
 		{
 			"id": "MAP-UI-10-complete-caption",
+			"passed": true
+		},
+		{
+			"id": "CIRCUIT-UI-01-start-first-phase",
+			"passed": true
+		},
+		{
+			"id": "CIRCUIT-UI-02-shield-input",
+			"passed": true
+		},
+		{
+			"id": "CIRCUIT-UI-03-magnet-locked",
+			"passed": true
+		},
+		{
+			"id": "CIRCUIT-UI-04-win-records-unlock-and-medals",
+			"passed": true
+		},
+		{
+			"id": "CIRCUIT-UI-05-next-carries-score-and-life",
+			"passed": true
+		},
+		{
+			"id": "CIRCUIT-UI-06-rebuilds-visual-map",
+			"passed": true
+		},
+		{
+			"id": "CIRCUIT-UI-07-second-phase-powers",
+			"passed": true
+		},
+		{
+			"id": "CIRCUIT-UI-08-map-freezes-powers",
+			"passed": true
+		},
+		{
+			"id": "CIRCUIT-UI-09-third-phase-unlocked",
+			"passed": true
+		},
+		{
+			"id": "CIRCUIT-UI-10-campaign-finale",
+			"passed": true
+		},
+		{
+			"id": "CIRCUIT-UI-11-final-phase-does-not-wrap",
+			"passed": true
+		},
+		{
+			"id": "CIRCUIT-UI-12-extras-and-nine-medals",
+			"passed": true
+		},
+		{
+			"id": "CIRCUIT-UI-13-phase-selector-callback",
+			"passed": true
+		},
+		{
+			"id": "CIRCUIT-UI-14-restart-preserves-earned-progress",
 			"passed": true
 		}
 	],

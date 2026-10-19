@@ -15,6 +15,11 @@ func press(code:int) -> void:
 	e=InputEventKey.new();e.physical_keycode=code;e.pressed=false
 	Input.parse_input_event(e)
 	await process_frame
+func finish_stage() -> void:
+	game.sim.player.dir=Vector2i.ZERO;game.sim.held_dir=Vector2i.ZERO
+	for g in game.sim.ghosts:g.release=100000.0;g.state="house"
+	for c in game.sim.pickups.keys():game.sim.collect(c,game.sim.time)
+	game._physics_process(1.0/120.0)
 func run() -> void:
 	game=Scene.instantiate();root.add_child(game);current_scene=game
 	await process_frame;await process_frame
@@ -86,6 +91,36 @@ func run() -> void:
 	check("MAP-UI-09-last-item-caption",game.collection_label.text=="ÚLTIMO ITEM")
 	game.sim.collect(game.sim.pickups.keys()[0],game.sim.time);game.update_hud()
 	check("MAP-UI-10-complete-caption",game.collection_label.text=="ÁREA LIMPA" and game.collection_bar.value==game.collection_bar.max_value)
+	game.start_game();game.update_hud()
+	check("CIRCUIT-UI-01-start-first-phase",game.sim.campaign and game.sim.stage_id==0 and game.sim.shield_charges==1 and game.sim.magnet_charges==0)
+	await press(KEY_E)
+	check("CIRCUIT-UI-02-shield-input",game.sim.shield_charges==0 and game.sim.shield_until>game.sim.time)
+	await press(KEY_R)
+	check("CIRCUIT-UI-03-magnet-locked",game.sim.magnet_until<0)
+	game.sim.stage_captures=2;game.sim.time=60;finish_stage()
+	check("CIRCUIT-UI-04-win-records-unlock-and-medals",game.current_screen=="results" and game.settings.unlocked>=1 and game.settings.medals[0]==7 and game.settings.circuit_record==game.sim.score)
+	var carry_score:int=game.sim.score;game.sim.lives=1;game.next_stage()
+	check("CIRCUIT-UI-05-next-carries-score-and-life",game.sim.stage_id==1 and game.sim.score==carry_score and game.sim.lives==2 and game.sim.magnet_charges==1)
+	check("CIRCUIT-UI-06-rebuilds-visual-map",game.walls.has(Vector2i(8,1)) and not game.walls.has(Vector2i(3,2)) and game.pickup_nodes.size()==game.sim.pickups.size())
+	await press(KEY_E);await press(KEY_R)
+	check("CIRCUIT-UI-07-second-phase-powers",game.sim.shield_until>game.sim.time and game.sim.magnet_until>game.sim.time)
+	await press(KEY_M)
+	var held_time:float=game.sim.time
+	await press(KEY_E);await physics_frame;await physics_frame
+	check("CIRCUIT-UI-08-map-freezes-powers",game.sim.time==held_time and game.sim.shield_charges==0 and game.sim.magnet_charges==0)
+	await press(KEY_M)
+	game.sim.time=60;finish_stage();game.next_stage()
+	check("CIRCUIT-UI-09-third-phase-unlocked",game.sim.stage_id==2 and game.settings.unlocked==2 and game.sim.lives==3)
+	game.sim.risk.state="success";game.sim.time=60;finish_stage()
+	check("CIRCUIT-UI-10-campaign-finale",game.menu_content.get_child(0).text=="CIRCUITO CONCLUÍDO!" and game.settings.medals[2]==7)
+	game.next_stage()
+	check("CIRCUIT-UI-11-final-phase-does-not-wrap",game.sim.stage_id==2 and game.current_screen=="results")
+	game.show_campaign()
+	check("CIRCUIT-UI-12-extras-and-nine-medals",game.current_screen=="campaign" and game.total_medals()==9 and not game.menu_content.get_child(4).disabled)
+	game.menu_content.get_child(4).pressed.emit()
+	check("CIRCUIT-UI-13-phase-selector-callback",game.current_screen=="playing" and game.sim.stage_id==2)
+	game.start_game()
+	check("CIRCUIT-UI-14-restart-preserves-earned-progress",game.sim.stage_id==0 and game.sim.score==0 and game.settings.medals==[7,7,7] and game.settings.unlocked==2)
 	var file=FileAccess.open("res://evidencias/testes_integracao.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify({"suite":"MV scene and input routing (headless, synthetic keys)","executed":checks.size(),"passed":checks.size()-failures,"failed":failures,"results":checks},"\t"));file.close()
 	game.queue_free();await process_frame

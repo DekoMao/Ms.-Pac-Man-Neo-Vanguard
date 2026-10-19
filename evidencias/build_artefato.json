@@ -1,8 +1,8 @@
 {
   "editor_version": "4.6.3.stable.official.7d41c59c4",
   "artifact": "/workspace/scratch/7740f940f7a4/neogrid-map/entrega/MsPacMan_Aperfeicoado/MsPacMan_Aperfeicoado.exe",
-  "bytes": 105863760,
-  "sha256": "231b4b3e865040addfb2deb3fba921ed9d1837042481283a524d5411d2e1f9c8",
+  "bytes": 105875680,
+  "sha256": "40b4b4a8378d5d97e6d1bed4ca3dad42572151caf628dda7d19419e32d08f6b0",
   "pe_amd64": true,
   "embedded_pack_smoke_on_host": true,
   "native_windows_tested": false,

@@ -5,6 +5,7 @@ const Store=preload("res://scripts/storage.gd")
 const PlayerScene=preload("res://scenes/player.tscn")
 const GhostScene=preload("res://scenes/ghost.tscn")
 const Feedback=preload("res://scripts/feedback.gd")
+const Stages=preload("res://scripts/stages.gd")
 const COLORS=[Color("ff4765"),Color("ff78d0"),Color("3bdffc"),Color("ffac59")]
 const CELL:=1.4
 var sim=Rules.new()
@@ -70,6 +71,12 @@ var power_caption:Label
 var floor_material:ShaderMaterial
 var toast_tween:Tween
 var camera_anchor:=Vector3.ZERO
+var maze_root:Node3D
+var mission_label:Label
+var ability_label:Label
+var power_field:MeshInstance3D
+var power_field_material:StandardMaterial3D
+var stage_lights:Array=[]
 
 func _ready() -> void:
 	settings=Store.read_settings()
@@ -85,13 +92,13 @@ func _ready() -> void:
 	setup_audio()
 	apply_settings()
 	show_title()
-	runtime_info={"version":"0.2.1-map","engine":Engine.get_version_info().string,"os":OS.get_name(),"display":DisplayServer.get_name(),"requested_renderer":ProjectSettings.get_setting("rendering/renderer/rendering_method"),"active_renderer":RenderingServer.get_current_rendering_method(),"driver":RenderingServer.get_current_rendering_driver_name(),"adapter":RenderingServer.get_video_adapter_name()}
+	runtime_info={"version":"0.3.0-circuit","engine":Engine.get_version_info().string,"os":OS.get_name(),"display":DisplayServer.get_name(),"requested_renderer":ProjectSettings.get_setting("rendering/renderer/rendering_method"),"active_renderer":RenderingServer.get_current_rendering_method(),"driver":RenderingServer.get_current_rendering_driver_name(),"adapter":RenderingServer.get_video_adapter_name()}
 	print("NEOGRID_RUNTIME ",JSON.stringify(runtime_info))
 	if demo or smoke:start_game()
 	get_tree().auto_accept_quit=false
 
 func setup_input() -> void:
-	var mapping={"p1_up":[KEY_W,KEY_UP],"p1_down":[KEY_S,KEY_DOWN],"p1_left":[KEY_A,KEY_LEFT],"p1_right":[KEY_D,KEY_RIGHT],"p1_dash":[KEY_SPACE],"risk_wager":[KEY_Q],"pause_game":[KEY_P,KEY_ESCAPE],"confirm_game":[KEY_ENTER],"toggle_camera":[KEY_C],"toggle_fullscreen":[KEY_F11],"toggle_map":[KEY_M]}
+	var mapping={"p1_up":[KEY_W,KEY_UP],"p1_down":[KEY_S,KEY_DOWN],"p1_left":[KEY_A,KEY_LEFT],"p1_right":[KEY_D,KEY_RIGHT],"p1_dash":[KEY_SPACE],"risk_wager":[KEY_Q],"pause_game":[KEY_P,KEY_ESCAPE],"confirm_game":[KEY_ENTER],"toggle_camera":[KEY_C],"toggle_fullscreen":[KEY_F11],"toggle_map":[KEY_M],"shield":[KEY_E],"magnet":[KEY_R]}
 	for action in mapping:
 		if not InputMap.has_action(action):InputMap.add_action(action)
 		for code in mapping[action]:
@@ -112,31 +119,18 @@ func build_world() -> void:
 	var key:=DirectionalLight3D.new();key.light_color=Color("92afff");key.light_energy=1.3;key.rotation_degrees=Vector3(-58,-30,0);key.shadow_enabled=true;add_child(key)
 	var rim:=DirectionalLight3D.new();rim.light_color=Color("f8a2dd");rim.light_energy=0.65;rim.rotation_degrees=Vector3(-30,145,0);add_child(rim)
 	for p in [Vector3(-9,5,-4),Vector3(8,5,5)]:
-		var light:=OmniLight3D.new();light.position=p;light.light_color=Color("37cbf4") if p.x<0 else Color("ff4eab");light.light_energy=2.5;light.omni_range=15;add_child(light)
+		var light:=OmniLight3D.new();light.position=p;light.light_color=Color("37cbf4") if p.x<0 else Color("ff4eab");light.light_energy=2.5;light.omni_range=15;add_child(light);stage_lights.append(light)
 	var bottom:=BoxMesh.new();bottom.size=Vector3(26,0.1,20)
 	add_child(Models.mesh_node(bottom,Models.material(Color("02050d")),Vector3(0,-1.8,0)))
 	var floor_mesh:=PlaneMesh.new();floor_mesh.size=Vector2(17*CELL,13*CELL)
 	var floor_mat:=ShaderMaterial.new();floor_mat.shader=load("res://assets/floor.gdshader")
 	floor_material=floor_mat
 	add_child(Models.mesh_node(floor_mesh,floor_mat,Vector3(0,-0.025,0)))
-	var wall_mesh=Models.bevel_box(Vector3(CELL*0.97,1.18,CELL*0.97),0.09)
-	for y in Rules.GRID.size():
-		for x in Rules.GRID[y].length():
-			var cell:=Vector2i(x,y)
-			if sim.floors.has(cell):continue
-			var color:=Color("44365e")
-			var neon:bool=(x+y*3)%5==0 or x==0 or x==16
-			if neon:color=Color("45d4ef") if (x+y)%2==0 else Color("e349a4")
-			var mat=Models.material(color,0.40 if neon else 0.0,0.35)
-			var wall=Models.mesh_node(wall_mesh,mat,coord(Vector2(cell),0.59))
-			walls[cell]=wall;add_child(wall)
-			if not neon:
-				var trim_mesh:=BoxMesh.new();trim_mesh.size=Vector3(CELL*0.82,0.025,0.025)
-				var trim=Models.mesh_node(trim_mesh,Models.material(Color("8c4dba"),0.4),Vector3(0,0.58,CELL*0.47));wall.add_child(trim)
-	# Closing cell exists visually from the start but remains open until the safe swap.
-	var closing=Models.mesh_node(wall_mesh,Models.material(Color("4ed8ee"),0.6,0.35),coord(Vector2(Rules.CLOSE_CELL),0.59));closing.visible=false;walls[Rules.CLOSE_CELL]=closing;add_child(closing)
-	for cell in sim.pickups:create_pickup(cell,sim.pickups[cell])
+	rebuild_maze()
 	hero=PlayerScene.instantiate();hero.scale=Vector3.ONE*CELL;add_child(hero)
+	var field:=TorusMesh.new();field.inner_radius=0.67;field.outer_radius=0.72
+	power_field_material=Models.material(Color("64eaff"),1.0)
+	power_field=Models.mesh_node(field,power_field_material);power_field.visible=false;add_child(power_field)
 	for i in 4:
 		var ghost=GhostScene.instantiate();ghost.tint=COLORS[i];ghost.scale=Vector3.ONE*CELL;add_child(ghost);ghosts.append(ghost)
 	camera=Camera3D.new();camera.fov=45;camera.near=0.15;camera.far=90;add_child(camera);camera.current=true
@@ -153,6 +147,31 @@ func build_world() -> void:
 		var strip:=BoxMesh.new();strip.size=Vector3(0.04,h*0.7,0.03)
 		tower.add_child(Models.mesh_node(strip,Models.material(Color("326887"),0.6),Vector3(0.8,0,0.82)))
 
+func rebuild_maze() -> void:
+	if is_instance_valid(maze_root):remove_child(maze_root);maze_root.queue_free()
+	maze_root=Node3D.new();maze_root.name="Labirinto";add_child(maze_root)
+	walls.clear();pickup_nodes.clear()
+	var stage:Dictionary=Stages.INFO[sim.stage_id]
+	var primary:=Color(stage.primary)
+	var secondary:=Color(stage.secondary)
+	stage_lights[0].light_color=primary;stage_lights[1].light_color=secondary
+	floor_material.set_shader_parameter("line_color",primary)
+	var wall_mesh=Models.bevel_box(Vector3(CELL*0.97,1.18,CELL*0.97),0.09)
+	for y in sim.grid.size():
+		for x in sim.grid[y].length():
+			var cell:=Vector2i(x,y)
+			if sim.floors.has(cell):continue
+			var neon:bool=(x+y*3)%5==0 or x==0 or x==16
+			var color:Color=(primary if (x+y)%2==0 else secondary) if neon else Color(stage.wall)
+			var wall=Models.mesh_node(wall_mesh,Models.material(color,0.40 if neon else 0.0,0.35),coord(Vector2(cell),0.59))
+			walls[cell]=wall;maze_root.add_child(wall)
+			if not neon:
+				var trim_mesh:=BoxMesh.new();trim_mesh.size=Vector3(CELL*0.82,0.025,0.025)
+				wall.add_child(Models.mesh_node(trim_mesh,Models.material(secondary.darkened(0.25),0.4),Vector3(0,0.58,CELL*0.47)))
+	var closing=Models.mesh_node(wall_mesh,Models.material(primary,0.6,0.35),coord(Vector2(Rules.CLOSE_CELL),0.59))
+	closing.visible=false;walls[Rules.CLOSE_CELL]=closing;maze_root.add_child(closing)
+	for c in sim.pickups:create_pickup(c,sim.pickups[c])
+
 func create_pickup(cell:Vector2i,kind:String) -> void:
 	var root:=Node3D.new();root.position=coord(Vector2(cell));root.name="Item_%s_%s"%[cell.x,cell.y]
 	if kind=="fruit":
@@ -164,7 +183,7 @@ func create_pickup(cell:Vector2i,kind:String) -> void:
 		if kind=="power":
 			var ring:=TorusMesh.new();ring.inner_radius=0.27;ring.outer_radius=0.30
 			root.add_child(Models.mesh_node(ring,Models.material(Color("57e4f6"),1.4),Vector3(0,0.1,0)))
-	add_child(root);pickup_nodes[cell]=root
+	maze_root.add_child(root);pickup_nodes[cell]=root
 
 func _unhandled_input(event:InputEvent) -> void:
 	if event is InputEventKey and event.echo:return
@@ -194,6 +213,8 @@ func _unhandled_input(event:InputEvent) -> void:
 			sim.held_dir=bindings[key_stack.back()] if not key_stack.is_empty() else Vector2i.ZERO
 	if event.is_action_pressed("p1_dash"):sim.request_dash()
 	if event.is_action_pressed("risk_wager"):sim.request_risk()
+	if event.is_action_pressed("shield"):sim.request_shield()
+	if event.is_action_pressed("magnet"):sim.request_magnet()
 
 func _notification(what:int) -> void:
 	if what==NOTIFICATION_APPLICATION_FOCUS_OUT:
@@ -229,13 +250,20 @@ func _physics_process(dt:float) -> void:
 			"risk_start":play_sound("risk_start");notify("APOSTA: 2 CAPTURAS NESTE POWER  •  +600")
 			"risk_success":play_sound("risk_success");notify("APOSTA VENCIDA  •  +600  •  +35 ENERGIA")
 			"risk_failed":notify("APOSTA ENCERRADA  •  TENTE NA PRÓXIMA PARTIDA")
+			"shield_armed":play_sound("power",0.85);notify("ESCUDO ATIVO  •  8s / UM CONTATO")
+			"shield_hit":play_sound("near_miss",0.8);notify("ESCUDO ABSORVEU O IMPACTO  •  SAIA DO CERCO")
+			"magnet":play_sound("power",1.15);notify("ÍMÃ ATIVO  •  6s / PONTOS VIZINHOS")
 	if sim.graph_version!=previous_graph:
 		walls[Rules.OPEN_CELL].visible=false;walls[Rules.CLOSE_CELL].visible=true;previous_graph=sim.graph_version
 	for cell in pickup_nodes.keys():
 		if not sim.pickups.has(cell):pickup_nodes[cell].queue_free();pickup_nodes.erase(cell)
 	if sim.status in ["won","game_over"] and not terminal_reported:
 		terminal_reported=true
-		settings.record=maxi(settings.record,sim.score);Store.write_settings(settings)
+		settings.circuit_record=maxi(settings.circuit_record,sim.score)
+		if sim.status=="won":
+			settings.unlocked=maxi(settings.unlocked,mini(2,sim.stage_id+1))
+			settings.medals[sim.stage_id]=int(settings.medals[sim.stage_id]) | int(sim.stage_result().mask)
+		Store.write_settings(settings)
 		show_results()
 
 func _process(dt:float) -> void:
@@ -248,6 +276,12 @@ func _process(dt:float) -> void:
 	var alpha:=Engine.get_physics_interpolation_fraction()
 	var p:Vector2=sim.player.previous.lerp(sim.player.pos,alpha)
 	hero.position=coord(p)
+	power_field.position=coord(p,0.1)
+	power_field.visible=sim.time<maxf(sim.shield_until,sim.grace_until) or sim.time<sim.magnet_until
+	var magnetic:bool=sim.time<sim.magnet_until
+	power_field.scale=Vector3.ONE*(2.0 if magnetic else 1.0)
+	power_field_material.albedo_color=Color("8affb9") if magnetic else Color("64eaff")
+	power_field_material.emission=power_field_material.albedo_color
 	var visual_time:float=sim.time if current_screen!="title" else menu_clock
 	hero.animate(visual_time,sim.player.dir,"",0.0,settings.reduced)
 	for i in ghosts.size():
@@ -350,7 +384,9 @@ func update_trail(dt:float) -> void:
 	if current_screen=="playing" and sim.player.pos.distance_to(sim.player.previous)>0.0001 and sim.time-last_trail>0.035 and not settings.reduced:
 		last_trail=sim.time
 		var hot:bool=sim.time<sim.dash_until or sim.flow>1.0
-		var orb=Models.mesh_node(Models.sphere(0.12 if hot else 0.055),Models.material(Color("ffcb58"),1.8),hero.position+Vector3(0,0.26,0));add_child(orb)
+		var trail_color:=Color("62ebee") if settings.trail_style==1 and total_medals()>=3 else Color("ffcb58")
+		var orb=Models.mesh_node(Models.sphere(0.12 if hot else 0.055),Models.material(trail_color,1.8),hero.position+Vector3(0,0.26,0));add_child(orb)
+		ribbon_material.albedo_color=trail_color;ribbon_material.emission=trail_color
 		trail.append({"node":orb,"life":0.34 if hot else 0.18,"max":0.34 if hot else 0.18})
 	for i in range(trail.size()-1,-1,-1):
 		if current_screen=="playing":trail[i].life-=dt
@@ -438,6 +474,10 @@ func build_ui() -> void:
 	var row:=HBoxContainer.new();row.add_theme_constant_override("separation",28);top.add_child(row)
 	var col:=VBoxContainer.new();row.add_child(col);col.add_child(label("NEO—GRID  /  MV",13,Color("5de0eb")));score_label=label("000000",30);col.add_child(score_label)
 	var livescol:=VBoxContainer.new();row.add_child(livescol);livescol.add_child(label("VIDAS",11,Color("97a9c4")));life_label=label("● ● ●",22,Color("ffce68"));livescol.add_child(life_label)
+	var mission_panel=panel();mission_panel.position=Vector2(25,135);mission_panel.custom_minimum_size=Vector2(300,0);hud.add_child(mission_panel)
+	var mission_box:=VBoxContainer.new();mission_panel.add_child(mission_box)
+	mission_label=label("",13,Color("bce9d4"));mission_box.add_child(mission_label)
+	ability_label=label("",12,Color("a9dff2"));mission_box.add_child(ability_label)
 	var minimap_panel=panel();hud.add_child(minimap_panel)
 	minimap_panel.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
 	minimap_panel.offset_left=-300;minimap_panel.offset_right=-25;minimap_panel.offset_top=20
@@ -491,29 +531,53 @@ func show_title() -> void:
 	current_screen="title";sim.paused=true;hud.visible=false
 	clear_menu("NEO—GRID","MS. PAC-MAN  /  UMA NOVA ÓRBITA ARCADE")
 	menu_content.add_child(label("Corra entre luzes. Transforme a caçada.",13))
-	menu_content.add_child(button("Jogar o demonstrador",start_game))
+	menu_content.add_child(button("Jogar Circuito Neon · 3 fases",start_game))
+	menu_content.add_child(button("Fases, medalhas e extras",show_campaign))
 	menu_content.add_child(button("Como jogar",show_help))
 	menu_content.add_child(button("Configurações",show_settings))
-	menu_content.add_child(button("Recorde  ·  %06d"%settings.record,show_records))
+	menu_content.add_child(button("Melhor pontuação · %06d"%settings.circuit_record,show_records))
 	menu_content.add_child(button("Sair",func():get_tree().quit()))
-	menu_content.add_child(label("MV 0.2.1  •  AÇÃO, FLOW E MAPA",10,Color("7787a2")))
+	menu_content.add_child(label("MV 0.3  •  CIRCUITO NEON",10,Color("7787a2")))
 
-func start_game() -> void:
+func start_game(level:int=0, carry:Dictionary={}) -> void:
+	level=clampi(level,0,2)
 	map_overlay.visible=false
-	sim.reset();sim.start();sim.paused=false;current_screen="playing";hud.visible=true;menu.visible=false;terminal_reported=false;previous_graph=0;music.stream_paused=false
+	sim.reset(level,true,carry);sim.start();sim.paused=false;current_screen="playing";hud.visible=true;menu.visible=false;terminal_reported=false;previous_graph=0;music.stream_paused=false
 	feedback.reset();observed_events.clear();first_frame=true
 	for track in [music,tension_music,hunt_music]:track.stop();track.stream_paused=false;track.play(0.0)
-	walls[Rules.OPEN_CELL].visible=true;walls[Rules.CLOSE_CELL].visible=false
-	for n in pickup_nodes.values():n.queue_free()
-	pickup_nodes.clear()
-	for c in sim.pickups:create_pickup(c,sim.pickups[c])
+	rebuild_maze()
+	for entry in trail:entry.node.queue_free()
+	trail.clear();ribbon.visible=false
 	key_stack.clear();last_trail=0
-	notify("SEU PRÓXIMO MOVIMENTO MUDA TUDO")
+	notify("%d/3 · %s  •  %s"%[level+1,Stages.INFO[level].name,"E: ESCUDO" if level==0 else "E: ESCUDO / R: ÍMÃ"])
+
+func next_stage() -> void:
+	if sim.status!="won" or sim.stage_id>=2:return
+	start_game(sim.stage_id+1,{"score":sim.score,"lives":mini(3,sim.lives+1)})
+
+func total_medals() -> int:
+	var count:=0
+	for mask in settings.medals:count+=Stages.medal_count(int(mask))
+	return count
+
+func show_campaign() -> void:
+	current_screen="campaign";sim.paused=true;hud.visible=false;pause_music(true)
+	clear_menu("CIRCUITO NEON","%d / 9 medalhas  ·  supere sua melhor rota"%total_medals())
+	for i in 3:
+		var unlocked:bool=i<=settings.unlocked
+		var stars:int=Stages.medal_count(int(settings.medals[i]))
+		var entry=button("%d · %s  %s"%[i+1,Stages.INFO[i].name,"★".repeat(stars)+"☆".repeat(3-stars) if unlocked else "BLOQUEADA"],func():start_game(i))
+		entry.disabled=not unlocked;menu_content.add_child(entry)
+	menu_content.add_child(label("Cada fase: concluir + desafio + tempo-alvo.\nMedalhas de tentativas diferentes se somam.",13,Color("9fc5d3")))
+	var cosmetic=button("Rastro: %s"%("Turquesa" if settings.trail_style==1 else "Dourado"),func():settings.trail_style=1-settings.trail_style;Store.write_settings(settings);show_campaign())
+	cosmetic.disabled=total_medals()<3;menu_content.add_child(cosmetic)
+	menu_content.add_child(label("Rastro turquesa: obtenha 3 medalhas.\nÍmã: disponível a partir da fase 2.",12,Color("9fc5d3")))
+	menu_content.add_child(button("Voltar",show_title))
 
 func pause_game() -> void:
 	current_screen="pause";sim.paused=true;key_stack.clear();sim.held_dir=Vector2i.ZERO;sim.buffer_dir=Vector2i.ZERO;pause_music(true)
 	clear_menu("PAUSA","Seu tempo está preservado.")
-	menu_content.add_child(button("Continuar",resume_game));menu_content.add_child(button("Mapa da área · M",show_map));menu_content.add_child(button("Reiniciar",start_game));menu_content.add_child(button("Configurações",show_settings));menu_content.add_child(button("Voltar à abertura",show_title));menu_content.add_child(button("Sair",show_quit_confirm))
+	menu_content.add_child(button("Continuar",resume_game));menu_content.add_child(button("Mapa da área · M",show_map));menu_content.add_child(button("Reiniciar circuito",start_game));menu_content.add_child(button("Configurações",show_settings));menu_content.add_child(button("Voltar à abertura",show_title));menu_content.add_child(button("Sair",show_quit_confirm))
 
 func show_map() -> void:
 	pause_game()
@@ -526,12 +590,14 @@ func resume_game() -> void:
 
 func show_help() -> void:
 	current_screen="help";sim.paused=true;clear_menu("COMO JOGAR")
-	for text in ["WASD / setas  ·  mover e antecipar curvas","Espaço  ·  dash, custo de 40 de energia","C  ·  vista oblíqua / superior   ·   F11  ·  tela cheia","P / Esc  ·  pausa   ·   Enter  ·  iniciar","Colete a esfera de luz para capturar fantasmas.","Capturas ativam Flow. Frutas abrem novas rotas.","Colete todos os itens para concluir a área MV."]:
+	for text in ["WASD / setas  ·  mover e antecipar curvas","Espaço  ·  dash, custo de 40 de energia","C  ·  vista oblíqua / superior   ·   F11  ·  tela cheia","P / Esc  ·  pausa   ·   Enter  ·  iniciar","Colete a esfera de luz para capturar fantasmas.","Capturas ativam Flow. Frutas abrem novas rotas.","Limpe a fase para avançar; +1 vida até o limite de 3."]:
 		menu_content.add_child(label(text,13))
 	menu_content.add_child(label("Q durante Power · aposte 20E em 2 capturas: +600 / +35E.",13))
 	menu_content.add_child(label("Uma aposta por fase. Não altera vidas nem colisões.",13))
 	menu_content.add_child(label("Ritmo sobe após aviso. Quase colisão só conta ao escapar.",13))
 	menu_content.add_child(label("M · mapa ampliado com pausa. O HUD mostra todos os itens restantes.",13))
+	menu_content.add_child(label("E · escudo de um impacto / 8s. R · ímã de pontos / 6s (fase 2+).",13))
+	menu_content.add_child(label("Uma carga por poder por fase. Morrer encerra os efeitos; não recarrega.",13))
 	menu_content.add_child(label("Fantasmas que voltaram à cor original já são perigosos.",13))
 	menu_content.add_child(button("Voltar",show_title))
 
@@ -549,13 +615,23 @@ func show_settings() -> void:
 	menu_content.add_child(button("Voltar",func():pause_game() if hud.visible else show_title()))
 
 func show_records() -> void:
-	current_screen="records";clear_menu("SEU RECORDE","MV • regras 0.1 • um jogador")
-	menu_content.add_child(label("%06d"%settings.record,48));menu_content.add_child(button("Voltar",show_title))
+	current_screen="records";clear_menu("SEU RECORDE","Circuito Neon 0.3 • um jogador")
+	menu_content.add_child(label("%06d"%settings.circuit_record,48))
+	menu_content.add_child(label("Recorde anterior MV: %06d"%settings.record,13))
+	menu_content.add_child(button("Voltar",show_title))
 
 func show_results() -> void:
-	current_screen="results";sim.paused=true
-	clear_menu("ÁREA CONCLUÍDA" if sim.status=="won" else "FIM DE JOGO","%06d pontos  •  Recorde %06d"%[sim.score,settings.record])
-	menu_content.add_child(button("Jogar novamente",start_game));menu_content.add_child(button("Voltar à abertura",show_title))
+	current_screen="results";sim.paused=true;hud.visible=false;pause_music(true)
+	var won:bool=sim.status=="won"
+	clear_menu(("CIRCUITO CONCLUÍDO!" if sim.stage_id==2 else "FASE CONCLUÍDA!") if won else "FIM DE JOGO","%06d pontos  •  Melhor %06d"%[sim.score,settings.circuit_record])
+	if won:
+		var result:Dictionary=sim.stage_result()
+		menu_content.add_child(label("★".repeat(result.stars)+"☆".repeat(3-result.stars),32,Color("ffdb76")))
+		menu_content.add_child(label("Área limpa: +500\n%s: %s\nTempo %.1fs / alvo %.0fs: %s"%[Stages.INFO[sim.stage_id].challenge,"+250" if result.challenge else "tente novamente",sim.time,Stages.INFO[sim.stage_id].par,"+250" if result.fast else "tente novamente"],14))
+		if sim.stage_id<2:
+			menu_content.add_child(button("Próxima fase · +1 vida (máx. 3)",next_stage))
+		if total_medals()>=3:menu_content.add_child(label("Extra liberado: rastro turquesa em Fases e extras.",12,Color("8affb9")))
+	menu_content.add_child(button("Recomeçar circuito",start_game));menu_content.add_child(button("Fases e extras",show_campaign));menu_content.add_child(button("Voltar à abertura",show_title))
 
 func show_quit_confirm() -> void:
 	sim.paused=true;current_screen="quit";clear_menu("ENCERRAR PARTIDA?","A partida atual será encerrada.")
@@ -578,7 +654,18 @@ func update_hud() -> void:
 	flow_label.text="FLOW ×%.1f    ·    DASH %d%%"%[sim.flow,sim.energy]
 	energy_bar.value=sim.energy;power_bar.value=maxf(0,sim.power_until-sim.time)
 	var hunting:bool=sim.time<sim.power_until
-	phase_label.text=("CAÇA  /  CADEIA %d"%sim.combo if hunting else "FUGA  /  RITMO %d"%sim.pressure_level)
+	phase_label.text="%d/3 · %s\n%s"%[sim.stage_id+1,Stages.INFO[sim.stage_id].name,"CAÇA / CADEIA %d"%sim.combo if hunting else "FUGA / RITMO %d"%sim.pressure_level]
+	var stage:Dictionary=Stages.INFO[sim.stage_id]
+	var challenge_status:String="Cumprido" if sim.challenge_met() else "Em andamento"
+	if sim.stage_id==0 and not sim.challenge_met():challenge_status="%d / 2 capturas"%sim.stage_captures
+	if sim.stage_id==1:challenge_status="Sem perdas até agora" if sim.stage_deaths==0 else "Tente na próxima partida"
+	if sim.stage_id==2 and sim.risk.state=="failed":challenge_status="Tente na próxima partida"
+	mission_label.text="DESAFIO · %s\n%s  |  %.0fs / %.0fs"%[stage.challenge,challenge_status,sim.time,stage.par]
+	var shield_text:String="ATIVO %.1fs"%maxf(0,sim.shield_until-sim.time) if sim.time<sim.shield_until else ("PRONTO" if sim.shield_charges>0 else "SEM CARGA")
+	if sim.time<sim.grace_until:shield_text="IMPACTO ABSORVIDO"
+	var magnet_text:String="ATIVO %.1fs"%maxf(0,sim.magnet_until-sim.time) if sim.time<sim.magnet_until else ("PRONTO" if sim.magnet_charges>0 else "SEM CARGA")
+	if sim.stage_id==0:magnet_text="LIBERA NA FASE 2"
+	ability_label.text="E · ESCUDO: %s\nR · ÍMÃ: %s"%[shield_text,magnet_text]
 	phase_label.modulate=Color("76e9ff") if hunting else Color("ffcb79").lerp(Color("ff7c88"),feedback.threat*0.6)
 	power_caption.text="CAÇA  •  %.1fs"%maxf(0,sim.power_until-sim.time) if hunting else "POWER PELLET  /  BUSQUE A LUZ"
 	match sim.risk.state:

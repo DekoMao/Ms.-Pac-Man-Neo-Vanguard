@@ -5,7 +5,7 @@ const LAST_ITEMS := 10
 
 func map_layout() -> Dictionary:
 	if sim == null: return {}
-	var dimensions := Vector2(sim.GRID[0].length(), sim.GRID.size())
+	var dimensions := Vector2(sim.grid[0].length(), sim.grid.size())
 	var available := (size - Vector2(8,8)).max(Vector2.ZERO)
 	var cell := minf(available.x / dimensions.x, available.y / dimensions.y)
 	var extent := dimensions * cell
@@ -16,8 +16,8 @@ func _draw() -> void:
 	if layout.is_empty() or layout.cell <= 0.0: return
 	var cell:float = layout.cell
 	var origin:Vector2 = layout.origin
-	for y in sim.GRID.size():
-		for x in sim.GRID[y].length():
+	for y in sim.grid.size():
+		for x in sim.grid[y].length():
 			var c := Vector2i(x,y)
 			draw_rect(Rect2(origin + Vector2(c)*cell, Vector2.ONE*maxf(0.0,cell-0.7)),
 				Color("20384b") if sim.floors.has(c) else Color("0a1020"))

@@ -62,6 +62,11 @@ def main():
         map_tests=json.loads((evidence/'testes_mapa.json').read_text())
         if map_tests['executed']<1 or map_tests['failed']:
             raise RuntimeError('Map progress tests did not execute and pass')
+        (evidence/'testes_circuito.json').unlink(missing_ok=True)
+        run('testes_circuito',['--script','res://tests/test_campaign.gd'],90)
+        campaign=json.loads((evidence/'testes_circuito.json').read_text())
+        if campaign['executed']<1 or campaign['failed']:
+            raise RuntimeError('Campaign tests did not execute and pass')
         run('smoke_headless',['--fixed-fps','60','--quit-after','240','--','--smoke'],45)
         run('export_windows',['--export-release','Windows Desktop',str(target)],180)
         resources=embed(target,ROOT/'assets/icon.ico')

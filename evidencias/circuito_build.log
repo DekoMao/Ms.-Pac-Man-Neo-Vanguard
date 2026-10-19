@@ -1,0 +1,10 @@
+importacao: OK
+testes_logica: OK
+testes_integracao: OK
+testes_acao: OK
+testes_mapa: OK
+testes_circuito: OK
+smoke_headless: OK
+export_windows: OK
+pacote_embutido: OK
+Windows PE: /workspace/scratch/7740f940f7a4/neogrid-map/entrega/MsPacMan_Aperfeicoado/MsPacMan_Aperfeicoado.exe
