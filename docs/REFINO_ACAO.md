@@ -25,7 +25,7 @@ Quase colisão exige saída segura; tocar, morrer, capturar ou passar por fantas
 vulnerável não produz recompensa de escape. As cores originais indicam fantasmas
 que já voltaram da casa e são perigosos, preservando a imunidade da base.
 
-A aposta não é necessária para concluir a área. Falhar perde apenas os 20E
+A aceitação exige pelo menos 2s de Power restantes e 20E. A aposta não é necessária para concluir a área. Falhar perde apenas os 20E
 voluntariamente gastos; não tira vidas, pontos acumulados ou Power. Uma nova esfera
 Power não renova a aposta ativa. Morte, expiração ou nova janela encerram a tentativa.
 

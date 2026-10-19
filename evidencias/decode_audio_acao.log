@@ -1,0 +1,48 @@
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from '/workspace/NeoGrid_Refino/entrega/NeoGrid_Acao_45s.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.103
+  Duration: 00:00:45.17, start: 0.000000, bitrate: 7789 kb/s
+  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuvj420p(pc, bt470bg/unknown/unknown, progressive), 1280x720 [SAR 1:1 DAR 16:9], 7625 kb/s, 24 fps, 24 tbr, 12288 tbn (default)
+      Metadata:
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.101 libx264
+  Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, stereo, fltp, 158 kb/s (default)
+      Metadata:
+        handler_name    : SoundHandler
+        vendor_id       : [0][0][0][0]
+[Parsed_volumedetect_0 @ 0x55aa21dc3780] n_samples: 0
+Stream mapping:
+  Stream #0:0 -> #0:0 (h264 (native) -> wrapped_avframe (native))
+  Stream #0:1 -> #0:1 (aac (native) -> pcm_s16le (native))
+Press [q] to stop, [?] for help
+Output #0, null, to 'pipe:':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.103
+  Stream #0:0(und): Video: wrapped_avframe, yuvj420p(pc, bt470bg/unknown/unknown, progressive), 1280x720 [SAR 1:1 DAR 16:9], q=2-31, 200 kb/s, 24 fps, 24 tbn (default)
+      Metadata:
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.101 wrapped_avframe
+  Stream #0:1(und): Audio: pcm_s16le, 48000 Hz, stereo, s16, 1536 kb/s (default)
+      Metadata:
+        handler_name    : SoundHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.101 pcm_s16le
+frame=  177 fps=0.0 q=-0.0 size=N/A time=00:00:07.37 bitrate=N/A speed=14.7x    frame=  412 fps=412 q=-0.0 size=N/A time=00:00:17.16 bitrate=N/A speed=17.2x    frame=  613 fps=408 q=-0.0 size=N/A time=00:00:25.54 bitrate=N/A speed=  17x    frame=  829 fps=414 q=-0.0 size=N/A time=00:00:34.54 bitrate=N/A speed=17.3x    frame= 1038 fps=415 q=-0.0 size=N/A time=00:00:43.25 bitrate=N/A speed=17.3x    [Parsed_volumedetect_0 @ 0x7fe00c002400] n_samples: 4337664
+[Parsed_volumedetect_0 @ 0x7fe00c002400] mean_volume: -37.1 dB
+[Parsed_volumedetect_0 @ 0x7fe00c002400] max_volume: -16.3 dB
+[Parsed_volumedetect_0 @ 0x7fe00c002400] histogram_16db: 24
+[Parsed_volumedetect_0 @ 0x7fe00c002400] histogram_17db: 62
+[Parsed_volumedetect_0 @ 0x7fe00c002400] histogram_18db: 250
+[Parsed_volumedetect_0 @ 0x7fe00c002400] histogram_19db: 592
+[Parsed_volumedetect_0 @ 0x7fe00c002400] histogram_20db: 1566
+[Parsed_volumedetect_0 @ 0x7fe00c002400] histogram_21db: 3096
+[out#0/null @ 0x55aa21ce4140] video:466KiB audio:8472KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown
+frame= 1084 fps=416 q=-0.0 Lsize=N/A time=00:00:45.16 bitrate=N/A speed=17.3x    

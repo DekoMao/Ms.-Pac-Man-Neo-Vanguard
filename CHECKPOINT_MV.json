@@ -7,8 +7,13 @@
   "verificacoes_passaram": 87,
   "export_windows_real": true,
   "pck_replay_45s_verificado_no_host": true,
-  "captura_continua": "em andamento",
+  "captura_continua": "45.166667s; 1084 frames; 45s de simulacao; sem cortes",
   "native_windows_tested": false,
   "physical_gpu_tested": false,
-  "multiplayer_novos_modos": "nao expandidos"
+  "multiplayer_novos_modos": "nao expandidos",
+  "captura_replay_corresponde_ao_pck_e_fontes": true,
+  "runtime_code_commit": "86883b81504db41d4765ffc40a53a2f32f0f2759",
+  "entrega_git_destino": "entrega/acao-20261019",
+  "status": "VALIDADO_NO_HOST_WINDOWS_E_GPU_FISICA_PENDENTES",
+  "zip_portatil_verificado": true
 }

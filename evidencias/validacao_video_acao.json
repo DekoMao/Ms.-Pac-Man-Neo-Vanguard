@@ -1,0 +1,19 @@
+{
+  "duration_seconds": 45.166667,
+  "simulation_seconds": 45.0,
+  "frames": 1084,
+  "fps": 24,
+  "resolution": [
+    1280,
+    720
+  ],
+  "codec_video": "h264",
+  "codec_audio": "aac",
+  "full_decode_success": true,
+  "audio_max_volume_db": -16.3,
+  "continuous_no_cuts": true,
+  "source_is_real_godot_execution": true,
+  "controls": "deterministic recorded commands",
+  "native_windows_execution": false,
+  "physical_gpu": false
+}

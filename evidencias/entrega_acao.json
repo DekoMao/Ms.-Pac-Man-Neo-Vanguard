@@ -1,0 +1,28 @@
+{
+  "version": "0.2.0-action",
+  "runtime_code_commit": "86883b81504db41d4765ffc40a53a2f32f0f2759",
+  "artifacts": [
+    {
+      "name": "MsPacMan_Aperfeicoado.exe",
+      "bytes": 105860208,
+      "sha256": "e8a73a94e4a51359fbb50fa089c59a97a15f10e502469c0c89bec6001ebe34da"
+    },
+    {
+      "name": "NeoGrid_Acao_0_2_Windows_x64.zip",
+      "bytes": 36876090,
+      "sha256": "94f3756a304d796aabf90c77e7ab4ae5abacfd1a1bcdaac604b94a2bab3e11d0"
+    },
+    {
+      "name": "NeoGrid_Acao_45s.mp4",
+      "bytes": 43978700,
+      "sha256": "46f9afbdcd7b8751028889787850fdc81cf1f2394188e907c9dd82bf09087989"
+    }
+  ],
+  "zip_crc_valid": true,
+  "zip_entries": 10,
+  "zip_extracted_hashes_valid": true,
+  "original_portable_preserved_sha256": "147e588e183df6ccbed05a6487a77ca67ed9f0383417dca80a93275af9add79c",
+  "checks_passed": 87,
+  "native_windows_tested": false,
+  "physical_gpu_tested": false
+}

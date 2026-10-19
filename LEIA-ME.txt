@@ -4,7 +4,8 @@ REFINO DA BASE APROVADA
 NOVIDADES E CONTROLES
 Ritmo de perseguicao sobe em tres niveis, sempre com aviso previo.
 Dash, quase colisoes e capturas recebem resposta de camera e audio.
-Q durante Power: aposta opcional de 20 de energia. Capture dois fantasmas
+Q com pelo menos 2s de Power restantes: aposta opcional de 20 de energia.
+Capture dois fantasmas
 antes do fim desse mesmo Power para ganhar 600 pontos e 35 de energia.
 Uma tentativa por fase; falhar nao tira vidas. Novo Power nao prolonga a aposta.
 Em Configuracoes, ajuste Intensidade da camera ate zero ou ative
