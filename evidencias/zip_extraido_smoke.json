@@ -1,0 +1,22 @@
+{
+  "zip": "/workspace/NeoGrid/entrega/MsPacMan_Aperfeicoado_Windows_x64.zip",
+  "zip_crc_verified": true,
+  "all_inner_manifest_hashes_verified": true,
+  "extracted_path": "/tmp/NeoGrid Teste do Jogo Versão Final w26hi0qf/MsPacMan_Aperfeicoado",
+  "command": [
+    "godot",
+    "--headless",
+    "--main-pack",
+    "/tmp/NeoGrid Teste do Jogo Versão Final w26hi0qf/MsPacMan_Aperfeicoado/MsPacMan_Aperfeicoado.exe",
+    "--fixed-fps",
+    "60",
+    "--quit-after",
+    "240",
+    "--",
+    "--smoke"
+  ],
+  "exit_code": 0,
+  "expected_functional_marker_seen": true,
+  "native_windows_execution": false,
+  "host": "Linux Godot; embedded PCK test only"
+}

@@ -1,0 +1,204 @@
+{
+	"engine": "4.6.3-stable (official)",
+	"executed": 39,
+	"failed": 0,
+	"passed": 39,
+	"results": [
+		{
+			"detail": "",
+			"id": "MAP-01-connected",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "MAP-02-rectangular",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "MAP-03-items-reachable",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "TIME-01-pause",
+			"passed": true
+		},
+		{
+			"detail": "(2.599998, 9.0)",
+			"id": "MOVE-01-speed",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "MOVE-02-walls",
+			"passed": true
+		},
+		{
+			"detail": "(4.0, 2.693333)",
+			"id": "MOVE-03-buffered-turn",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "DRIFT-01-new-turn",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "DRIFT-02-held-no-farming",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "DRIFT-03-outside-window",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "DASH-01-insufficient",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "DASH-02-empty",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "DASH-03-exact",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "DASH-04-cooldown",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "DASH-05-blocked-no-cost",
+			"passed": true
+		},
+		{
+			"detail": "(3.0, 9.0)",
+			"id": "DASH-06-distance",
+			"passed": true
+		},
+		{
+			"detail": "score=20 energy=70.000000",
+			"id": "COLLECT-01-swept-single",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "COLLECT-02-no-duplicate",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "COLLIDE-01-relative-sweep",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "COLLIDE-02-later-power-cannot-save",
+			"passed": true
+		},
+		{
+			"detail": "score=250 state=returning",
+			"id": "COLLIDE-03-earlier-power-capture",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "FLOW-01-capture",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "CAPTURE-01-returning-no-farming",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "CAPTURE-02-window-immunity",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "LIVES-01-overlapping-ghosts",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "FLOW-02-expiry",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "POWER-01-expiry",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "POWER-02-replace-duration",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "GRAPH-01-valid-swap",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "GRAPH-02-atomic-swap",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "GRAPH-03-occupied-defer",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "GRAPH-04-cancel-after-limit",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "GRAPH-05-isolated-rejected",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "RESET-01-clean",
+			"passed": true
+		},
+		{
+			"detail": "[[(7.399994, 9.0), 0, 100.0, 2.0], [(7.399994, 9.0), 0, 100.0, 2.0], [(7.399994, 9.0), 0, 100.0, 2.0]]",
+			"id": "TIME-02-30-60-144-equivalence",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "STORE-01-missing-defaults",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "STORE-02-save",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "STORE-03-reload",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "STORE-04-corrupt-defaults",
+			"passed": true
+		}
+	],
+	"suite": "MV rules and persistence"
+}

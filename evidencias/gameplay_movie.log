@@ -1,0 +1,12 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+Vulkan 1.4.305 - Forward+ - Using Device #0: Unknown - llvmpipe (LLVM 19.1.7, 256 bits)
+
+Movie Maker mode enabled, recording movie in 1280×720 @ 24 FPS...
+NEOGRID_RUNTIME {"active_renderer":"forward_plus","adapter":"llvmpipe (LLVM 19.1.7, 256 bits)","display":"X11","driver":"vulkan","engine":"4.6.3-stable (official)","os":"Linux","requested_renderer":"forward_plus","version":"0.1.0-mv"}
+--------------------------------------------------------------------------------
+Done recording movie at path: /tmp/neogrid-mv-final.avi
+240 frames at 24 FPS (movie length: 00:00:10:00), recorded in 00:02:00 (8% of real-time speed).
+CPU render time: 0.29 seconds (average: 1.21 ms/frame)
+GPU render time: 95.49 seconds (average: 397.89 ms/frame)
+Encoding time: 3.16 seconds (average: 13.15 ms/frame)
+--------------------------------------------------------------------------------

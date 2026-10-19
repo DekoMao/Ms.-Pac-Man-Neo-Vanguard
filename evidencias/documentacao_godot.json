@@ -1,0 +1,27 @@
+[
+  {
+    "url": "https://docs.godotengine.org/en/4.6/tutorials/export/exporting_for_windows.html",
+    "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+  },
+  {
+    "url": "https://docs.godotengine.org/en/4.6/tutorials/editor/command_line_tutorial.html",
+    "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/godotengine/godot-docs/4.6/tutorials/export/exporting_for_windows.rst",
+    "retrieved": true,
+    "excerpts": [
+      ".. _doc_exporting_for_windows:\n\nExporting for Windows\n=====================\n\n.. seealso::\n\n    This page describes how to export a Godot project to Windows.\n    If you're looking to compile editor or export template binaries from source instead,\n    read :ref:`doc_compiling_for_windows`.\n\nThe simplest way to distribute a game for PC is to copy the executable\n(``godot.exe``), compress the folder and send it to someone else. However, this\nis often not desired.\n\nGodot offers a more elegant approach for PC distribution when using the export\nsystem. When exporting for Windows, the exporter takes all the project files and\ncreates a ``data.pck`` file. This file is bundled with a specially optim"
+    ]
+  },
+  {
+    "url": "https://raw.githubusercontent.com/godotengine/godot-docs/4.6/tutorials/editor/command_line_tutorial.rst",
+    "retrieved": true,
+    "excerpts": [
+      "------------------------------------------------------------------------+\n| ``--export-release <preset> <path>``                             | |editor| Export the project in release mode using the given preset and output path. The preset name should match one defined in \"export_presets.cfg\".   |\n|                                                                  | ``<path>`` should be absolute or relative to the project directory, and include the filename for the binary (e.g. \"builds/game.exe\"). The target        |\n|                                                                  | directory must exist.                                                                                                                        ",
+      "age:: img/editor.svg\n\n**Legend**\n\n- |release| Available in editor builds, debug export templates and release export templates.\n- |debug| Available in editor builds and debug export templates only.\n- |extended| Only available in editor builds, and export templates compiled with ``disable_path_overrides=false``.\n- |editor| Only available in editor builds.\n\nNote that unknown command line arguments have no effect whatsoever. The engine\nwill **not** warn you when using a command line argument that doesn't exist with a\ngiven build type.\n\n**General options**\n\n+----------------------------+-------------------------------------------------------------------------------+\n| Command                    | Description                  ",
+      "------------------------------------------------------------------------+\n| ``--write-movie <file>``                 | |release| Run the engine in a way that a movie is written (usually with .avi or .png extension).                                                             |\n|                                          | ``--fixed-fps`` is forced when enabled, but can be used to change movie FPS.                                                                                 |\n|                                          | ``--disable-vsync`` can speed up movie writing but makes interaction more difficult.                                                                         |\n|                                          |",
+      "times are pretty fast, making it\nsuitable for this workflow.\n\n.. note::\n\n    On Windows and Linux, you can run a Godot binary in a terminal by specifying\n    its relative or absolute path.\n\n    On macOS, the process is different due to Godot being contained within a\n    ``.app`` bundle (which is a *folder*, not a file). To run a Godot binary\n    from a terminal on macOS, you have to ``cd`` to the folder where the Godot\n    application bundle is located, then run ``Godot.app/Contents/MacOS/Godot``\n    followed by any command line arguments. If you've renamed the application\n    bundle from ``Godot`` to another name, make sure to edit this command line\n    accordingly.\n\nCommand line reference\n----------------------\n\n.. |re"
+    ]
+  }
+]

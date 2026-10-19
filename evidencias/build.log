@@ -1,0 +1,7 @@
+importacao: OK
+testes_logica: OK
+testes_integracao: OK
+smoke_headless: OK
+export_windows: OK
+pacote_embutido: OK
+Windows PE: /workspace/NeoGrid/entrega/MsPacMan_Aperfeicoado/MsPacMan_Aperfeicoado.exe

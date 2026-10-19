@@ -1,0 +1,55 @@
+{
+  "status": "ENTREGA_PARCIAL_MV",
+  "runtime": "Godot 4.6.3, Linux/X11/Vulkan/Forward+, llvmpipe",
+  "automated_checks": 53,
+  "failed": 0,
+  "native_windows_tested": false,
+  "visual_gate_approved": false,
+  "physical_gpu_profile_tested": false,
+  "original_windows_folder_inspected": false,
+  "M1_M2_M3": "Não iniciados; gate MV pendente",
+  "artifact": {
+    "editor_version": "4.6.3.stable.official.7d41c59c4",
+    "artifact": "/workspace/NeoGrid/entrega/MsPacMan_Aperfeicoado/MsPacMan_Aperfeicoado.exe",
+    "bytes": 105501320,
+    "sha256": "50eb9573090ad2c43a14e658ee0553f5d4c9ff70ebbf9fe14e1621d64f0d61a1",
+    "pe_amd64": true,
+    "embedded_pack_smoke_on_host": true,
+    "native_windows_tested": false,
+    "code_signed": false
+  },
+  "movie": {
+    "frames_after_warmup": 192,
+    "gpu_time_ms": null,
+    "lives": 2,
+    "note": "Software renderer / Movie Maker is not native Windows validation or a physical GPU benchmark.",
+    "p95_ms": 988.768,
+    "p99_ms": 1237.819,
+    "preset": 2,
+    "recorded_events": {
+      "capture": 2,
+      "dash": 4,
+      "death": 1,
+      "drift": 5,
+      "fruit": 1,
+      "pellet": 16,
+      "power": 2,
+      "topology": 1,
+      "warning": 1
+    },
+    "resolution": "(1280.0, 720.0)",
+    "runtime": {
+      "active_renderer": "forward_plus",
+      "adapter": "llvmpipe (LLVM 19.1.7, 256 bits)",
+      "display": "X11",
+      "driver": "vulkan",
+      "engine": "4.6.3-stable (official)",
+      "os": "Linux",
+      "requested_renderer": "forward_plus",
+      "version": "0.1.0-mv"
+    },
+    "score": 970,
+    "simulation_seconds": 9.99166666666674,
+    "wall_clock_frame_times_ms": true
+  }
+}

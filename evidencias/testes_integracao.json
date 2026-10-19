@@ -1,0 +1,64 @@
+{
+	"executed": 14,
+	"failed": 0,
+	"passed": 14,
+	"results": [
+		{
+			"id": "AUDIO-01-full-musical-loop",
+			"passed": true
+		},
+		{
+			"id": "UI-01-title-and-menu",
+			"passed": true
+		},
+		{
+			"id": "SCENE-01-real-actors",
+			"passed": true
+		},
+		{
+			"id": "UI-02-enter-start",
+			"passed": true
+		},
+		{
+			"id": "UI-03-pause-stops-time",
+			"passed": true
+		},
+		{
+			"id": "UI-04-explicit-resume",
+			"passed": true
+		},
+		{
+			"id": "UI-05-camera-toggle",
+			"passed": true
+		},
+		{
+			"id": "UI-06-focus-pauses",
+			"passed": true
+		},
+		{
+			"id": "UI-07-help",
+			"passed": true
+		},
+		{
+			"id": "UI-08-settings",
+			"passed": true
+		},
+		{
+			"id": "UI-09-records",
+			"passed": true
+		},
+		{
+			"id": "UI-10-restart-clears-run",
+			"passed": true
+		},
+		{
+			"id": "UI-11-quit-confirmation",
+			"passed": true
+		},
+		{
+			"id": "UI-12-window-close-while-paused",
+			"passed": true
+		}
+	],
+	"suite": "MV scene and input routing (headless, synthetic keys)"
+}

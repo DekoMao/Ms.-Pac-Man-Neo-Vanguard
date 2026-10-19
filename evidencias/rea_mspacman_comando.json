@@ -1,0 +1,11 @@
+{
+  "command": [
+    "/tmp/rea-npm-cache/_npx/a1722018f28f9df2/node_modules/.bin/rea",
+    "inspect-artifact",
+    "/workspace/attachments/439d98c5-cda3-41f2-bb6d-3399dbab3b19/mspacman.zip",
+    "--json"
+  ],
+  "cwd": "/workspace",
+  "exit_code": 0,
+  "observed_utc": "2026-10-19T05:52:40.494975+00:00"
+}

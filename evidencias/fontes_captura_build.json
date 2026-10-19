@@ -1,0 +1,32 @@
+{
+  "version": "0.1.0-mv",
+  "sha256": {
+    "scripts/build.py": "f674f08eddb376faae97133ecc1064c115b6f76af0b23a2d041af6b42a6ff852",
+    "scripts/build_windows.ps1": "edcb50db9bbda137457910756b9b35b8bb479220536b4275e6240c1b609de4ba",
+    "scripts/embed_windows_resources.py": "e1e504bf659fdd8a59b5f42122736405da7749c749e355a7d68faf2cac7238be",
+    "scripts/main.gd": "f979df18ad374a6718c6945f1f1ccca8f7a542f7142fd551f29fec61ec73ac82",
+    "scripts/minimap.gd": "343425a859828a3c8f56e600fe028c1f235871f085255b1042fa7db37c56cdbc",
+    "scripts/models.gd": "4756e0f58625f8c5e9d3de3d4f6bb96872c2aaf779e28e6f845d74de2a3301f2",
+    "scripts/rules.gd": "66175f0c7de6eeddbad699ea7d584d3a89aad5e32c73610b2d32e883426e3e9f",
+    "scripts/storage.gd": "392ffdd5101ddf8353f737ff583df160a5e85cde9420538e48157d0d80af84b3",
+    "scripts/visual_actor.gd": "654bda3fbed1de19f1cdd8326640a44d594dfceece007292c2e6024429649a49",
+    "scenes/ghost.tscn": "cc0e8fa61e83a9c28204307fa6635ea52472d7404bf452c79fbe315441ded9d8",
+    "scenes/main.tscn": "df4a88a3cab449be74eb398a399262c297da21efe828138a7420a8573bb94e81",
+    "scenes/player.tscn": "5de600229eabc3df04161bece0c4ba96364b52e13dd0b4e26e67d7e8d9f0ca09",
+    "assets/DejaVuSans.ttf": "57f73e11f51999432bf7ab22ce55b6f945d5eca1bf824404cfa9ec2e3718c84e",
+    "assets/audio/capture.wav": "70e34c72d372137463cb4d07f7a1a755ccad2cab2c682b48069d58a45e8a40cb",
+    "assets/audio/dash.wav": "8272f10a4f8c8f678db5817ba554ea6b4bcda38ab1a070cc38c10516298b2d6a",
+    "assets/audio/death.wav": "f9f914bf3fd56baa898ff155f71c7ff6fb305bb1af6576b799b2a1ed9f6d9790",
+    "assets/audio/fruit.wav": "cb6a1ad02c4d1543f251f89fb92df229eeadfcad04d5964da830d0a5f492b49c",
+    "assets/audio/pellet.wav": "fd592e747045f373555d13f862ce5e890ae9067d299b409aa168d8438bdb391f",
+    "assets/audio/power.wav": "685fd00826e356148e9dcbaaf545d2af127f62c6d4e522f981715d1a531446e2",
+    "assets/audio/pulse.wav": "56d0671ff15196e950cd5072212ae9b4ab3581ef67123c80abcebb4f5b3a6ff9",
+    "assets/balance.json": "44261ea9a236f4e2cc8dd693e4e784556cb81e36b7b7ffeb24a528022e452c96",
+    "assets/floor.gdshader": "5278865c3f7251548823c4042153163cbf3d39a7d2678da5ce87b9f8c8f57473",
+    "assets/icon.ico": "468367907d10ac1ded37b5a7dcbfb18d296549ce9aca1b3dc739bc917e1ebdf6",
+    "assets/icon.svg": "eec4373aeb3c7da74007f23652e313d30b02b7156bccda2f9212fc897a134ac4",
+    "project.godot": "f31b13e1a0617033081acf77b4583534146274ead43fea62a7f71e5e91c79cd5",
+    "export_presets.cfg": "5d35e307a12bf774c347fde0772beacc4926f276695bff443cf5cd62cdb91dbd"
+  },
+  "note": "Final runtime code/assets frozen for export and final Movie Maker capture; documents and results are updated separately."
+}

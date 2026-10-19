@@ -1,0 +1,12 @@
+{
+  "status": "ENTREGA_PARCIAL",
+  "project": "/workspace/NeoGrid",
+  "prompt": "3.2",
+  "M0": "Base e exportação preparadas; análise da pasta Windows pendente",
+  "MV": "Fontes/cenas/testes/PE/vídeo reais; homologação visual/GPU/Windows parcial",
+  "M1": "Não iniciado",
+  "M2": "Não iniciado",
+  "M3": "Não iniciado",
+  "previous_checkpoint_preserved": true,
+  "next_steps": "docs/RETOMADA.md"
+}

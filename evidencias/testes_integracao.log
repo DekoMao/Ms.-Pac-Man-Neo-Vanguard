@@ -1,0 +1,18 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+NEOGRID_RUNTIME {"active_renderer":"forward_plus","adapter":"","display":"headless","driver":"vulkan","engine":"4.6.3-stable (official)","os":"Linux","requested_renderer":"forward_plus","version":"0.1.0-mv"}
+PASS AUDIO-01-full-musical-loop
+PASS UI-01-title-and-menu
+PASS SCENE-01-real-actors
+PASS UI-02-enter-start
+PASS UI-03-pause-stops-time
+PASS UI-04-explicit-resume
+PASS UI-05-camera-toggle
+PASS UI-06-focus-pauses
+PASS UI-07-help
+PASS UI-08-settings
+PASS UI-09-records
+PASS UI-10-restart-clears-run
+PASS UI-11-quit-confirmation
+PASS UI-12-window-close-while-paused
+MV_INTEGRATION_RESULT executed=14 failed=0

@@ -1,0 +1,33 @@
+{
+	"frames_after_warmup": 192,
+	"gpu_time_ms": null,
+	"lives": 2,
+	"note": "Software renderer / Movie Maker is not native Windows validation or a physical GPU benchmark.",
+	"p95_ms": 27.5,
+	"p99_ms": 28.925,
+	"preset": 2,
+	"recorded_events": {
+		"capture": 2,
+		"death": 1,
+		"drift": 5,
+		"fruit": 1,
+		"pellet": 16,
+		"power": 2,
+		"topology": 1,
+		"warning": 1
+	},
+	"resolution": "(1280.0, 720.0)",
+	"runtime": {
+		"active_renderer": "forward_plus",
+		"adapter": "",
+		"display": "headless",
+		"driver": "vulkan",
+		"engine": "4.6.3-stable (official)",
+		"os": "Linux",
+		"requested_renderer": "forward_plus",
+		"version": "0.1.0-mv"
+	},
+	"score": 970,
+	"simulation_seconds": 9.99166666666674,
+	"wall_clock_frame_times_ms": true
+}

@@ -1,0 +1,13 @@
+Retome o trabalho preservando o checkpoint M0 existente nesta sessão. Leia integralmente Prompt_REA_Codex_MsPACMan_Windows.md, versão 3.2, incluído no pacote NeoGrid_Kit_Retomada_v3_2.zip, e use as referências da pasta referencias.
+
+A v3.2 substitui a condição de parada da v3.1: a falta de acesso a D:\Ms PACMan ou a presença apenas de MAME sem ROM bloqueiam a investigação do original, mas não a implementação própria do Neo-Grid já autorizada. Não trate o executável do emulador como o jogo novo.
+
+Verifique o checkpoint realmente disponível, reaproveite os arquivos úteis e prossiga para criar ou retomar um projeto Godot 4 estável no workspace acessível. Preserve a origem e o checkpoint. Produza project.godot, cenas 3D, personagens com materiais acabados, movimento, colisões, pellets, Power Pellet, dash, fantasmas, Flow e preset Windows x64, conforme o marco MV do prompt.
+
+Use a CLI do REA para operações disponíveis. A ausência do MCP ou de decompilador não impede escrever o código próprio. Consulte a ajuda e a documentação da versão efetivamente usada; não repita diagnóstico sem mudança de estado.
+
+Execute importação/parsing e testes de lógica, e tente a exportação Windows com editor e templates compatíveis. Se houver renderizador gráfico adequado, execute a cena e grave dez segundos reais do motor. Se faltar GPU ou Windows, marque somente as respectivas validações como pendentes; não apresente execução headless como comprovação visual ou homologação nativa.
+
+Antes de encerrar, conclua o trabalho independente viável. Entregue projeto-fonte e resultados verificáveis, o executável PE quando efetivamente exportado e instruções exatas para validar as pendências. Não substitua a implementação por outro pacote contendo apenas documentação.
+
+Comece agora verificando checkpoint, referências e ferramentas disponíveis; depois escreva e valide os arquivos reais do projeto.

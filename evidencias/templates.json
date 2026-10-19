@@ -1,0 +1,7 @@
+{
+  "url": "https://github.com/godotengine/godot-builds/releases/download/4.6.3-stable/Godot_v4.6.3-stable_export_templates.tpz",
+  "sha512": "da606b61c10157844f8300172df374472665f95015495cb1a7cd132c40ede404faa96cc1016a4b9662db9909ddea69632c4948b2cd11163438dad4808881fb68",
+  "official_checksum_matches": true,
+  "template_version": "4.6.3.stable",
+  "editor_version": "4.6.3.stable.official.7d41c59c4"
+}

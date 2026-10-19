@@ -1,0 +1,80 @@
+{
+  "checkpoint_original": "/workspace/MsPACMan_Checkpoint_M0_20261019.zip",
+  "checkpoint_sha256": "0001f1e27cdc4e6b82750d3133aee81ac53182094931358aff6dcebd1ce8a9af",
+  "kit_manifest_verified": true,
+  "prompt_version": "3.2",
+  "original_path": "D:\\Ms PACMan",
+  "original_path_accessible": false,
+  "rom_candidate_zip": {
+    "sha256": "8374fafe9f0053a2e0f6de0b3b62088a0a48cb2115219b9507ddd63145acc131",
+    "entries": [
+      {
+        "name": "5e",
+        "bytes": 4096,
+        "sha256": "effa5d95c0c3b3d04d41dbeb315370b9666a97036dd0f1a81037ba06b1fec9d9"
+      },
+      {
+        "name": "5f",
+        "bytes": 4096,
+        "sha256": "6bd821cce05d7d6cb40b2dc5967abb41e8b2dadeae27eac4b235b3f55ee759dd"
+      },
+      {
+        "name": "82s123.7f",
+        "bytes": 32,
+        "sha256": "48fe0b01d68e3d702019ca715f7266c8e3261c769509b281720f53ca0a1cc8fb"
+      },
+      {
+        "name": "82s126.1m",
+        "bytes": 256,
+        "sha256": "8e723ad91e46ef1a186b2ed3c99a8bf1c571786bc7ceae2b367cbfc80857a394"
+      },
+      {
+        "name": "82s126.3m",
+        "bytes": 256,
+        "sha256": "8c34002652e587aa19a77bff9040d870af18b4b2fe5c5f0ed962899386e0e751"
+      },
+      {
+        "name": "82s126.4a",
+        "bytes": 256,
+        "sha256": "ef8f7a3b0c10f787d9cc1cbc5cc266fcc1afadb24c3b4d610fe252b9c3df1d76"
+      },
+      {
+        "name": "pacman.6e",
+        "bytes": 4096,
+        "sha256": "fe1c3234df345855d30728637f361f79472cabfe2a892a7567c63eaf31a4217b"
+      },
+      {
+        "name": "pacman.6f",
+        "bytes": 4096,
+        "sha256": "09a723c9f84790e9019633e37761cfa4e9d7ab6db14f6fdb12738f51fec11065"
+      },
+      {
+        "name": "pacman.6h",
+        "bytes": 4096,
+        "sha256": "69347409739b64ed9d9b19713de0bc66627bd137687de649796b9d2ef88ed8e6"
+      },
+      {
+        "name": "pacman.6j",
+        "bytes": 4096,
+        "sha256": "03ee523c210e87fb8dd1d925b092ad269fdd753b5b7a20b3757b0ceee5f18679"
+      },
+      {
+        "name": "u5",
+        "bytes": 2048,
+        "sha256": "9418acd93bf2f859bdd78a342fbbed04ec628b84e6e6c22c3258903d534d6cde"
+      },
+      {
+        "name": "u6",
+        "bytes": 4096,
+        "sha256": "90e12618b54e22fa3c42c4b5e0c0b3279facd80ceeb1d8d4648b8f42321fb8fd"
+      },
+      {
+        "name": "u7",
+        "bytes": 4096,
+        "sha256": "1866f07add83e63156a23284ed1e39dfa88de70e7944dfbd9db655d2b8de3e22"
+      }
+    ],
+    "runtime_audit_in_mame": false
+  },
+  "implementation": "Código e recursos próprios; sem ROM ou MAME no novo produto"
+}
