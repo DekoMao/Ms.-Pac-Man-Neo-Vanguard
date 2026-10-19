@@ -1,0 +1,32 @@
+{
+  "version": "0.3.0-circuit",
+  "base_commit": "70f1da18bde7b0734ef6f9bfffc18a80641f0a1d",
+  "tests": {
+    "executed": 163,
+    "passed": 163,
+    "failed": 0
+  },
+  "zip": {
+    "filename": "NeoGrid_0.3_CircuitoNeon_Windows_x64.zip",
+    "bytes": 37405597,
+    "sha256": "00660a31cabc41dad8be80494d363a780d1fbe5cca1e6270275a99e68f158fe3",
+    "entries": 15,
+    "crc_ok": true
+  },
+  "exe": {
+    "bytes": 105875680,
+    "sha256": "40b4b4a8378d5d97e6d1bed4ca3dad42572151caf628dda7d19419e32d08f6b0",
+    "machine": "AMD64",
+    "version": "0.3.0.0",
+    "embedded_pack_smoke_on_linux": true,
+    "native_windows_tested": false
+  },
+  "visual_inspection": {
+    "host": "Linux/Xvfb",
+    "renderer": "gl_compatibility",
+    "adapter": "llvmpipe",
+    "controlled_capture_setup": true,
+    "physical_gpu_tested": false
+  },
+  "gameplay_balance_human_tested": false
+}

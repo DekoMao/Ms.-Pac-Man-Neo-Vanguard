@@ -1,0 +1,153 @@
+{
+	"engine": "4.6.3-stable (official)",
+	"executed": 36,
+	"failed": 0,
+	"passed": 36,
+	"results": [
+		{
+			"id": "STAGE-0-connected",
+			"passed": true
+		},
+		{
+			"id": "STAGE-0-item-spawn-contract",
+			"passed": true
+		},
+		{
+			"id": "STAGE-0-safe-topology",
+			"passed": true
+		},
+		{
+			"id": "STAGE-0-complete-via-movement",
+			"passed": true
+		},
+		{
+			"id": "STAGE-1-connected",
+			"passed": true
+		},
+		{
+			"id": "STAGE-1-item-spawn-contract",
+			"passed": true
+		},
+		{
+			"id": "STAGE-1-safe-topology",
+			"passed": true
+		},
+		{
+			"id": "STAGE-1-complete-via-movement",
+			"passed": true
+		},
+		{
+			"id": "STAGE-2-connected",
+			"passed": true
+		},
+		{
+			"id": "STAGE-2-item-spawn-contract",
+			"passed": true
+		},
+		{
+			"id": "STAGE-2-safe-topology",
+			"passed": true
+		},
+		{
+			"id": "STAGE-2-complete-via-movement",
+			"passed": true
+		},
+		{
+			"id": "STAGE-distinct-layouts",
+			"passed": true
+		},
+		{
+			"id": "SHIELD-one-charge",
+			"passed": true
+		},
+		{
+			"id": "SHIELD-overlapping-ghosts-one-block",
+			"passed": true
+		},
+		{
+			"id": "SHIELD-grace-expiry-is-dangerous",
+			"passed": true
+		},
+		{
+			"id": "SHIELD-exact-expiry",
+			"passed": true
+		},
+		{
+			"id": "POWERS-no-use-while-paused",
+			"passed": true
+		},
+		{
+			"id": "POWERS-duration-pauses",
+			"passed": true
+		},
+		{
+			"id": "MAGNET-locked-stage-one",
+			"passed": true
+		},
+		{
+			"id": "MAGNET-single-charge",
+			"passed": true
+		},
+		{
+			"id": "MAGNET-adjacent-pellet",
+			"passed": true
+		},
+		{
+			"id": "MAGNET-no-remote-fruit-or-power",
+			"passed": true
+		},
+		{
+			"id": "MAGNET-no-through-wall",
+			"passed": true
+		},
+		{
+			"id": "MAGNET-expiry-stops-attraction",
+			"passed": true
+		},
+		{
+			"id": "POWERS-death-clears-without-refill",
+			"passed": true
+		},
+		{
+			"id": "STAGE-transition-carries-session",
+			"passed": true
+		},
+		{
+			"id": "MEDAL-first-stage-complete",
+			"passed": true
+		},
+		{
+			"id": "MEDAL-speed-target",
+			"passed": true
+		},
+		{
+			"id": "MEDAL-deathless-not-awarded-after-death",
+			"passed": true
+		},
+		{
+			"id": "MEDAL-reactor-wager",
+			"passed": true
+		},
+		{
+			"id": "MEDAL-no-rewards-on-defeat",
+			"passed": true
+		},
+		{
+			"id": "MEDAL-victory-bonus-once",
+			"passed": true
+		},
+		{
+			"id": "SAVE-migrates-without-losing-record",
+			"passed": true
+		},
+		{
+			"id": "SAVE-retains-campaign-and-cosmetic",
+			"passed": true
+		},
+		{
+			"id": "SAVE-bounded-unlocks-and-medals",
+			"passed": true
+		}
+	],
+	"suite": "Circuit stages, powers, rewards and save migration"
+}

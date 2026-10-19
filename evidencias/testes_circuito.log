@@ -1,0 +1,39 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PASS STAGE-0-connected
+PASS STAGE-0-item-spawn-contract
+PASS STAGE-0-safe-topology
+PASS STAGE-0-complete-via-movement
+PASS STAGE-1-connected
+PASS STAGE-1-item-spawn-contract
+PASS STAGE-1-safe-topology
+PASS STAGE-1-complete-via-movement
+PASS STAGE-2-connected
+PASS STAGE-2-item-spawn-contract
+PASS STAGE-2-safe-topology
+PASS STAGE-2-complete-via-movement
+PASS STAGE-distinct-layouts
+PASS SHIELD-one-charge
+PASS SHIELD-overlapping-ghosts-one-block
+PASS SHIELD-grace-expiry-is-dangerous
+PASS SHIELD-exact-expiry
+PASS POWERS-no-use-while-paused
+PASS POWERS-duration-pauses
+PASS MAGNET-locked-stage-one
+PASS MAGNET-single-charge
+PASS MAGNET-adjacent-pellet
+PASS MAGNET-no-remote-fruit-or-power
+PASS MAGNET-no-through-wall
+PASS MAGNET-expiry-stops-attraction
+PASS POWERS-death-clears-without-refill
+PASS STAGE-transition-carries-session
+PASS MEDAL-first-stage-complete
+PASS MEDAL-speed-target
+PASS MEDAL-deathless-not-awarded-after-death
+PASS MEDAL-reactor-wager
+PASS MEDAL-no-rewards-on-defeat
+PASS MEDAL-victory-bonus-once
+PASS SAVE-migrates-without-losing-record
+PASS SAVE-retains-campaign-and-cosmetic
+PASS SAVE-bounded-unlocks-and-medals
+CIRCUIT_TEST_RESULT executed=36 failed=0

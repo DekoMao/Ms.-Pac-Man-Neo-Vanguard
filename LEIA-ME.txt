@@ -1,76 +1,44 @@
-MS. PAC-MAN: NEO-GRID — MV MAPA 0.2.1
-REFINO DA BASE APROVADA
+NEO-GRID — CIRCUITO NEON 0.3.0
 
-NOVIDADES E CONTROLES
-HUD: itens restantes, coletados/total, percentual e contagem por tipo.
-O minimapa mostra pontos, Power Pellets e frutas ainda presentes.
-Os ultimos dez itens recebem circulos brancos fixos para facilitar a busca.
-M: abre o mapa ampliado com tempo e musica pausados. M/Esc: retoma.
-Ritmo de perseguicao sobe em tres niveis, sempre com aviso previo.
-Dash, quase colisoes e capturas recebem resposta de camera e audio.
-Q com pelo menos 2s de Power restantes: aposta opcional de 20 de energia.
-Capture dois fantasmas
-antes do fim desse mesmo Power para ganhar 600 pontos e 35 de energia.
-Uma tentativa por fase; falhar nao tira vidas. Novo Power nao prolonga a aposta.
-Em Configuracoes, ajuste Intensidade da camera ate zero ou ative
-Reduzir efeitos e movimento. As mensagens essenciais continuam visiveis.
-Fantasmas que voltaram a cor original ja sao perigosos, mesmo durante Power.
+Extraia o ZIP inteiro e abra MsPacMan_Aperfeicoado.exe.
+Nao precisa instalar Godot, Python, MAME ou ROMs para jogar.
 
-Validacao nativa Windows e desempenho em GPU fisica ainda pendentes.
+CONTROLES E PODERES
+WASD/setas: mover. Espaco: dash (40E). Enter: iniciar.
+E: escudo por ate 8s, absorve um impacto; 1s de protecao para escapar.
+R: ima por 6s, apenas pontos normais vizinhos, sem atravessar paredes.
+Ima disponivel a partir da fase 2. Uma carga por poder por fase.
+Morrer encerra os efeitos sem repor cargas. Dash sozinho nao protege.
+Q: durante Power, com pelo menos 2s e 20E, aposte em duas capturas.
+M: mapa ampliado e pausa. M/Esc: retoma. C: camera. F11: tela cheia.
+P/Esc: pausa. Foco perdido pausa; escolha Continuar.
+Reiniciar circuito volta a fase 1.
 
-ABRIR NO WINDOWS
-Extraia o ZIP inteiro e abra MsPacMan_Aperfeicoado.exe por duplo clique.
-O EXE Windows x64 real contém o jogo e seus recursos (PCK embutido).
-O jogador não precisa instalar Godot, Python, Node, MAME ou ROMs.
-Não é o jogo original emulado: esta é uma implementação própria autorizada.
-Não foi executado nativamente no Windows nesta sessão. Não está assinado.
+FASES, DESAFIOS E EXTRAS
+Portico Neon: 109 itens; desafio de capturar 2 fantasmas; alvo 110s.
+Jardim Ionico: 112 itens; desafio de nao perder vidas; alvo 125s.
+Reator Solar: 105 itens; desafio de vencer uma aposta Q; alvo 140s.
+Colete tudo para avancar pelo botao Proxima fase. Fruta e Power contam.
+Avanco carrega os pontos e devolve uma vida ate o limite de tres.
+Desafio e tempo sao opcionais. Tres medalhas por fase: limpeza, desafio,
+tempo. Bonus: 500 pela limpeza e 250 por objetivo extra.
+Medalhas de tentativas diferentes se acumulam. Tres liberam rastro turquesa
+em Fases, medalhas e extras. O seletor inicia nova tentativa com zero pontos
+e tres vidas. Save guarda fases/medalhas/configuracoes, sem retomar partidas.
+O recorde anterior MV foi preservado, separado do recorde do Circuito Neon.
 
-CONTROLES
-Enter: iniciar/confirmar. Setas/WASD: mover; a direção continua até a parede.
-Espaço: dash (custo 40, energia recuperada com pellets). C: câmera 3D.
-M: mapa ampliado com pausa. P/Esc: pausa. F11: tela cheia. Reinício pelo menu de pausa.
-Foco perdido pausa a partida; escolha Continuar para retomar.
-Configurações: Baixa/Média/Alta, volume/mudo, câmera e redução de efeitos/bob.
+VALIDACAO
+163 verificacoes automaticas aprovadas no Godot 4.6.3 / Linux.
+Inclui coleta dos tres mapas via movimento com inimigos desativados, testes
+de poderes, transicoes e migracao do save. Windows x64, PCK embutido, icone
+e versao 0.3.0.0, sem assinatura. Smoke do PCK passou no motor Linux:
+isso nao executa o PE no Windows. Windows nativo e GPU fisica pendentes.
+Dificuldade e tempos precisam de teste humano. Imagens sao preparacoes de
+QA no motor Linux Compatibility/llvmpipe, sem comprovar acabamento Forward+.
 
-OBJETIVO
-Colete todos os itens desta área. Power Pellets deixam fantasmas vulneráveis.
-Capturas geram Flow, que multiplica pellets e frutas, não as capturas.
-Uma fruta dispara uma troca de parede: o aviso precede a alteração segura.
-Dash não concede invulnerabilidade. Há três vidas e reinício após derrota.
-Este MV contém uma área; Clássico, outras fases e modos M1–M3 não estão
-implementados ou expostos como botões futuros.
-
-GRÁFICOS E LIMITES
-O perfil usa Godot 4.6.3 / Forward+ / Vulkan, geometria 3D e piso com
-reflexos estilizados por geometria espelhada, inclusive fantasmas translúcidos.
-SSR sozinho não reflete transparências. Os presets preservam os modelos 3D.
-Não há requisito mínimo de hardware homologado. O teste gráfico foi Linux
-com renderizador de software llvmpipe; não atingiu a meta de 60 FPS.
-A aprovação visual completa, o perfil em GPU física e a homologação Windows
-continuam pendentes. Detalhes em docs/VALIDACAO.md e ORCAMENTO_GPU.md.
-
-DADOS E FALHAS
-Configurações/recorde MV ficam em user://neo_grid_mv.json, normalmente
-%APPDATA%\Godot\app_userdata\Ms. PAC-Man_ Neo-Grid\ no Windows; o nome
-sanitizado pode variar. Consulte o diretório de dados indicado pelo Godot.
-Há backup .bak e cópia .corrompido-* para arquivo inválido.
-Logs do Godot ficam na subpasta logs desse diretório.
-Se o driver gráfico não iniciar, preserve o log e atualize o driver Vulkan
-compatível. Não há garantia para hardware que não foi testado.
-
-FONTES E REBUILD (apenas desenvolvedor)
-Abra project.godot com Godot 4.6.3 estável e instale templates oficiais
-4.6.3.stable no gerenciador do editor. Com Python 3.10+ e Godot no PATH:
-  python scripts/build.py --godot godot
-No PowerShell:
-  .\scripts\build_windows.ps1 -Godot 'C:\caminho\Godot.exe' -Python python
-Não é necessário mudar permanentemente a política de execução.
-O builder importa, testa, exporta, aplica ícone/versão e testa o PCK embutido
-com o motor do host. Esse último teste não equivale à execução PE no Windows.
-
-VALIDAÇÃO MANUAL PENDENTE
-Em Windows x64, extrair em caminho com espaço/acento, abrir por duplo clique,
-jogar a área completa, testar pausa/foco/controles/som/tela cheia e reabrir.
-Homologar 720p/1080p, ficar 20 minutos em sessão real e medir GPU/SSR.
-A pasta D:\Ms PACMan e o checkpoint M0 nao foram alterados nesta revisao.
+Dados: user://neo_grid_mv.json (Godot/AppData). Ha backup .bak e copia de
+arquivo corrompido. Nao apague o save ao atualizar.
+Detalhes, creditos e licencas: docs/ e licencas/.
+Rebuild: Godot 4.6.3 + templates 4.6.3.stable + Python 3.10+.
+python scripts/build.py --godot godot
 

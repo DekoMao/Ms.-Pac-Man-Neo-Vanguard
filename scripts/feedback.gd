@@ -53,6 +53,9 @@ func react(event:Dictionary,sim,reduced:bool) -> void:
 			color=Color("74eeff").lerp(Color("ffb8ea"),minf(1.0,chain/4.0))
 			radius=1.8+chain*0.35;text="+%d  CADEIA %d"%[event.points,chain]
 		"risk_success":color=Color("adffd0");radius=3.0;text="APOSTA +600";chain_heat=1.5
+		"shield_armed":color=Color("64eaff");radius=2.0;text="ESCUDO ATIVO"
+		"shield_hit":color=Color("64eaff");radius=2.5;text="IMPACTO ABSORVIDO";impact=0.35
+		"magnet":color=Color("8affb9");radius=2.8;text="IMA ATIVO"
 		"death":impact=0.8
 		_:return
 	if reduced:return
@@ -74,3 +77,4 @@ func camera_offset(motion:float) -> Vector3:
 
 func fov_offset(sim,motion:float) -> float:
 	return (dash_heat*4.0+near_heat*1.1+threat*0.8-2.0*float(sim.time<sim.power_until)-chain_heat*0.6)*motion
+

@@ -1,0 +1,18 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.2 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+
+NEOGRID_RUNTIME {"active_renderer":"gl_compatibility","adapter":"llvmpipe (LLVM 20.1.2, 256 bits)","display":"X11","driver":"opengl3","engine":"4.6.3-stable (official)","os":"Linux","requested_renderer":"forward_plus","version":"0.3.0-circuit"}
+CIRCUIT_CAPTURE circuito_menu_030
+CIRCUIT_CAPTURE circuito_fase1_030
+CIRCUIT_CAPTURE circuito_fase2_030
+CIRCUIT_CAPTURE circuito_fase3_030
+CIRCUIT_CAPTURE circuito_extras_030
+CIRCUIT_CAPTURE circuito_final_030
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:364)
+WARNING: Screen-space reflections (SSR) are only available when using the Forward+ renderer.
+     at: environment_set_ssr (servers/rendering/storage/environment_storage.cpp:653)
+     GDScript backtrace (most recent call first):
+         [0] build_world (res://scripts/main.gd:117)
+         [1] _ready (res://scripts/main.gd:89)
+         [2] capture (res://tests/capture_campaign.gd:13)

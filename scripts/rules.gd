@@ -24,6 +24,18 @@ const OPEN_CELL := Vector2i(5,5)
 const CLOSE_CELL := Vector2i(8,3)
 const PLAYER_RADIUS := 0.29
 const GHOST_RADIUS := 0.30
+const Stages = preload("res://scripts/stages.gd")
+
+var grid:Array = GRID
+var stage_id := 0
+var campaign := false
+var stage_deaths := 0
+var stage_captures := 0
+var shield_charges := 0
+var magnet_charges := 0
+var shield_until := -1.0
+var grace_until := -1.0
+var magnet_until := -1.0
 
 var tuning: Dictionary
 var floors: Dictionary = {}
@@ -70,15 +82,18 @@ func _init(seed_value: int = 73021) -> void:
 	rng.seed = seed_value
 	reset()
 
-func reset() -> void:
+func reset(level:int=0, circuit:bool=false, carry:Dictionary={}) -> void:
+	stage_id = clampi(level,0,2)
+	campaign = circuit
+	grid = Stages.layout(stage_id, GRID)
 	floors.clear()
 	pickups.clear()
-	for y in GRID.size():
-		for x in GRID[y].length():
-			if GRID[y][x] != "#":
+	for y in grid.size():
+		for x in grid[y].length():
+			if grid[y][x] != "#":
 				var c := Vector2i(x,y)
 				floors[c] = true
-				pickups[c] = "power" if GRID[y][x] == "o" else "pellet"
+				pickups[c] = "power" if grid[y][x] == "o" else "pellet"
 	player = actor(Vector2(1,9), Vector2i.RIGHT)
 	ghosts.clear()
 	for i in 4:
@@ -90,8 +105,15 @@ func reset() -> void:
 	pickups[Vector2i(3,9)] = "fruit"
 	pickups[Vector2i(5,9)] = "power"
 	time = 0.0
-	score = 0
-	lives = 3
+	score = maxi(0,int(carry.get("score",0)))
+	lives = clampi(int(carry.get("lives",3)),1,3)
+	stage_deaths = 0
+	stage_captures = 0
+	shield_charges = 1 if campaign else 0
+	magnet_charges = 1 if campaign and stage_id >= 1 else 0
+	shield_until = -1.0
+	grace_until = -1.0
+	magnet_until = -1.0
 	energy = 100.0
 	power_until = -1.0
 	window_id = 0
@@ -188,6 +210,7 @@ func tick(dt: float = STEP) -> void:
 			g.immune = window_id
 		if g.state in ["chase", "scatter"]: g.state = normal_state()
 		var gs: float = tuning.ghost_speed
+		if campaign: gs *= Stages.INFO[stage_id].speed
 		if g.state in ["chase", "scatter"]: gs *= 1.0 + 0.04 * pressure_level
 		if g.state == "vulnerable": gs *= 0.65
 		if g.state == "returning": gs = 5.0
@@ -195,6 +218,14 @@ func tick(dt: float = STEP) -> void:
 	var contacts: Array = []
 	for cell in pickups:
 		var toi := path_contact(pp, [{"a":Vector2(cell), "b":Vector2(cell), "t0":0.0, "t1":1.0}], 0.23)
+		if pickups[cell] == "pellet" and time < magnet_until:
+			# Only the same/adjacent floor cell: never reach through a wall or diagonally.
+			var here := Vector2i(player.pos.round())
+			var before := Vector2i(player.previous.round())
+			var adjacent := absi(cell.x-here.x)+absi(cell.y-here.y) <= 1 or absi(cell.x-before.x)+absi(cell.y-before.y) <= 1
+			if adjacent:
+				var magnetic_toi := path_contact(pp, [{"a":Vector2(cell), "b":Vector2(cell), "t0":0.0, "t1":1.0}], 1.05)
+				if time + dt * magnetic_toi < magnet_until: toi = minf(toi, magnetic_toi)
 		if toi <= 1.0: contacts.append({"at":toi, "priority":0, "type":"pickup", "cell":cell})
 	for i in ghosts.size():
 		if ghosts[i].state == "house": continue
@@ -221,6 +252,7 @@ func tick(dt: float = STEP) -> void:
 				var g: Dictionary = ghosts[contact.index]
 				if g.state == "vulnerable": capture(g, event_time)
 				elif g.state in ["chase", "scatter"]:
+					if block_hit(event_time): continue
 					die()
 					break
 	time += dt
@@ -233,7 +265,44 @@ func tick(dt: float = STEP) -> void:
 		update_topology()
 		if pickups.is_empty():
 			status = "won"
+			if campaign: score += stage_result().bonus
 			events.append({"type":"won", "pos":player.pos})
+
+func request_shield() -> bool:
+	if not campaign or paused or status != "playing" or shield_charges <= 0 or time < shield_until: return false
+	shield_charges -= 1
+	shield_until = time + 8.0
+	pending_events.append({"type":"shield_armed", "pos":player.pos})
+	return true
+
+func request_magnet() -> bool:
+	if not campaign or paused or status != "playing" or magnet_charges <= 0 or time < magnet_until: return false
+	magnet_charges -= 1
+	magnet_until = time + 6.0
+	pending_events.append({"type":"magnet", "pos":player.pos})
+	return true
+
+func block_hit(at:float) -> bool:
+	if at < grace_until: return true
+	if at >= shield_until: return false
+	shield_until = -1.0
+	grace_until = at + 1.0
+	events.append({"type":"shield_hit", "pos":player.pos})
+	return true
+
+func challenge_met() -> bool:
+	match stage_id:
+		0: return stage_captures >= 2
+		1: return stage_deaths == 0
+		_: return risk.state == "success"
+
+func stage_result() -> Dictionary:
+	var cleared := status == "won"
+	var challenge := cleared and challenge_met()
+	var fast:bool = cleared and time <= Stages.INFO[stage_id].par
+	var mask := int(cleared) | (int(challenge) << 1) | (int(fast) << 2)
+	return {"mask":mask, "stars":Stages.medal_count(mask), "challenge":challenge, "fast":fast,
+		"bonus":(500 if cleared else 0) + (250 if challenge else 0) + (250 if fast else 0)}
 
 func normal_state() -> String:
 	return "scatter" if fmod(time, 20.0) < 5.0 - pressure_level * 0.7 else "chase"
@@ -324,6 +393,7 @@ func collect(cell: Vector2i, at: float) -> void:
 
 func capture(g: Dictionary, at: float) -> void:
 	if g.state != "vulnerable": return
+	stage_captures += 1
 	var points := 200 * (1 << mini(combo,3))
 	score += points
 	combo += 1
@@ -337,6 +407,10 @@ func capture(g: Dictionary, at: float) -> void:
 		if risk.progress >= 2: finish_risk(true)
 
 func die() -> void:
+	stage_deaths += 1
+	shield_until = -1.0
+	grace_until = -1.0
+	magnet_until = -1.0
 	finish_risk(false)
 	close_passes.clear()
 	lives -= 1

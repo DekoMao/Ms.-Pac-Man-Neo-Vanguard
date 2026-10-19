@@ -1,6 +1,6 @@
 Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
 
-NEOGRID_RUNTIME {"active_renderer":"forward_plus","adapter":"","display":"headless","driver":"vulkan","engine":"4.6.3-stable (official)","os":"Linux","requested_renderer":"forward_plus","version":"0.2.1-map"}
+NEOGRID_RUNTIME {"active_renderer":"forward_plus","adapter":"","display":"headless","driver":"vulkan","engine":"4.6.3-stable (official)","os":"Linux","requested_renderer":"forward_plus","version":"0.3.0-circuit"}
 PASS AUDIO-01-full-musical-loop
 PASS UI-01-title-and-menu
 PASS SCENE-01-real-actors
@@ -32,4 +32,18 @@ PASS MAP-UI-07-m-closes-map
 PASS MAP-UI-08-restart-clears-overlay
 PASS MAP-UI-09-last-item-caption
 PASS MAP-UI-10-complete-caption
-MV_INTEGRATION_RESULT executed=31 failed=0
+PASS CIRCUIT-UI-01-start-first-phase
+PASS CIRCUIT-UI-02-shield-input
+PASS CIRCUIT-UI-03-magnet-locked
+PASS CIRCUIT-UI-04-win-records-unlock-and-medals
+PASS CIRCUIT-UI-05-next-carries-score-and-life
+PASS CIRCUIT-UI-06-rebuilds-visual-map
+PASS CIRCUIT-UI-07-second-phase-powers
+PASS CIRCUIT-UI-08-map-freezes-powers
+PASS CIRCUIT-UI-09-third-phase-unlocked
+PASS CIRCUIT-UI-10-campaign-finale
+PASS CIRCUIT-UI-11-final-phase-does-not-wrap
+PASS CIRCUIT-UI-12-extras-and-nine-medals
+PASS CIRCUIT-UI-13-phase-selector-callback
+PASS CIRCUIT-UI-14-restart-preserves-earned-progress
+MV_INTEGRATION_RESULT executed=45 failed=0
