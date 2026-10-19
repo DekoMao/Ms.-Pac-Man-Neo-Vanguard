@@ -23,7 +23,7 @@ PASS HUD-safe-zones-960x720
 PASS HUD-safe-zones-1280x720
 PASS HUD-safe-zones-1920x1080
 PASS HUD-safe-zones-2560x1080
-NEOGRID_RUNTIME {"active_renderer":"forward_plus","adapter":"","display":"headless","driver":"vulkan","engine":"4.6.3-stable (official)","os":"Linux","requested_renderer":"forward_plus","version":"0.4.0-arcade"}
+NEOGRID_RUNTIME {"active_renderer":"forward_plus","adapter":"","display":"headless","driver":"vulkan","engine":"4.6.3-stable (official)","os":"Linux","requested_renderer":"forward_plus","version":"0.5.0-neon"}
 PASS HUD-camera-in-dedicated-viewport
 PASS HUD-live-bounds-960x720
 PASS HUD-live-bounds-1280x720

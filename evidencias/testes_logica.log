@@ -1,42 +1,55 @@
 Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
 
-PASS MAP-01-connected 
-PASS MAP-02-rectangular 
-PASS MAP-03-items-reachable 
-PASS TIME-01-pause 
+PASS START-0-no-direction-no-movement
+PASS START-0-dash-cannot-start-alone
+PASS START-0-first-direction-moves
+PASS START-0-restart-restores-idle
+PASS START-1-no-direction-no-movement
+PASS START-1-dash-cannot-start-alone
+PASS START-1-first-direction-moves
+PASS START-1-restart-restores-idle
+PASS START-2-no-direction-no-movement
+PASS START-2-dash-cannot-start-alone
+PASS START-2-first-direction-moves
+PASS START-2-restart-restores-idle
+PASS START-respawn-also-waits-for-direction
+PASS MAP-01-connected
+PASS MAP-02-rectangular
+PASS MAP-03-items-reachable
+PASS TIME-01-pause
 PASS MOVE-01-speed (2.599998, 9.0)
-PASS MOVE-02-walls 
+PASS MOVE-02-walls
 PASS MOVE-03-buffered-turn (4.0, 2.693333)
-PASS DRIFT-01-new-turn 
-PASS DRIFT-02-held-no-farming 
-PASS DRIFT-03-outside-window 
-PASS DASH-01-insufficient 
-PASS DASH-02-empty 
-PASS DASH-03-exact 
-PASS DASH-04-cooldown 
-PASS DASH-05-blocked-no-cost 
+PASS DRIFT-01-new-turn
+PASS DRIFT-02-held-no-farming
+PASS DRIFT-03-outside-window
+PASS DASH-01-insufficient
+PASS DASH-02-empty
+PASS DASH-03-exact
+PASS DASH-04-cooldown
+PASS DASH-05-blocked-no-cost
 PASS DASH-06-distance (3.0, 9.0)
 PASS COLLECT-01-swept-single score=20 energy=70.000000
-PASS COLLECT-02-no-duplicate 
-PASS COLLIDE-01-relative-sweep 
-PASS COLLIDE-02-later-power-cannot-save 
+PASS COLLECT-02-no-duplicate
+PASS COLLIDE-01-relative-sweep
+PASS COLLIDE-02-later-power-cannot-save
 PASS COLLIDE-03-earlier-power-capture score=250 state=returning
-PASS FLOW-01-capture 
-PASS CAPTURE-01-returning-no-farming 
-PASS CAPTURE-02-window-immunity 
-PASS LIVES-01-overlapping-ghosts 
-PASS FLOW-02-expiry 
-PASS POWER-01-expiry 
-PASS POWER-02-replace-duration 
-PASS GRAPH-01-valid-swap 
-PASS GRAPH-02-atomic-swap 
-PASS GRAPH-03-occupied-defer 
-PASS GRAPH-04-cancel-after-limit 
-PASS GRAPH-05-isolated-rejected 
-PASS RESET-01-clean 
+PASS FLOW-01-capture
+PASS CAPTURE-01-returning-no-farming
+PASS CAPTURE-02-window-immunity
+PASS LIVES-01-overlapping-ghosts
+PASS FLOW-02-expiry
+PASS POWER-01-expiry
+PASS POWER-02-replace-duration
+PASS GRAPH-01-valid-swap
+PASS GRAPH-02-atomic-swap
+PASS GRAPH-03-occupied-defer
+PASS GRAPH-04-cancel-after-limit
+PASS GRAPH-05-isolated-rejected
+PASS RESET-01-clean
 PASS TIME-02-30-60-144-equivalence [[(7.399994, 9.0), 0, 100.0, 2.0], [(7.399994, 9.0), 0, 100.0, 2.0], [(7.399994, 9.0), 0, 100.0, 2.0]]
-PASS STORE-01-missing-defaults 
-PASS STORE-02-save 
-PASS STORE-03-reload 
-PASS STORE-04-corrupt-defaults 
-MV_TEST_RESULT executed=39 failed=0
+PASS STORE-01-missing-defaults
+PASS STORE-02-save
+PASS STORE-03-reload
+PASS STORE-04-corrupt-defaults
+MV_TEST_RESULT executed=52 failed=0

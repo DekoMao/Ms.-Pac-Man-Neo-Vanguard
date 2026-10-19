@@ -6,6 +6,7 @@ const PlayerScene=preload("res://scenes/player.tscn")
 const GhostScene=preload("res://scenes/ghost.tscn")
 const Feedback=preload("res://scripts/feedback.gd")
 const Stages=preload("res://scripts/stages.gd")
+const Architecture=preload("res://scripts/architecture.gd")
 const Interface=preload("res://scripts/interface.gd")
 const COLORS=[Color("ff4765"),Color("ff78d0"),Color("3bdffc"),Color("ffac59")]
 const CELL:=1.4
@@ -102,7 +103,7 @@ func _ready() -> void:
 	setup_audio()
 	apply_settings()
 	show_title()
-	runtime_info={"version":"0.4.0-arcade","engine":Engine.get_version_info().string,"os":OS.get_name(),"display":DisplayServer.get_name(),"requested_renderer":ProjectSettings.get_setting("rendering/renderer/rendering_method"),"active_renderer":RenderingServer.get_current_rendering_method(),"driver":RenderingServer.get_current_rendering_driver_name(),"adapter":RenderingServer.get_video_adapter_name()}
+	runtime_info={"version":"0.5.0-neon","engine":Engine.get_version_info().string,"os":OS.get_name(),"display":DisplayServer.get_name(),"requested_renderer":ProjectSettings.get_setting("rendering/renderer/rendering_method"),"active_renderer":RenderingServer.get_current_rendering_method(),"driver":RenderingServer.get_current_rendering_driver_name(),"adapter":RenderingServer.get_video_adapter_name()}
 	print("NEOGRID_RUNTIME ",JSON.stringify(runtime_info))
 	if demo or smoke:start_game()
 	get_tree().auto_accept_quit=false
@@ -120,16 +121,17 @@ func coord(p:Vector2,y:float=0.0) -> Vector3:
 func build_world() -> void:
 	world_environment=WorldEnvironment.new()
 	var env:=Environment.new()
-	env.background_mode=Environment.BG_COLOR;env.background_color=Color("060b19")
-	env.ambient_light_source=Environment.AMBIENT_SOURCE_COLOR;env.ambient_light_color=Color("8a9bc7");env.ambient_light_energy=0.70
-	env.tonemap_mode=Environment.TONE_MAPPER_FILMIC
+	env.background_mode=Environment.BG_COLOR;env.background_color=Color("070a16")
+	env.ambient_light_source=Environment.AMBIENT_SOURCE_COLOR;env.ambient_light_color=Color("8a9bc7");env.ambient_light_energy=0.52
+	env.tonemap_mode=Environment.TONE_MAPPER_ACES
 	env.glow_enabled=true;env.glow_intensity=0.45;env.glow_bloom=0.08
+	env.fog_enabled=true;env.fog_light_color=Color("21263f");env.fog_light_energy=0.35;env.fog_density=0.009
 	env.ssr_enabled=true;env.ssr_max_steps=32;env.ssao_enabled=true;env.ssao_radius=0.65;env.ssao_intensity=1.3
 	world_environment.environment=env;add_child(world_environment)
-	var key:=DirectionalLight3D.new();key.light_color=Color("92afff");key.light_energy=1.3;key.rotation_degrees=Vector3(-58,-30,0);key.shadow_enabled=true;add_child(key)
-	var rim:=DirectionalLight3D.new();rim.light_color=Color("f8a2dd");rim.light_energy=0.65;rim.rotation_degrees=Vector3(-30,145,0);add_child(rim)
+	var key:=DirectionalLight3D.new();key.light_color=Color("92afff");key.light_energy=1.15;key.light_specular=0.22;key.rotation_degrees=Vector3(-58,-30,0);key.shadow_enabled=true;add_child(key)
+	var rim:=DirectionalLight3D.new();rim.light_color=Color("f8a2dd");rim.light_energy=0.85;rim.light_specular=0.10;rim.rotation_degrees=Vector3(-30,145,0);add_child(rim)
 	for p in [Vector3(-9,5,-4),Vector3(8,5,5)]:
-		var light:=OmniLight3D.new();light.position=p;light.light_color=Color("37cbf4") if p.x<0 else Color("ff4eab");light.light_energy=2.5;light.omni_range=15;add_child(light);stage_lights.append(light)
+		var light:=OmniLight3D.new();light.position=p;light.light_color=Color("37cbf4") if p.x<0 else Color("ff4eab");light.light_energy=1.15;light.light_specular=0.08;light.omni_range=15;add_child(light);stage_lights.append(light)
 	var bottom:=BoxMesh.new();bottom.size=Vector3(26,0.1,20)
 	add_child(Models.mesh_node(bottom,Models.material(Color("02050d")),Vector3(0,-1.8,0)))
 	var floor_mesh:=PlaneMesh.new();floor_mesh.size=Vector2(17*CELL,13*CELL)
@@ -156,6 +158,11 @@ func build_world() -> void:
 		add_child(tower)
 		var strip:=BoxMesh.new();strip.size=Vector3(0.04,h*0.7,0.03)
 		tower.add_child(Models.mesh_node(strip,Models.material(Color("326887"),0.6),Vector3(0.8,0,0.82)))
+		for level in range(1,int(h/0.45)):
+			for column in 3:
+				if (level*7+column+i)%5==0:continue
+				Architecture.box(tower,Vector3(0.20,0.06,0.025),Vector3(-0.57+column*0.53,-h*0.5+level*0.45,0.82),Color("54709b") if i%3 else Color("a359b7"),0.35)
+
 
 func rebuild_maze() -> void:
 	if is_instance_valid(maze_root):remove_child(maze_root);maze_root.queue_free()
@@ -166,7 +173,7 @@ func rebuild_maze() -> void:
 	var secondary:=Color(stage.secondary)
 	stage_lights[0].light_color=primary;stage_lights[1].light_color=secondary
 	floor_material.set_shader_parameter("line_color",primary)
-	var wall_mesh=Models.bevel_box(Vector3(CELL,0.72,CELL),0.055)
+	var wall_mesh=Models.bevel_box(Vector3(CELL,Architecture.HEIGHT,CELL),0.018)
 	for y in sim.grid.size():
 		for x in sim.grid[y].length():
 			var cell:=Vector2i(x,y)
@@ -174,22 +181,26 @@ func rebuild_maze() -> void:
 			walls[cell]=create_wall(cell,wall_mesh,primary,secondary)
 	var closing=create_wall(sim.close_cell,wall_mesh,primary,secondary)
 	closing.visible=false;walls[sim.close_cell]=closing
+	Architecture.deck(maze_root,primary,secondary)
+	Architecture.routes(maze_root,sim.floors,Rules.HOUSE,primary)
 	build_ghost_house(primary,secondary)
 	for row in Rules.TUNNEL_ROWS:
 		for x in [0,16]:build_tunnel(Vector2i(x,row),primary if row==5 else secondary)
 	for c in sim.pickups:create_pickup(c,sim.pickups[c])
 
-func create_wall(cell:Vector2i,mesh:Mesh,primary:Color,secondary:Color) -> MeshInstance3D:
-	var wall=Models.mesh_node(mesh,Models.material(Color("142238"),0.02,0.35),coord(Vector2(cell),0.36))
+func create_wall(cell:Vector2i,_mesh:Mesh,primary:Color,secondary:Color) -> MeshInstance3D:
+	# Inset exposed faces, keeping adjacent wall cells joined. This gives the
+	# narrow architectural walls of the concepts instead of a board of cubes.
+	var left:float=-0.39 if sim.floors.has(cell+Vector2i.LEFT) else -CELL*0.5
+	var right:float=0.39 if sim.floors.has(cell+Vector2i.RIGHT) else CELL*0.5
+	var back:float=-0.39 if sim.floors.has(cell+Vector2i.UP) else -CELL*0.5
+	var front:float=0.39 if sim.floors.has(cell+Vector2i.DOWN) else CELL*0.5
+	var footprint:=Rect2(left,back,right-left,front-back)
+	var body:=BoxMesh.new();body.size=Vector3(footprint.size.x,Architecture.HEIGHT,footprint.size.y)
+	var mat:=Models.material(Color("1d2035"),0.01,0.28);mat.roughness=0.58;mat.metallic_specular=0.22
+	var wall=Models.mesh_node(body,mat,coord(Vector2(cell),Architecture.HEIGHT*0.5)+Vector3(footprint.get_center().x,0,footprint.get_center().y))
 	maze_root.add_child(wall)
-	for d in Rules.DIRS:
-		if not sim.floors.has(cell+d):continue
-		var trim:=BoxMesh.new()
-		trim.size=Vector3(CELL,0.025,0.025) if d.y!=0 else Vector3(0.025,0.025,CELL)
-		var p:=Vector3(d.x*CELL*0.48,0.35,d.y*CELL*0.48)
-		wall.add_child(Models.mesh_node(trim,Models.material(primary,0.75),p))
-		p.y=-0.15
-		wall.add_child(Models.mesh_node(trim,Models.material(secondary.darkened(0.3),0.28),p))
+	Architecture.decorate(wall,cell,sim.floors,primary,secondary,footprint)
 	return wall
 
 func build_ghost_house(primary:Color,secondary:Color) -> void:
@@ -202,6 +213,13 @@ func build_ghost_house(primary:Color,secondary:Color) -> void:
 	for y in [4.55,6.45]:
 		var rail:=BoxMesh.new();rail.size=Vector3(CELL*2.9,0.04,0.035)
 		house.add_child(Models.mesh_node(rail,Models.material(secondary,0.6),coord(Vector2(8,y),0.12)))
+	for x in [6.62,9.38]:
+		for y in [4.62,6.38]:
+			Architecture.box(house,Vector3(0.14,1.42,0.14),coord(Vector2(x,y),0.71),Color("414360"),0,0.6)
+			Architecture.box(house,Vector3(0.06,0.95,0.06),coord(Vector2(x,y),0.82),secondary,0.8)
+	var halo:=TorusMesh.new();halo.inner_radius=0.69;halo.outer_radius=0.73
+	house.add_child(Models.mesh_node(halo,Models.material(secondary,0.55),coord(Vector2(8,5.5),0.08)))
+	Architecture.glow(house,Vector2(3.7,2.5),coord(Vector2(8,5.5),0.06),secondary,0.14)
 	var gate:=BoxMesh.new();gate.size=Vector3(CELL*0.9,0.07,0.08)
 	house_gate=Models.mesh_node(gate,Models.material(Color("f3b0e8"),0.75),coord(Vector2(Rules.DOOR),0.40));house_gate.name="Porta";house.add_child(house_gate)
 
@@ -221,7 +239,7 @@ func create_pickup(cell:Vector2i,kind:String) -> void:
 		var stem:=CylinderMesh.new();stem.top_radius=0.025;stem.bottom_radius=0.025;stem.height=0.35
 		var stalk=Models.mesh_node(stem,Models.material(Color("64ecac"),0.4),Vector3(0,0.65,0));stalk.rotation.z=-0.5;root.add_child(stalk)
 	else:
-		root.add_child(Models.mesh_node(Models.sphere(0.20 if kind=="power" else 0.075),Models.material(Color("ffe6a0"),2.2 if kind=="power" else 0.8,0.3),Vector3(0,0.28,0)))
+		root.add_child(Models.mesh_node(Models.sphere(0.20 if kind=="power" else 0.075),Models.material(Color("ffd15a"),1.3 if kind=="power" else 0.32,0.3),Vector3(0,0.28,0)))
 		if kind=="power":
 			var ring:=TorusMesh.new();ring.inner_radius=0.27;ring.outer_radius=0.30
 			root.add_child(Models.mesh_node(ring,Models.material(Color("57e4f6"),1.4),Vector3(0,0.1,0)))
@@ -269,6 +287,8 @@ func _notification(what:int) -> void:
 func _physics_process(dt:float) -> void:
 	if current_screen!="playing":return
 	if demo:demo_input()
+	# The opening is safe: the phase clock and house release wait for direction.
+	if sim.time==0.0 and sim.player.dir==Vector2i.ZERO and sim.held_dir==Vector2i.ZERO and not sim.pickups.is_empty():return
 	sim.tick(dt)
 	for event in sim.events:
 		observed_events[event.type]=observed_events.get(event.type,0)+1
@@ -282,6 +302,7 @@ func _physics_process(dt:float) -> void:
 			"drift":burst(coord(event.pos,0.3),Color("ffe576"),5)
 			"wrap":
 				if event.player:
+					first_frame=true
 					for entry in trail:entry.node.queue_free()
 					trail.clear();ribbon.visible=false
 			"warning":notify("RECONFIGURANDO ROTAS • AGUARDE A LUZ")
@@ -330,6 +351,9 @@ func _process(dt:float) -> void:
 	power_field_material.emission=power_field_material.albedo_color
 	var visual_time:float=sim.time if current_screen!="title" else menu_clock
 	hero.animate(visual_time,sim.player.dir,"",0.0,settings.reduced)
+	if sim.player.dir==Vector2i.ZERO and sim.time==0:
+		var facing:Vector3=camera.position-hero.position
+		hero.rotation.y=-atan2(facing.z,facing.x)
 	for i in ghosts.size():
 		var g:Dictionary=sim.ghosts[i]
 		ghosts[i].position=coord(g.previous.lerp(g.pos,alpha))
@@ -337,15 +361,20 @@ func _process(dt:float) -> void:
 		# Expressive faces orient toward the camera; collision/direction stay planar.
 		var facing:Vector3=camera.position-ghosts[i].position
 		ghosts[i].rotation.y=-atan2(facing.z,facing.x)
-	var target:=Vector3.ZERO
-	var offset:=Vector3(0.0,27,0.01) if settings.camera_top else Vector3(0,24,14)
+	# A close, oblique perspective is the main view. C provides the full maze.
+	var target:=hero.position+Vector3(1.4,0.25,-0.6)
+	if current_screen=="title":target=Vector3(0,0.25,0)
+	if settings.camera_top:target=Vector3.ZERO
+	var offset:=Vector3(0,27,0.01) if settings.camera_top else Vector3(-4.8,8.1,8.9)
 	var motion:float=0.0 if settings.reduced else settings.camera_motion
 	if first_frame:camera_anchor=target+offset;first_frame=false
 	else:camera_anchor=camera_anchor.lerp(target+offset,1-exp(-dt*5))
 	camera.position=camera_anchor+feedback.camera_offset(motion)
-	camera.projection=Camera3D.PROJECTION_ORTHOGONAL;camera.fov=45.0
-	camera.size=maxf(20.5 if settings.camera_top else 18.0,26.5/maxf(0.5,play_rect.size.x/play_rect.size.y))
-	camera.look_at(target,Vector3(0,0,-1) if settings.camera_top else Vector3.UP)
+	camera.projection=Camera3D.PROJECTION_ORTHOGONAL if settings.camera_top else Camera3D.PROJECTION_PERSPECTIVE
+	camera.fov=49.0
+	camera.size=maxf(20.5,26.5/maxf(0.5,play_rect.size.x/play_rect.size.y))
+	camera.look_at(camera_anchor-offset,Vector3(0,0,-1) if settings.camera_top else Vector3.UP)
+
 	var hunting:bool=sim.time<sim.power_until
 	floor_material.set_shader_parameter("hunt_mix",1.0 if hunting else 0.0)
 	update_audio(dt,hunting)
@@ -353,8 +382,9 @@ func _process(dt:float) -> void:
 	# Fade the foreground obstacle when it can occlude the player.
 	for c in walls:
 		var node:MeshInstance3D=walls[c]
-		var near_player:bool=absf(c.x-p.x)<1.2 and c.y>p.y and c.y-p.y<1.4
-		node.scale.y=lerpf(node.scale.y,0.28 if near_player and not settings.camera_top else 1.0,minf(1,dt*8))
+		var near_player:bool=(-(c.x-p.x)*0.47+(c.y-p.y)*0.89)>0.1 and Vector2(c).distance_to(p)<1.6
+		node.scale.y=lerpf(node.scale.y,0.40 if near_player and not settings.camera_top else 1.0,minf(1,dt*8))
+		node.position.y=Architecture.HEIGHT*node.scale.y*0.5
 	if not sim.topology.is_empty():
 		var mat:StandardMaterial3D=walls[sim.open_cell].material_override
 		mat.emission_enabled=true;mat.emission=Color("68e6f0");mat.emission_energy_multiplier=0.4 if settings.reduced else 0.6+sin(visual_time*8)*0.2
@@ -491,7 +521,7 @@ func apply_settings() -> void:
 	AudioServer.set_bus_volume_db(0,linear_to_db(maxf(0.001,settings.volume)))
 	var env:Environment=world_environment.environment
 	env.glow_enabled=not settings.reduced
-	env.glow_intensity=0.16 if settings.reduced else 0.28
+	env.glow_intensity=0.16 if settings.reduced else 0.55
 	env.ssr_enabled=settings.quality>0
 	env.ssao_enabled=settings.quality>0
 	env.ssr_max_steps=32 if settings.quality==2 else 16
@@ -533,9 +563,10 @@ func show_title() -> void:
 	menu_content.add_child(button("Configurações",show_settings))
 	menu_content.add_child(button("Melhor pontuação · %06d"%settings.circuit_record,show_records))
 	menu_content.add_child(button("Sair",func():get_tree().quit()))
-	menu_content.add_child(label("MV 0.4  •  ESSÊNCIA ARCADE",10,Color("7787a2")))
+	menu_content.add_child(label("MV 0.5  •  NEON ARCHITECTURE",10,Color("7787a2")))
 
 func start_game(level:int=0, carry:Dictionary={}) -> void:
+	key_stack.clear();first_frame=true
 	level=clampi(level,0,2)
 	map_overlay.visible=false
 	sim.reset(level,true,carry);sim.start();sim.paused=false;current_screen="playing";hud.visible=true;menu.visible=false;terminal_reported=false;previous_graph=0;music.stream_paused=false
@@ -546,7 +577,7 @@ func start_game(level:int=0, carry:Dictionary={}) -> void:
 	for entry in trail:entry.node.queue_free()
 	trail.clear();ribbon.visible=false
 	key_stack.clear();last_trail=0
-	notify("%d/3 · %s  •  %s"%[level+1,Stages.INFO[level].name,"E: ESCUDO" if level==0 else "E: ESCUDO / R: ÍMÃ"])
+	notify("SETAS / WASD PARA COMEÇAR  •  C: VER TODO O MAPA")
 
 func next_stage() -> void:
 	if sim.status!="won" or sim.stage_id>=2:return

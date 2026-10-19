@@ -1,4 +1,4 @@
 Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
 
-NEOGRID_RUNTIME {"active_renderer":"forward_plus","adapter":"","display":"headless","driver":"vulkan","engine":"4.6.3-stable (official)","os":"Linux","requested_renderer":"forward_plus","version":"0.4.0-arcade"}
-NEOGRID_SMOKE_OK {"ghosts":4,"pickups":95,"score":210,"time":3.00833333333333}
+NEOGRID_RUNTIME {"active_renderer":"forward_plus","adapter":"","display":"headless","driver":"vulkan","engine":"4.6.3-stable (official)","os":"Linux","requested_renderer":"forward_plus","version":"0.5.0-neon"}
+NEOGRID_SMOKE_OK {"ghosts":4,"pickups":103,"score":0,"time":0.0}

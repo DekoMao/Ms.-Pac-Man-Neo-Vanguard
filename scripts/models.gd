@@ -138,7 +138,8 @@ static func ghost_mesh(phase: float = 0.0) -> ArrayMesh:
 
 static func ghost(color: Color) -> Node3D:
 	var root:=Node3D.new();root.name="Fantasma"
-	var mat:=material(color,0.16,0.08)
+	var mat:=material(color,0.32,0.08)
+	mat.rim_enabled=true;mat.rim=0.65;mat.rim_tint=0.6
 	mat.roughness=0.28
 	mat.cull_mode=BaseMaterial3D.CULL_BACK
 	var shell:=mesh_node(ghost_mesh(),mat);shell.name="Body";root.add_child(shell)

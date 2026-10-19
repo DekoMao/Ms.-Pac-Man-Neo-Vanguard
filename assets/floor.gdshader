@@ -6,10 +6,9 @@ uniform vec4 line_color : source_color = vec4(0.27,0.83,0.94,1.0);
 void fragment() {
 	vec2 tile = abs(fract(UV * vec2(17.0,13.0))-0.5);
 	float line = smoothstep(0.482,0.496,max(tile.x,tile.y));
-	ALBEDO = mix(base_color.rgb,vec3(0.05,0.11,0.17),line);
-	METALLIC=0.65;
-	ROUGHNESS=0.22;
-	EMISSION=line_color.rgb * mix(0.20,0.40,hunt_mix)*line*0.40;
-	ALPHA=0.73;
+	ALBEDO = mix(base_color.rgb,vec3(0.025,0.035,0.07),line);
+	METALLIC=0.82;
+	ROUGHNESS=0.16;
+	EMISSION=line_color.rgb * mix(0.20,0.40,hunt_mix)*line*0.25;
 }
 

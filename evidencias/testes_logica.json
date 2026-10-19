@@ -1,9 +1,74 @@
 {
 	"engine": "4.6.3-stable (official)",
-	"executed": 39,
+	"executed": 52,
 	"failed": 0,
-	"passed": 39,
+	"passed": 52,
 	"results": [
+		{
+			"detail": "",
+			"id": "START-0-no-direction-no-movement",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "START-0-dash-cannot-start-alone",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "START-0-first-direction-moves",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "START-0-restart-restores-idle",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "START-1-no-direction-no-movement",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "START-1-dash-cannot-start-alone",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "START-1-first-direction-moves",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "START-1-restart-restores-idle",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "START-2-no-direction-no-movement",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "START-2-dash-cannot-start-alone",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "START-2-first-direction-moves",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "START-2-restart-restores-idle",
+			"passed": true
+		},
+		{
+			"detail": "",
+			"id": "START-respawn-also-waits-for-direction",
+			"passed": true
+		},
 		{
 			"detail": "",
 			"id": "MAP-01-connected",

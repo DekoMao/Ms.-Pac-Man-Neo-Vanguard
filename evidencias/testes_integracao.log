@@ -1,10 +1,14 @@
 Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
 
-NEOGRID_RUNTIME {"active_renderer":"forward_plus","adapter":"","display":"headless","driver":"vulkan","engine":"4.6.3-stable (official)","os":"Linux","requested_renderer":"forward_plus","version":"0.4.0-arcade"}
+NEOGRID_RUNTIME {"active_renderer":"forward_plus","adapter":"","display":"headless","driver":"vulkan","engine":"4.6.3-stable (official)","os":"Linux","requested_renderer":"forward_plus","version":"0.5.0-neon"}
 PASS AUDIO-01-full-musical-loop
 PASS UI-01-title-and-menu
 PASS SCENE-01-real-actors
 PASS UI-02-enter-start
+PASS START-UI-01-enter-does-not-move
+PASS START-UI-05-clock-and-house-wait-for-input
+PASS START-UI-06-dash-alone-stays-idle
+PASS START-UI-02-direction-starts-movement
 PASS UI-03-pause-stops-time
 PASS UI-04-explicit-resume
 PASS UI-05-camera-toggle
@@ -12,6 +16,7 @@ PASS UI-06-focus-pauses
 PASS UI-07-help
 PASS UI-08-settings
 PASS UI-09-records
+PASS START-UI-03-restart-clears-direction
 PASS UI-10-restart-clears-run
 PASS UI-11-quit-confirmation
 PASS UI-12-window-close-while-paused
@@ -37,6 +42,7 @@ PASS CIRCUIT-UI-02-shield-input
 PASS CIRCUIT-UI-03-magnet-locked
 PASS CIRCUIT-UI-04-win-records-unlock-and-medals
 PASS CIRCUIT-UI-05-next-carries-score-and-life
+PASS START-UI-04-next-phase-waits
 PASS CIRCUIT-UI-06-rebuilds-visual-map
 PASS CIRCUIT-UI-07-second-phase-powers
 PASS CIRCUIT-UI-08-map-freezes-powers
@@ -46,4 +52,4 @@ PASS CIRCUIT-UI-11-final-phase-does-not-wrap
 PASS CIRCUIT-UI-12-extras-and-nine-medals
 PASS CIRCUIT-UI-13-phase-selector-callback
 PASS CIRCUIT-UI-14-restart-preserves-earned-progress
-MV_INTEGRATION_RESULT executed=45 failed=0
+MV_INTEGRATION_RESULT executed=51 failed=0
