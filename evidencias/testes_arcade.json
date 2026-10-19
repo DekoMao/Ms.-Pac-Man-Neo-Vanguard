@@ -1,0 +1,141 @@
+{
+	"engine": "4.6.3-stable (official)",
+	"executed": 33,
+	"failed": 0,
+	"passed": 33,
+	"results": [
+		{
+			"id": "TUNNEL-graph-pairs",
+			"passed": true
+		},
+		{
+			"id": "TUNNEL-shortest-path",
+			"passed": true
+		},
+		{
+			"id": "TUNNEL-direction-0",
+			"passed": true
+		},
+		{
+			"id": "TUNNEL-no-middle-sweep-0",
+			"passed": true
+		},
+		{
+			"id": "TUNNEL-interpolation-reset-0",
+			"passed": true
+		},
+		{
+			"id": "TUNNEL-direction-16",
+			"passed": true
+		},
+		{
+			"id": "TUNNEL-no-middle-sweep-16",
+			"passed": true
+		},
+		{
+			"id": "TUNNEL-interpolation-reset-16",
+			"passed": true
+		},
+		{
+			"id": "TUNNEL-dash-allowed",
+			"passed": true
+		},
+		{
+			"id": "TUNNEL-dash-keeps-distance",
+			"passed": true
+		},
+		{
+			"id": "TUNNEL-arrival-is-not-invulnerable",
+			"passed": true
+		},
+		{
+			"id": "TUNNEL-other-borders-closed",
+			"passed": true
+		},
+		{
+			"id": "TUNNEL-ghosts-use-link",
+			"passed": true
+		},
+		{
+			"id": "HOUSE-player-cannot-enter",
+			"passed": true
+		},
+		{
+			"id": "HOUSE-no-required-items-inside",
+			"passed": true
+		},
+		{
+			"id": "HOUSE-route-access-by-state",
+			"passed": true
+		},
+		{
+			"id": "HOUSE-ghost-exits-through-door",
+			"passed": true
+		},
+		{
+			"id": "HOUSE-return-and-regeneration",
+			"passed": true
+		},
+		{
+			"id": "HOUSE-regenerated-ghost-exits",
+			"passed": true
+		},
+		{
+			"id": "HUD-safe-zones-960x720",
+			"passed": true
+		},
+		{
+			"id": "HUD-safe-zones-1280x720",
+			"passed": true
+		},
+		{
+			"id": "HUD-safe-zones-1920x1080",
+			"passed": true
+		},
+		{
+			"id": "HUD-safe-zones-2560x1080",
+			"passed": true
+		},
+		{
+			"id": "HUD-camera-in-dedicated-viewport",
+			"passed": true
+		},
+		{
+			"id": "HUD-live-bounds-960x720",
+			"passed": true
+		},
+		{
+			"id": "HUD-live-bounds-1280x720",
+			"passed": true
+		},
+		{
+			"id": "HUD-live-bounds-1920x1080",
+			"passed": true
+		},
+		{
+			"id": "MENU-bounded-and-scrollable",
+			"passed": true
+		},
+		{
+			"id": "MENU-help-text-wraps",
+			"passed": true
+		},
+		{
+			"id": "MAP-overlay-bounded",
+			"passed": true
+		},
+		{
+			"id": "GHOST-opaque-readable-body",
+			"passed": true
+		},
+		{
+			"id": "GHOST-frightened-face",
+			"passed": true
+		},
+		{
+			"id": "GHOST-returning-eyes-only",
+			"passed": true
+		}
+	],
+	"suite": "Tunnels, ghost house, UI safe zones and ghost presentation"
+}

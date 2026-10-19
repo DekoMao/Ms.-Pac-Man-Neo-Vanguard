@@ -2,7 +2,7 @@
   {
     "id": "importacao",
     "command": [
-      "/tmp/neogrid-circuit-build-8tk7_cqr/engine/Godot_v4.6.3-stable_linux.x86_64",
+      "/tmp/neogrid-arcade-build-bizhnfa6/engine/Godot_v4.6.3-stable_linux.x86_64",
       "--headless",
       "--path",
       "/workspace/scratch/7740f940f7a4/neogrid-map",
@@ -12,12 +12,12 @@
     ],
     "cwd": "/workspace/scratch/7740f940f7a4/neogrid-map",
     "exit_code": 0,
-    "duration_seconds": 7.388
+    "duration_seconds": 8.511
   },
   {
     "id": "testes_logica",
     "command": [
-      "/tmp/neogrid-circuit-build-8tk7_cqr/engine/Godot_v4.6.3-stable_linux.x86_64",
+      "/tmp/neogrid-arcade-build-bizhnfa6/engine/Godot_v4.6.3-stable_linux.x86_64",
       "--headless",
       "--path",
       "/workspace/scratch/7740f940f7a4/neogrid-map",
@@ -26,12 +26,12 @@
     ],
     "cwd": "/workspace/scratch/7740f940f7a4/neogrid-map",
     "exit_code": 0,
-    "duration_seconds": 0.37
+    "duration_seconds": 0.609
   },
   {
     "id": "testes_integracao",
     "command": [
-      "/tmp/neogrid-circuit-build-8tk7_cqr/engine/Godot_v4.6.3-stable_linux.x86_64",
+      "/tmp/neogrid-arcade-build-bizhnfa6/engine/Godot_v4.6.3-stable_linux.x86_64",
       "--headless",
       "--path",
       "/workspace/scratch/7740f940f7a4/neogrid-map",
@@ -40,12 +40,12 @@
     ],
     "cwd": "/workspace/scratch/7740f940f7a4/neogrid-map",
     "exit_code": 0,
-    "duration_seconds": 1.549
+    "duration_seconds": 1.799
   },
   {
     "id": "testes_acao",
     "command": [
-      "/tmp/neogrid-circuit-build-8tk7_cqr/engine/Godot_v4.6.3-stable_linux.x86_64",
+      "/tmp/neogrid-arcade-build-bizhnfa6/engine/Godot_v4.6.3-stable_linux.x86_64",
       "--headless",
       "--path",
       "/workspace/scratch/7740f940f7a4/neogrid-map",
@@ -54,12 +54,12 @@
     ],
     "cwd": "/workspace/scratch/7740f940f7a4/neogrid-map",
     "exit_code": 0,
-    "duration_seconds": 0.36
+    "duration_seconds": 0.278
   },
   {
     "id": "testes_mapa",
     "command": [
-      "/tmp/neogrid-circuit-build-8tk7_cqr/engine/Godot_v4.6.3-stable_linux.x86_64",
+      "/tmp/neogrid-arcade-build-bizhnfa6/engine/Godot_v4.6.3-stable_linux.x86_64",
       "--headless",
       "--path",
       "/workspace/scratch/7740f940f7a4/neogrid-map",
@@ -68,12 +68,12 @@
     ],
     "cwd": "/workspace/scratch/7740f940f7a4/neogrid-map",
     "exit_code": 0,
-    "duration_seconds": 0.341
+    "duration_seconds": 0.304
   },
   {
     "id": "testes_circuito",
     "command": [
-      "/tmp/neogrid-circuit-build-8tk7_cqr/engine/Godot_v4.6.3-stable_linux.x86_64",
+      "/tmp/neogrid-arcade-build-bizhnfa6/engine/Godot_v4.6.3-stable_linux.x86_64",
       "--headless",
       "--path",
       "/workspace/scratch/7740f940f7a4/neogrid-map",
@@ -82,12 +82,26 @@
     ],
     "cwd": "/workspace/scratch/7740f940f7a4/neogrid-map",
     "exit_code": 0,
-    "duration_seconds": 6.415
+    "duration_seconds": 8.527
+  },
+  {
+    "id": "testes_arcade",
+    "command": [
+      "/tmp/neogrid-arcade-build-bizhnfa6/engine/Godot_v4.6.3-stable_linux.x86_64",
+      "--headless",
+      "--path",
+      "/workspace/scratch/7740f940f7a4/neogrid-map",
+      "--script",
+      "res://tests/test_arcade.gd"
+    ],
+    "cwd": "/workspace/scratch/7740f940f7a4/neogrid-map",
+    "exit_code": 0,
+    "duration_seconds": 2.546
   },
   {
     "id": "smoke_headless",
     "command": [
-      "/tmp/neogrid-circuit-build-8tk7_cqr/engine/Godot_v4.6.3-stable_linux.x86_64",
+      "/tmp/neogrid-arcade-build-bizhnfa6/engine/Godot_v4.6.3-stable_linux.x86_64",
       "--headless",
       "--path",
       "/workspace/scratch/7740f940f7a4/neogrid-map",
@@ -100,12 +114,12 @@
     ],
     "cwd": "/workspace/scratch/7740f940f7a4/neogrid-map",
     "exit_code": 0,
-    "duration_seconds": 1.318
+    "duration_seconds": 1.669
   },
   {
     "id": "export_windows",
     "command": [
-      "/tmp/neogrid-circuit-build-8tk7_cqr/engine/Godot_v4.6.3-stable_linux.x86_64",
+      "/tmp/neogrid-arcade-build-bizhnfa6/engine/Godot_v4.6.3-stable_linux.x86_64",
       "--headless",
       "--path",
       "/workspace/scratch/7740f940f7a4/neogrid-map",
@@ -115,15 +129,15 @@
     ],
     "cwd": "/workspace/scratch/7740f940f7a4/neogrid-map",
     "exit_code": 0,
-    "duration_seconds": 5.47
+    "duration_seconds": 10.269
   },
   {
     "id": "pacote_embutido",
     "command": [
-      "/tmp/neogrid-circuit-build-8tk7_cqr/engine/Godot_v4.6.3-stable_linux.x86_64",
+      "/tmp/neogrid-arcade-build-bizhnfa6/engine/Godot_v4.6.3-stable_linux.x86_64",
       "--headless",
       "--main-pack",
-      "/tmp/NeoGrid Teste vers\u00e3o tbz62j6e/MsPacMan_Aperfeicoado.exe",
+      "/tmp/NeoGrid Teste vers\u00e3o vl0clft2/MsPacMan_Aperfeicoado.exe",
       "--fixed-fps",
       "60",
       "--quit-after",
@@ -131,8 +145,8 @@
       "--",
       "--smoke"
     ],
-    "cwd": "/tmp/NeoGrid Teste vers\u00e3o tbz62j6e",
+    "cwd": "/tmp/NeoGrid Teste vers\u00e3o vl0clft2",
     "exit_code": 0,
-    "duration_seconds": 1.327
+    "duration_seconds": 1.614
   }
 ]

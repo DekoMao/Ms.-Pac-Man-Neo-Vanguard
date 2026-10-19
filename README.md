@@ -1,4 +1,8 @@
-# NeoGrid — Circuito Neon 0.3.0
+# NeoGrid — Essência Arcade 0.4.0
+
+Área 3D separada do HUD, visão geral do labirinto, dois pares de túneis laterais,
+casa central de regeneração e fantasmas com silhueta/rostos mais legíveis.
+Menus limitados à tela, com texto ajustável e rolagem quando necessário.
 
 Arcade 3D para Windows com três fases autorais, poderes limitados, nove medalhas
 e rastro cosmético desbloqueável. Movimento, música, Flow, contador e mapa ampliado
@@ -7,9 +11,9 @@ da versão aprovada foram preservados. Extraia o ZIP inteiro e execute
 
 | Fase | Desafio opcional | Tempo-alvo | Itens |
 | --- | --- | ---: | ---: |
-| Pórtico Neon | Capture 2 fantasmas | 110s | 109 |
-| Jardim Iônico | Sem perder vidas | 125s | 112 |
-| Reator Solar | Vença uma aposta Q | 140s | 105 |
+| Pórtico Neon | Capture 2 fantasmas | 110s | 103 |
+| Jardim Iônico | Sem perder vidas | 125s | 107 |
+| Reator Solar | Vença uma aposta Q | 140s | 101 |
 
 WASD/setas: mover; Espaço: dash; **E: escudo**; **R: ímã (fase 2+)**;
 Q: aposta durante Power; M: mapa/pausa; C: câmera; P/Esc: pausa; F11: tela cheia.
@@ -29,15 +33,16 @@ Godot **4.6.3 stable**, templates oficiais **4.6.3.stable**, Python 3.10+:
 python scripts/build.py --godot godot
 ```
 
-O builder exige cinco suítes, faz smoke, exporta Windows, aplica ícone/versão
+O builder exige seis suítes, faz smoke, exporta Windows, aplica ícone/versão
 e testa o PCK embutido no motor do host fora das fontes.
 
-**163 verificações aprovadas.** Inclui coleta dos três mapas por movimento
+**196 verificações aprovadas.** Inclui coleta dos três mapas por movimento
 automatizado, com inimigos desativados para verificar alcançabilidade.
 **Windows nativo, GPU física e equilíbrio com jogadores permanecem pendentes.**
 Capturas Linux/Xvfb em Compatibility/llvmpipe não comprovam acabamento Forward+.
 
-- [Regras e evidências da 0.3](docs/CIRCUITO_NEON.md)
+- [Interface, túneis e fantasmas da 0.4](docs/ESSENCIA_ARCADE.md)
+- [Regras e evidências históricas da 0.3](docs/CIRCUITO_NEON.md)
 - [Correção do mapa 0.2.1](docs/CORRECAO_MAPA.md)
 - [Histórico](CHANGELOG.md)
 - [Créditos e licenças](docs/CREDITOS_E_LICENCAS.md)

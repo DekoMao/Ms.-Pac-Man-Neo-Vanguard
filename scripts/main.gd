@@ -6,6 +6,7 @@ const PlayerScene=preload("res://scenes/player.tscn")
 const GhostScene=preload("res://scenes/ghost.tscn")
 const Feedback=preload("res://scripts/feedback.gd")
 const Stages=preload("res://scripts/stages.gd")
+const Interface=preload("res://scripts/interface.gd")
 const COLORS=[Color("ff4765"),Color("ff78d0"),Color("3bdffc"),Color("ffac59")]
 const CELL:=1.4
 var sim=Rules.new()
@@ -77,6 +78,15 @@ var ability_label:Label
 var power_field:MeshInstance3D
 var power_field_material:StandardMaterial3D
 var stage_lights:Array=[]
+var screen_root:Control
+var game_frame:SubViewportContainer
+var game_view:SubViewport
+var header:PanelContainer
+var sidebar:PanelContainer
+var menu_scrim:ColorRect
+var menu_scroll:ScrollContainer
+var play_rect:Rect2
+var house_gate:MeshInstance3D
 
 func _ready() -> void:
 	settings=Store.read_settings()
@@ -92,7 +102,7 @@ func _ready() -> void:
 	setup_audio()
 	apply_settings()
 	show_title()
-	runtime_info={"version":"0.3.0-circuit","engine":Engine.get_version_info().string,"os":OS.get_name(),"display":DisplayServer.get_name(),"requested_renderer":ProjectSettings.get_setting("rendering/renderer/rendering_method"),"active_renderer":RenderingServer.get_current_rendering_method(),"driver":RenderingServer.get_current_rendering_driver_name(),"adapter":RenderingServer.get_video_adapter_name()}
+	runtime_info={"version":"0.4.0-arcade","engine":Engine.get_version_info().string,"os":OS.get_name(),"display":DisplayServer.get_name(),"requested_renderer":ProjectSettings.get_setting("rendering/renderer/rendering_method"),"active_renderer":RenderingServer.get_current_rendering_method(),"driver":RenderingServer.get_current_rendering_driver_name(),"adapter":RenderingServer.get_video_adapter_name()}
 	print("NEOGRID_RUNTIME ",JSON.stringify(runtime_info))
 	if demo or smoke:start_game()
 	get_tree().auto_accept_quit=false
@@ -156,21 +166,53 @@ func rebuild_maze() -> void:
 	var secondary:=Color(stage.secondary)
 	stage_lights[0].light_color=primary;stage_lights[1].light_color=secondary
 	floor_material.set_shader_parameter("line_color",primary)
-	var wall_mesh=Models.bevel_box(Vector3(CELL*0.97,1.18,CELL*0.97),0.09)
+	var wall_mesh=Models.bevel_box(Vector3(CELL,0.72,CELL),0.055)
 	for y in sim.grid.size():
 		for x in sim.grid[y].length():
 			var cell:=Vector2i(x,y)
 			if sim.floors.has(cell):continue
-			var neon:bool=(x+y*3)%5==0 or x==0 or x==16
-			var color:Color=(primary if (x+y)%2==0 else secondary) if neon else Color(stage.wall)
-			var wall=Models.mesh_node(wall_mesh,Models.material(color,0.40 if neon else 0.0,0.35),coord(Vector2(cell),0.59))
-			walls[cell]=wall;maze_root.add_child(wall)
-			if not neon:
-				var trim_mesh:=BoxMesh.new();trim_mesh.size=Vector3(CELL*0.82,0.025,0.025)
-				wall.add_child(Models.mesh_node(trim_mesh,Models.material(secondary.darkened(0.25),0.4),Vector3(0,0.58,CELL*0.47)))
-	var closing=Models.mesh_node(wall_mesh,Models.material(primary,0.6,0.35),coord(Vector2(Rules.CLOSE_CELL),0.59))
-	closing.visible=false;walls[Rules.CLOSE_CELL]=closing;maze_root.add_child(closing)
+			walls[cell]=create_wall(cell,wall_mesh,primary,secondary)
+	var closing=create_wall(sim.close_cell,wall_mesh,primary,secondary)
+	closing.visible=false;walls[sim.close_cell]=closing
+	build_ghost_house(primary,secondary)
+	for row in Rules.TUNNEL_ROWS:
+		for x in [0,16]:build_tunnel(Vector2i(x,row),primary if row==5 else secondary)
 	for c in sim.pickups:create_pickup(c,sim.pickups[c])
+
+func create_wall(cell:Vector2i,mesh:Mesh,primary:Color,secondary:Color) -> MeshInstance3D:
+	var wall=Models.mesh_node(mesh,Models.material(Color("142238"),0.02,0.35),coord(Vector2(cell),0.36))
+	maze_root.add_child(wall)
+	for d in Rules.DIRS:
+		if not sim.floors.has(cell+d):continue
+		var trim:=BoxMesh.new()
+		trim.size=Vector3(CELL,0.025,0.025) if d.y!=0 else Vector3(0.025,0.025,CELL)
+		var p:=Vector3(d.x*CELL*0.48,0.35,d.y*CELL*0.48)
+		wall.add_child(Models.mesh_node(trim,Models.material(primary,0.75),p))
+		p.y=-0.15
+		wall.add_child(Models.mesh_node(trim,Models.material(secondary.darkened(0.3),0.28),p))
+	return wall
+
+func build_ghost_house(primary:Color,secondary:Color) -> void:
+	var house:=Node3D.new();house.name="CasaRegeneracao";maze_root.add_child(house)
+	var plate:=BoxMesh.new();plate.size=Vector3(CELL*2.95,0.035,CELL*1.95)
+	house.add_child(Models.mesh_node(plate,Models.material(Color("162c45"),0.12,0.4),coord(Vector2(8,5.5),0.025)))
+	for x in [6.55,9.45]:
+		var rail:=BoxMesh.new();rail.size=Vector3(0.035,0.04,CELL*1.95)
+		house.add_child(Models.mesh_node(rail,Models.material(secondary,0.6),coord(Vector2(x,5.5),0.12)))
+	for y in [4.55,6.45]:
+		var rail:=BoxMesh.new();rail.size=Vector3(CELL*2.9,0.04,0.035)
+		house.add_child(Models.mesh_node(rail,Models.material(secondary,0.6),coord(Vector2(8,y),0.12)))
+	var gate:=BoxMesh.new();gate.size=Vector3(CELL*0.9,0.07,0.08)
+	house_gate=Models.mesh_node(gate,Models.material(Color("f3b0e8"),0.75),coord(Vector2(Rules.DOOR),0.40));house_gate.name="Porta";house.add_child(house_gate)
+
+func build_tunnel(cell:Vector2i,color:Color) -> void:
+	var portal:=Node3D.new();portal.name="Tunel_%d_%d"%[cell.x,cell.y];portal.position=coord(Vector2(cell));maze_root.add_child(portal)
+	var post:=BoxMesh.new();post.size=Vector3(0.07,0.88,0.07)
+	for side in [-1,1]:portal.add_child(Models.mesh_node(post,Models.material(color,0.8),Vector3(0,0.44,side*CELL*0.46)))
+	var beam:=BoxMesh.new();beam.size=Vector3(0.07,0.07,CELL*0.97)
+	portal.add_child(Models.mesh_node(beam,Models.material(color,0.8),Vector3(0,0.9,0)))
+	var arrow:=Label3D.new();arrow.text="‹" if cell.x==0 else "›";arrow.font=load("res://assets/DejaVuSans.ttf");arrow.font_size=64;arrow.pixel_size=0.007
+	arrow.billboard=BaseMaterial3D.BILLBOARD_ENABLED;arrow.position=Vector3(0,0.48,0);arrow.modulate=color;portal.add_child(arrow)
 
 func create_pickup(cell:Vector2i,kind:String) -> void:
 	var root:=Node3D.new();root.position=coord(Vector2(cell));root.name="Item_%s_%s"%[cell.x,cell.y]
@@ -238,6 +280,10 @@ func _physics_process(dt:float) -> void:
 			"capture":burst(coord(event.pos,0.7),Color("58dfff"),16+event.chain*3);play_sound("capture",minf(1.36,1.0+(event.chain-1)*0.12));notify("CADEIA %d  •  +%d  •  FLOW ×%.1f"%[event.chain,event.points,sim.flow])
 			"fruit":burst(coord(event.pos,0.6),Color("ff86bb"),16);play_sound("fruit")
 			"drift":burst(coord(event.pos,0.3),Color("ffe576"),5)
+			"wrap":
+				if event.player:
+					for entry in trail:entry.node.queue_free()
+					trail.clear();ribbon.visible=false
 			"warning":notify("RECONFIGURANDO ROTAS • AGUARDE A LUZ")
 			"topology":burst(coord(event.pos,0.6),Color("75efff"),25);notify("NOVA ROTA ABERTA")
 			"topology_cancel":notify("ROTA PRESERVADA • PASSAGEM OCUPADA")
@@ -254,7 +300,7 @@ func _physics_process(dt:float) -> void:
 			"shield_hit":play_sound("near_miss",0.8);notify("ESCUDO ABSORVEU O IMPACTO  •  SAIA DO CERCO")
 			"magnet":play_sound("power",1.15);notify("ÍMÃ ATIVO  •  6s / PONTOS VIZINHOS")
 	if sim.graph_version!=previous_graph:
-		walls[Rules.OPEN_CELL].visible=false;walls[Rules.CLOSE_CELL].visible=true;previous_graph=sim.graph_version
+		walls[sim.open_cell].visible=false;walls[sim.close_cell].visible=true;previous_graph=sim.graph_version
 	for cell in pickup_nodes.keys():
 		if not sim.pickups.has(cell):pickup_nodes[cell].queue_free();pickup_nodes.erase(cell)
 	if sim.status in ["won","game_over"] and not terminal_reported:
@@ -291,40 +337,39 @@ func _process(dt:float) -> void:
 		# Expressive faces orient toward the camera; collision/direction stay planar.
 		var facing:Vector3=camera.position-ghosts[i].position
 		ghosts[i].rotation.y=-atan2(facing.z,facing.x)
-	var target:=coord(p,0.0)
-	if current_screen=="title":target=coord(Vector2(4.5,8))
-	if settings.camera_top:target=Vector3.ZERO
-	var offset:=Vector3(0.0,27,0.01) if settings.camera_top else Vector3(3.6,8.6,8.4)
+	var target:=Vector3.ZERO
+	var offset:=Vector3(0.0,27,0.01) if settings.camera_top else Vector3(0,24,14)
 	var motion:float=0.0 if settings.reduced else settings.camera_motion
-	var lead:=Vector3.ZERO if settings.camera_top else Vector3(sim.player.dir.x,0,sim.player.dir.y)*0.24*motion
-	target+=lead
 	if first_frame:camera_anchor=target+offset;first_frame=false
 	else:camera_anchor=camera_anchor.lerp(target+offset,1-exp(-dt*5))
 	camera.position=camera_anchor+feedback.camera_offset(motion)
-	camera.fov=lerpf(camera.fov,45.0+feedback.fov_offset(sim,motion),1-exp(-dt*9.0)) if motion>0 else 45.0
+	camera.projection=Camera3D.PROJECTION_ORTHOGONAL;camera.fov=45.0
+	camera.size=maxf(20.5 if settings.camera_top else 18.0,26.5/maxf(0.5,play_rect.size.x/play_rect.size.y))
 	camera.look_at(target,Vector3(0,0,-1) if settings.camera_top else Vector3.UP)
 	var hunting:bool=sim.time<sim.power_until
 	floor_material.set_shader_parameter("hunt_mix",1.0 if hunting else 0.0)
 	update_audio(dt,hunting)
+	if is_instance_valid(house_gate):house_gate.visible=not sim.ghosts.any(func(g):return g.state in ["returning","leaving"])
 	# Fade the foreground obstacle when it can occlude the player.
 	for c in walls:
 		var node:MeshInstance3D=walls[c]
 		var near_player:bool=absf(c.x-p.x)<1.2 and c.y>p.y and c.y-p.y<1.4
 		node.scale.y=lerpf(node.scale.y,0.28 if near_player and not settings.camera_top else 1.0,minf(1,dt*8))
 	if not sim.topology.is_empty():
-		var mat:StandardMaterial3D=walls[Rules.OPEN_CELL].material_override
-		mat.emission_enabled=true;mat.emission=Color("68e6f0");mat.emission_energy_multiplier=1.0+sin(visual_time*8)*0.4
-		walls[Rules.CLOSE_CELL].visible=true
-		var preview_mat:StandardMaterial3D=walls[Rules.CLOSE_CELL].material_override
-		preview_mat.transparency=BaseMaterial3D.TRANSPARENCY_ALPHA;preview_mat.albedo_color.a=0.22+0.08*sin(visual_time*8)
+		var mat:StandardMaterial3D=walls[sim.open_cell].material_override
+		mat.emission_enabled=true;mat.emission=Color("68e6f0");mat.emission_energy_multiplier=0.4 if settings.reduced else 0.6+sin(visual_time*8)*0.2
+		walls[sim.close_cell].visible=true
+		var preview_mat:StandardMaterial3D=walls[sim.close_cell].material_override
+		preview_mat.transparency=BaseMaterial3D.TRANSPARENCY_ALPHA;preview_mat.albedo_color.a=0.25
 	else:
-		walls[Rules.CLOSE_CELL].visible=sim.graph_version>0
-		var closing_mat:StandardMaterial3D=walls[Rules.CLOSE_CELL].material_override
+		walls[sim.close_cell].visible=sim.graph_version>0
+		var closing_mat:StandardMaterial3D=walls[sim.close_cell].material_override
 		closing_mat.transparency=BaseMaterial3D.TRANSPARENCY_DISABLED;closing_mat.albedo_color.a=1.0
 	for cell in pickup_nodes:
 		if sim.pickups.get(cell)=="power":pickup_nodes[cell].scale=Vector3.ONE*(1.0+0.10*sin(visual_time*4))
 	update_hud()
 	update_trail(dt)
+	Interface.layout(self)
 	if demo and not screenshot_dir.is_empty():
 		for mark in [2,7]:
 			if sim.time>=mark and not screenshots_done.has(mark):screenshots_done[mark]=true;save_screenshot(mark)
@@ -332,6 +377,7 @@ func _process(dt:float) -> void:
 		print("NEOGRID_SMOKE_OK ",JSON.stringify({"score":sim.score,"time":sim.time,"ghosts":ghosts.size(),"pickups":pickup_nodes.size()}));get_tree().quit()
 
 func demo_input() -> void:
+	if sim.player.pos.x<0 or sim.player.pos.x>16:return
 	var cell:=Vector2i(sim.player.pos.round())
 	if sim.player.pos.distance_to(Vector2(cell))>0.05:return
 	if sim.time<1.0:demo_target=Vector2i(5,9)
@@ -349,8 +395,8 @@ func demo_input() -> void:
 				if d<best:best=d;demo_target=c
 	var direction:=Vector2i.ZERO;var distance:=10000
 	for d in Rules.DIRS:
-		if not sim.floors.has(cell+d):continue
-		var dd:int=sim.path_distance(cell+d,demo_target)
+		if not sim.walkable(sim.neighbor(cell,d)):continue
+		var dd:int=sim.path_distance(sim.neighbor(cell,d),demo_target)
 		if dd<distance:distance=dd;direction=d
 	if direction!=sim.player.dir:sim.request_direction(direction)
 	else:sim.held_dir=direction
@@ -445,11 +491,11 @@ func apply_settings() -> void:
 	AudioServer.set_bus_volume_db(0,linear_to_db(maxf(0.001,settings.volume)))
 	var env:Environment=world_environment.environment
 	env.glow_enabled=not settings.reduced
-	env.glow_intensity=0.20 if settings.reduced else 0.45
+	env.glow_intensity=0.16 if settings.reduced else 0.28
 	env.ssr_enabled=settings.quality>0
 	env.ssao_enabled=settings.quality>0
 	env.ssr_max_steps=32 if settings.quality==2 else 16
-	get_viewport().positional_shadow_atlas_size=2048 if settings.quality==2 else 1024
+	game_view.positional_shadow_atlas_size=2048 if settings.quality==2 else 1024
 	Store.write_settings(settings)
 
 func label(text:String,size:int,color:Color=Color("e9f1ff")) -> Label:
@@ -466,66 +512,16 @@ func button(text:String,callback:Callable) -> Button:
 	b.add_theme_stylebox_override("normal",style);b.add_theme_stylebox_override("hover",hover);b.add_theme_stylebox_override("focus",hover);b.add_theme_stylebox_override("pressed",hover);b.pressed.connect(callback);return b
 
 func build_ui() -> void:
-	ui=CanvasLayer.new();add_child(ui)
-	var root:=Control.new();root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);ui.add_child(root)
-	var theme:=Theme.new();theme.default_font=load("res://assets/DejaVuSans.ttf");root.theme=theme
-	hud=Control.new();hud.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);hud.mouse_filter=Control.MOUSE_FILTER_IGNORE;root.add_child(hud)
-	var top=panel();top.position=Vector2(25,20);hud.add_child(top)
-	var row:=HBoxContainer.new();row.add_theme_constant_override("separation",28);top.add_child(row)
-	var col:=VBoxContainer.new();row.add_child(col);col.add_child(label("NEO—GRID  /  MV",13,Color("5de0eb")));score_label=label("000000",30);col.add_child(score_label)
-	var livescol:=VBoxContainer.new();row.add_child(livescol);livescol.add_child(label("VIDAS",11,Color("97a9c4")));life_label=label("● ● ●",22,Color("ffce68"));livescol.add_child(life_label)
-	var mission_panel=panel();mission_panel.position=Vector2(25,135);mission_panel.custom_minimum_size=Vector2(300,0);hud.add_child(mission_panel)
-	var mission_box:=VBoxContainer.new();mission_panel.add_child(mission_box)
-	mission_label=label("",13,Color("bce9d4"));mission_box.add_child(mission_label)
-	ability_label=label("",12,Color("a9dff2"));mission_box.add_child(ability_label)
-	var minimap_panel=panel();hud.add_child(minimap_panel)
-	minimap_panel.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
-	minimap_panel.offset_left=-300;minimap_panel.offset_right=-25;minimap_panel.offset_top=20
-	minimap_panel.custom_minimum_size=Vector2(275,0)
-	var map_box:=VBoxContainer.new();map_box.add_theme_constant_override("separation",5);minimap_panel.add_child(map_box)
-	collection_label=label("COLETA",18,Color("ffe19a"));map_box.add_child(collection_label)
-	collection_caption=label("",12,Color("c6d9e9"));map_box.add_child(collection_caption)
-	collection_bar=ProgressBar.new();collection_bar.show_percentage=false;collection_bar.custom_minimum_size=Vector2(235,7);map_box.add_child(collection_bar)
-	collection_detail=label("",11,Color("b8cddd"));map_box.add_child(collection_detail)
-	var phase_panel=panel();phase_panel.position=Vector2(420,20);phase_panel.custom_minimum_size=Vector2(420,0);hud.add_child(phase_panel)
-	phase_label=label("FUGA  /  RITMO 0",18,Color.WHITE);phase_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;phase_panel.add_child(phase_label)
-	var risk_panel=panel();hud.add_child(risk_panel)
-	risk_panel.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
-	risk_panel.offset_left=-325;risk_panel.offset_right=-25;risk_panel.offset_top=320
-	risk_panel.custom_minimum_size=Vector2(300,0)
-	risk_label=label("APOSTA OPCIONAL",12,Color("bce8ff"));risk_label.custom_minimum_size.x=260;risk_panel.add_child(risk_label)
-	minimap=Control.new();minimap.set_script(load("res://scripts/minimap.gd"));minimap.sim=sim;minimap.custom_minimum_size=Vector2(235,156);map_box.add_child(minimap)
-	map_box.add_child(label("M · ampliar mapa e pausar",11,Color("92e0f0")))
-	var bottom=panel();bottom.position=Vector2(25,625);bottom.custom_minimum_size.x=420;hud.add_child(bottom)
-	var box:=VBoxContainer.new();bottom.add_child(box)
-	flow_label=label("FLOW ×1.0",16,Color("ffb5df"));box.add_child(flow_label)
-	energy_bar=ProgressBar.new();energy_bar.show_percentage=false;energy_bar.custom_minimum_size=Vector2(370,10);energy_bar.max_value=100;box.add_child(energy_bar)
-	status_label=label("ESPAÇO · DASH   C · CÂMERA   M · MAPA   P · PAUSA",10,Color("9aacc4"));box.add_child(status_label)
-	var power_panel=panel();power_panel.position=Vector2(1000,637);power_panel.custom_minimum_size.x=250;hud.add_child(power_panel)
-	var pbox:=VBoxContainer.new();power_panel.add_child(pbox);power_caption=label("POWER PELLET",11,Color("91e2ff"));pbox.add_child(power_caption);power_bar=ProgressBar.new();power_bar.show_percentage=false;power_bar.custom_minimum_size=Vector2(200,8);power_bar.max_value=6;pbox.add_child(power_bar)
-	toast=label("",19,Color("fcdd8c"));toast.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;toast.position=Vector2(300,110);toast.size=Vector2(680,50);hud.add_child(toast)
-	menu=panel();menu.position=Vector2(65,100);menu.custom_minimum_size=Vector2(400,0);root.add_child(menu)
-	menu_content=VBoxContainer.new();menu_content.add_theme_constant_override("separation",12);menu.add_child(menu_content)
-	map_overlay=panel();root.add_child(map_overlay)
-	map_overlay.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
-	map_overlay.anchor_left=0.5;map_overlay.anchor_right=0.5
-	map_overlay.offset_left=-275;map_overlay.offset_right=275;map_overlay.offset_top=20
-	map_overlay.custom_minimum_size=Vector2(550,0);map_overlay.visible=false
-	var overview_box:=VBoxContainer.new();overview_box.add_theme_constant_override("separation",8);map_overlay.add_child(overview_box)
-	overview_box.add_child(label("MAPA DA ÁREA",22,Color("ffe19a")))
-	overview_caption=label("",15);overview_box.add_child(overview_caption)
-	overview_map=Control.new();overview_map.set_script(load("res://scripts/minimap.gd"));overview_map.sim=sim
-	overview_map.custom_minimum_size=Vector2(510,390);overview_box.add_child(overview_map)
-	overview_box.add_child(label("• Pontos   ◉ Power   ◆ Fruta   ▲ Você",13,Color("cee5f3")))
-	overview_box.add_child(label("Últimos 10 itens: círculo branco. Tempo pausado.",12,Color("a3ccda")))
-	overview_box.add_child(button("Retomar · M / Esc",resume_game))
+	Interface.build(self)
 
 func clear_menu(title:String,subtitle:String="") -> void:
 	map_overlay.visible=false
 	for c in menu_content.get_children():menu_content.remove_child(c);c.queue_free()
 	menu.visible=true
+	menu_scrim.visible=true;menu_scroll.scroll_vertical=0
 	menu_content.add_child(label(title,35,Color("ffdb76")))
 	if not subtitle.is_empty():menu_content.add_child(label(subtitle,13,Color("8fc5d5")))
+	Interface.layout(self)
 
 func show_title() -> void:
 	current_screen="title";sim.paused=true;hud.visible=false
@@ -537,12 +533,13 @@ func show_title() -> void:
 	menu_content.add_child(button("Configurações",show_settings))
 	menu_content.add_child(button("Melhor pontuação · %06d"%settings.circuit_record,show_records))
 	menu_content.add_child(button("Sair",func():get_tree().quit()))
-	menu_content.add_child(label("MV 0.3  •  CIRCUITO NEON",10,Color("7787a2")))
+	menu_content.add_child(label("MV 0.4  •  ESSÊNCIA ARCADE",10,Color("7787a2")))
 
 func start_game(level:int=0, carry:Dictionary={}) -> void:
 	level=clampi(level,0,2)
 	map_overlay.visible=false
 	sim.reset(level,true,carry);sim.start();sim.paused=false;current_screen="playing";hud.visible=true;menu.visible=false;terminal_reported=false;previous_graph=0;music.stream_paused=false
+	menu_scrim.visible=false;Interface.layout(self)
 	feedback.reset();observed_events.clear();first_frame=true
 	for track in [music,tension_music,hunt_music]:track.stop();track.stream_paused=false;track.play(0.0)
 	rebuild_maze()
@@ -587,6 +584,7 @@ func show_map() -> void:
 func resume_game() -> void:
 	map_overlay.visible=false
 	current_screen="playing";sim.paused=false;menu.visible=false;hud.visible=true;pause_music(false)
+	menu_scrim.visible=false;Interface.layout(self)
 
 func show_help() -> void:
 	current_screen="help";sim.paused=true;clear_menu("COMO JOGAR")
@@ -596,6 +594,7 @@ func show_help() -> void:
 	menu_content.add_child(label("Uma aposta por fase. Não altera vidas nem colisões.",13))
 	menu_content.add_child(label("Ritmo sobe após aviso. Quase colisão só conta ao escapar.",13))
 	menu_content.add_child(label("M · mapa ampliado com pausa. O HUD mostra todos os itens restantes.",13))
+	menu_content.add_child(label("Túneis laterais ligam bordas opostas. A casa central regenera os fantasmas.",13))
 	menu_content.add_child(label("E · escudo de um impacto / 8s. R · ímã de pontos / 6s (fase 2+).",13))
 	menu_content.add_child(label("Uma carga por poder por fase. Morrer encerra os efeitos; não recarrega.",13))
 	menu_content.add_child(label("Fantasmas que voltaram à cor original já são perigosos.",13))
@@ -651,7 +650,7 @@ func update_hud() -> void:
 	overview_caption.text="%d itens restantes  ·  %d / %d coletados"%[remaining,progress.collected,progress.total]
 	score_label.text="%06d"%sim.score
 	life_label.text="● ".repeat(maxi(0,sim.lives))
-	flow_label.text="FLOW ×%.1f    ·    DASH %d%%"%[sim.flow,sim.energy]
+	flow_label.text="FLOW ×%.1f"%sim.flow
 	energy_bar.value=sim.energy;power_bar.value=maxf(0,sim.power_until-sim.time)
 	var hunting:bool=sim.time<sim.power_until
 	phase_label.text="%d/3 · %s\n%s"%[sim.stage_id+1,Stages.INFO[sim.stage_id].name,"CAÇA / CADEIA %d"%sim.combo if hunting else "FUGA / RITMO %d"%sim.pressure_level]
@@ -660,19 +659,19 @@ func update_hud() -> void:
 	if sim.stage_id==0 and not sim.challenge_met():challenge_status="%d / 2 capturas"%sim.stage_captures
 	if sim.stage_id==1:challenge_status="Sem perdas até agora" if sim.stage_deaths==0 else "Tente na próxima partida"
 	if sim.stage_id==2 and sim.risk.state=="failed":challenge_status="Tente na próxima partida"
-	mission_label.text="DESAFIO · %s\n%s  |  %.0fs / %.0fs"%[stage.challenge,challenge_status,sim.time,stage.par]
+	mission_label.text="%s\n%s\n%.0fs / alvo %.0fs"%[stage.challenge,challenge_status,sim.time,stage.par]
 	var shield_text:String="ATIVO %.1fs"%maxf(0,sim.shield_until-sim.time) if sim.time<sim.shield_until else ("PRONTO" if sim.shield_charges>0 else "SEM CARGA")
-	if sim.time<sim.grace_until:shield_text="IMPACTO ABSORVIDO"
+	if sim.time<sim.grace_until:shield_text="PROTEÇÃO"
 	var magnet_text:String="ATIVO %.1fs"%maxf(0,sim.magnet_until-sim.time) if sim.time<sim.magnet_until else ("PRONTO" if sim.magnet_charges>0 else "SEM CARGA")
 	if sim.stage_id==0:magnet_text="LIBERA NA FASE 2"
 	ability_label.text="E · ESCUDO: %s\nR · ÍMÃ: %s"%[shield_text,magnet_text]
 	phase_label.modulate=Color("76e9ff") if hunting else Color("ffcb79").lerp(Color("ff7c88"),feedback.threat*0.6)
 	power_caption.text="CAÇA  •  %.1fs"%maxf(0,sim.power_until-sim.time) if hunting else "POWER PELLET  /  BUSQUE A LUZ"
 	match sim.risk.state:
-		"available":risk_label.text="APOSTA OPCIONAL  /  Q\n20E: 2 capturas no mesmo Power\nRecompensa: +600 pontos / +35E" if hunting else "APOSTA OPCIONAL  /  +600\nConsuma Power para apostar (Q)\nCusto 20E  •  uma tentativa por fase"
-		"active":risk_label.text="APOSTA  %d / 2  •  %.1fs\nCapture antes de acabar este Power"%[sim.risk.progress,maxf(0,sim.risk.deadline-sim.time)]
+		"available":risk_label.text="Q · apostar 20E: 2 capturas\n+600 pontos / +35 energia" if hunting else "Q · aposta liberada durante Power"
+		"active":risk_label.text="APOSTA %d / 2 · %.1fs"%[sim.risk.progress,maxf(0,sim.risk.deadline-sim.time)]
 		"success":risk_label.text="APOSTA VENCIDA\n+600 pontos  /  +35 energia"
-		"failed":risk_label.text="APOSTA ENCERRADA\nSua partida continua. Sem perder vida."
+		"failed":risk_label.text="APOSTA ENCERRADA"
 	minimap.queue_redraw()
 	if map_overlay.visible:overview_map.queue_redraw()
 

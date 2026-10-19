@@ -1,0 +1,37 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PASS TUNNEL-graph-pairs
+PASS TUNNEL-shortest-path
+PASS TUNNEL-direction-0
+PASS TUNNEL-no-middle-sweep-0
+PASS TUNNEL-interpolation-reset-0
+PASS TUNNEL-direction-16
+PASS TUNNEL-no-middle-sweep-16
+PASS TUNNEL-interpolation-reset-16
+PASS TUNNEL-dash-allowed
+PASS TUNNEL-dash-keeps-distance
+PASS TUNNEL-arrival-is-not-invulnerable
+PASS TUNNEL-other-borders-closed
+PASS TUNNEL-ghosts-use-link
+PASS HOUSE-player-cannot-enter
+PASS HOUSE-no-required-items-inside
+PASS HOUSE-route-access-by-state
+PASS HOUSE-ghost-exits-through-door
+PASS HOUSE-return-and-regeneration
+PASS HOUSE-regenerated-ghost-exits
+PASS HUD-safe-zones-960x720
+PASS HUD-safe-zones-1280x720
+PASS HUD-safe-zones-1920x1080
+PASS HUD-safe-zones-2560x1080
+NEOGRID_RUNTIME {"active_renderer":"forward_plus","adapter":"","display":"headless","driver":"vulkan","engine":"4.6.3-stable (official)","os":"Linux","requested_renderer":"forward_plus","version":"0.4.0-arcade"}
+PASS HUD-camera-in-dedicated-viewport
+PASS HUD-live-bounds-960x720
+PASS HUD-live-bounds-1280x720
+PASS HUD-live-bounds-1920x1080
+PASS MENU-bounded-and-scrollable
+PASS MENU-help-text-wraps
+PASS MAP-overlay-bounded
+PASS GHOST-opaque-readable-body
+PASS GHOST-frightened-face
+PASS GHOST-returning-eyes-only
+ARCADE_TEST_RESULT executed=33 failed=0

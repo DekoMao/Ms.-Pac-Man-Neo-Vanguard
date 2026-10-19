@@ -25,8 +25,14 @@ const CLOSE_CELL := Vector2i(8,3)
 const PLAYER_RADIUS := 0.29
 const GHOST_RADIUS := 0.30
 const Stages = preload("res://scripts/stages.gd")
+const TUNNEL_ROWS = [5,9]
+const HOUSE = [Vector2i(7,5),Vector2i(8,5),Vector2i(9,5),Vector2i(7,6),Vector2i(8,6),Vector2i(9,6)]
+const DOOR := Vector2i(8,4)
+const EXIT := Vector2i(8,3)
 
 var grid:Array = GRID
+var open_cell := OPEN_CELL
+var close_cell := CLOSE_CELL
 var stage_id := 0
 var campaign := false
 var stage_deaths := 0
@@ -85,7 +91,9 @@ func _init(seed_value: int = 73021) -> void:
 func reset(level:int=0, circuit:bool=false, carry:Dictionary={}) -> void:
 	stage_id = clampi(level,0,2)
 	campaign = circuit
-	grid = Stages.layout(stage_id, GRID)
+	grid = Stages.layout(stage_id) if campaign else GRID.duplicate()
+	open_cell = OPEN_CELL
+	close_cell = Vector2i(8,9) if campaign else CLOSE_CELL
 	floors.clear()
 	pickups.clear()
 	for y in grid.size():
@@ -100,8 +108,10 @@ func reset(level:int=0, circuit:bool=false, carry:Dictionary={}) -> void:
 		var g := actor(Vector2(HOME[i]), Vector2i.UP)
 		g.merge({"state":"house", "home":HOME[i], "release":2.5 + i * 1.2, "immune":-1, "id":i})
 		ghosts.append(g)
-	for c in HOME + [CLOSE_CELL, Vector2i(1,9)]:
+	for c in HOME + [close_cell, Vector2i(1,9)]:
 		pickups.erase(c)
+	if campaign:
+		for c in HOUSE + [DOOR]:pickups.erase(c)
 	pickups[Vector2i(3,9)] = "fruit"
 	pickups[Vector2i(5,9)] = "power"
 	time = 0.0
@@ -176,9 +186,9 @@ func request_dash() -> bool:
 	var probe := p + Vector2(dir) * 0.035
 	# Permit moving only inside legal corridors, including next center/edge.
 	var c := Vector2i(p.round())
-	if dir == Vector2i.ZERO or (p.distance_to(Vector2(c)) < 0.001 and not floors.has(c + dir)):
+	if dir == Vector2i.ZERO or (p.distance_to(Vector2(c)) < 0.001 and not walkable(neighbor(c,dir))):
 		return false
-	if not floors.has(Vector2i(probe.round())): return false
+	if not walkable(normalize_cell(Vector2i(probe.round()))): return false
 	energy -= tuning.dash_cost
 	dash_until = time + tuning.dash_duration
 	dash_ready = time + tuning.dash_cooldown
@@ -202,6 +212,9 @@ func tick(dt: float = STEP) -> void:
 	var ghost_paths: Array = []
 	for g in ghosts:
 		if g.state == "house" and time >= g.release:
+			g.state = "leaving" if campaign else ("vulnerable" if time < power_until and g.immune != window_id else normal_state())
+		if g.state == "leaving" and g.pos.distance_to(Vector2(EXIT)) < 0.06:
+			g.pos = Vector2(EXIT)
 			g.state = "vulnerable" if time < power_until and g.immune != window_id else normal_state()
 		if g.state == "returning" and g.pos.distance_to(Vector2(g.home)) < 0.06:
 			g.pos = Vector2(g.home)
@@ -228,7 +241,7 @@ func tick(dt: float = STEP) -> void:
 				if time + dt * magnetic_toi < magnet_until: toi = minf(toi, magnetic_toi)
 		if toi <= 1.0: contacts.append({"at":toi, "priority":0, "type":"pickup", "cell":cell})
 	for i in ghosts.size():
-		if ghosts[i].state == "house": continue
+		if ghosts[i].state in ["house","leaving"]: continue
 		var toi := path_contact(pp, ghost_paths[i], PLAYER_RADIUS + GHOST_RADIUS)
 		if toi <= 1.0: contacts.append({"at":toi, "priority":2, "type":"ghost", "index":i})
 	if power_until >= time and power_until <= time + dt:
@@ -381,7 +394,7 @@ func collect(cell: Vector2i, at: float) -> void:
 		power_until = at + tuning.power_seconds
 		score += 50
 		for g in ghosts:
-			if g.state not in ["returning", "house"]: g.state = "vulnerable"
+			if g.state not in ["returning", "house", "leaving"]: g.state = "vulnerable"
 	elif kind == "fruit":
 		score += roundi(100 * flow)
 		queue_topology()
@@ -440,6 +453,7 @@ func advance(a: Dictionary, distance: float, is_player: bool) -> Array:
 	var total := maxf(distance, 0.000001)
 	var spent := 0.0
 	var guard := 0
+	var house_access:bool = not is_player and a.get("state","") in ["returning","leaving","house"]
 	while distance > 0.000001 and guard < 12:
 		guard += 1
 		var p: Vector2 = a.pos
@@ -448,7 +462,7 @@ func advance(a: Dictionary, distance: float, is_player: bool) -> Array:
 			a.pos = Vector2(center)
 			if is_player:
 				var wanted := buffer_dir if time-buffer_time <= tuning.turn_buffer else held_dir
-				if wanted != Vector2i.ZERO and time >= dash_until and floors.has(center + wanted):
+				if wanted != Vector2i.ZERO and time >= dash_until and walkable(neighbor(center,wanted)):
 					if a.dir != Vector2i.ZERO and Vector2(wanted).dot(Vector2(a.dir)) == 0 and time-buffer_time <= tuning.drift_window and time >= drift_ready:
 						drift_until = time + 0.2
 						drift_ready = time + 0.35
@@ -456,7 +470,7 @@ func advance(a: Dictionary, distance: float, is_player: bool) -> Array:
 					a.dir = wanted
 					buffer_time = -100.0
 			else: a.dir = choose_direction(a, center)
-			if not floors.has(center + a.dir): break
+			if not walkable(neighbor(center,a.dir),house_access): break
 		if a.dir == Vector2i.ZERO: break
 		var d: Vector2i = a.dir
 		var next: Vector2 = p
@@ -469,18 +483,26 @@ func advance(a: Dictionary, distance: float, is_player: bool) -> Array:
 		segments.append({"a":p, "b":a.pos, "t0":spent/total, "t1":(spent+move)/total})
 		distance -= move
 		spent += move
+		if campaign and int(roundf(a.pos.y)) in TUNNEL_ROWS and (a.pos.x <= -1.0+0.000001 or a.pos.x >= 17.0-0.000001):
+			a.pos.x += 17.0 if a.pos.x<0 else -17.0
+			a.previous = a.pos
+			# A discontinuity, never a swept line through the middle of the maze.
+			segments.append({"a":a.pos,"b":a.pos,"t0":spent/total,"t1":spent/total})
+			events.append({"type":"wrap","pos":a.pos,"player":is_player})
 	if spent/total < 1.0:
 		segments.append({"a":a.pos, "b":a.pos, "t0":spent/total, "t1":1.0})
 	return segments
 
 func choose_direction(g: Dictionary, c: Vector2i) -> Vector2i:
 	var options: Array = []
+	var access:bool = g.state in ["returning","leaving","house"]
 	for d in DIRS:
-		if floors.has(c+d): options.append(d)
+		if walkable(neighbor(c,d),access): options.append(d)
 	if options.is_empty(): return Vector2i.ZERO
-	if options.size() > 1: options.erase(-g.dir)
+	if options.size() > 1 and not access: options.erase(-g.dir)
 	var target := Vector2i(player.pos.round())
 	if g.state == "returning": target = g.home
+	elif g.state == "leaving": target = EXIT
 	elif g.state == "scatter": target = [Vector2i(15,1),Vector2i(1,1),Vector2i(15,11),Vector2i(1,11)][g.id]
 	elif g.id == 1: target += player.dir * 3
 	elif g.id == 2: target = Vector2i(16,12)-target
@@ -488,22 +510,38 @@ func choose_direction(g: Dictionary, c: Vector2i) -> Vector2i:
 	var best: Vector2i = options[0]
 	var value := -100000.0
 	for d in options:
-		var dist := path_distance(c+d, target)
+		var dist := path_distance(neighbor(c,d), target, access)
 		var utility := float(dist if g.state == "vulnerable" else -dist)
 		if utility > value:
 			value = utility
 			best = d
 	return best
 
-func path_distance(start_cell: Vector2i, target: Vector2i) -> int:
+func normalize_cell(c:Vector2i) -> Vector2i:
+	if campaign and c.y in TUNNEL_ROWS:
+		if c.x==-1:return Vector2i(16,c.y)
+		if c.x==17:return Vector2i(0,c.y)
+	return c
+
+func neighbor(c:Vector2i,d:Vector2i) -> Vector2i:
+	return normalize_cell(c+d)
+
+func walkable(c:Vector2i,house_access:bool=false) -> bool:
+	return floors.has(c) and (not campaign or house_access or (c not in HOUSE and c!=DOOR))
+
+func path_distance(start_cell: Vector2i, target: Vector2i, house_access:bool=false) -> int:
+	start_cell=normalize_cell(start_cell)
+	target=normalize_cell(target)
 	# At most one small-board BFS per legal direction, only at cell centers.
-	if not floors.has(target):
+	if not walkable(target,house_access):
 		var closest := 100000
 		for c in floors:
+			if not walkable(c,house_access):continue
 			var d: int = absi(c.x-target.x)+absi(c.y-target.y)
 			if d < closest: closest=d
 		var best_target: Vector2i = start_cell
 		for c in floors:
+			if not walkable(c,house_access):continue
 			if absi(c.x-target.x)+absi(c.y-target.y) == closest: best_target=c; break
 		target = best_target
 	var queue: Array = [start_cell]
@@ -514,9 +552,10 @@ func path_distance(start_cell: Vector2i, target: Vector2i) -> int:
 		index += 1
 		if c == target: return distances[c]
 		for d in DIRS:
-			if floors.has(c+d) and not distances.has(c+d):
-				distances[c+d] = distances[c]+1
-				queue.append(c+d)
+			var next := neighbor(c,d)
+			if walkable(next,house_access) and not distances.has(next):
+				distances[next] = distances[c]+1
+				queue.append(next)
 	return 10000
 
 static func segment_toi(a: Vector2, b: Vector2, c: Vector2, d: Vector2, radius: float) -> float:
@@ -550,7 +589,7 @@ static func path_contact(a: Array, b: Array, radius: float) -> float:
 func queue_topology() -> void:
 	if topology_done or not topology.is_empty(): return
 	topology = {"apply_at":time+1.5, "cancel_at":time+4.5}
-	events.append({"type":"warning", "pos":Vector2(OPEN_CELL)})
+	events.append({"type":"warning", "pos":Vector2(open_cell)})
 
 func topology_valid(candidate: Dictionary) -> bool:
 	if candidate.is_empty(): return false
@@ -566,25 +605,26 @@ func topology_valid(candidate: Dictionary) -> bool:
 		var c: Vector2i = queue[i]
 		i += 1
 		for d in DIRS:
-			if candidate.has(c+d) and not visited.has(c+d): visited[c+d]=true; queue.append(c+d)
+			var next := neighbor(c,d)
+			if candidate.has(next) and not visited.has(next): visited[next]=true; queue.append(next)
 	return visited.size() == candidate.size()
 
 func update_topology() -> void:
 	if topology.is_empty() or time < topology.apply_at: return
 	var candidate := floors.duplicate()
-	candidate[OPEN_CELL] = true
-	candidate.erase(CLOSE_CELL)
+	candidate[open_cell] = true
+	candidate.erase(close_cell)
 	var safe := topology_valid(candidate)
 	for a in [player]+ghosts:
-		if a.pos.distance_to(Vector2(OPEN_CELL)) < 1.1 or a.pos.distance_to(Vector2(CLOSE_CELL)) < 1.1: safe=false
+		if a.pos.distance_to(Vector2(open_cell)) < 1.1 or a.pos.distance_to(Vector2(close_cell)) < 1.1: safe=false
 	if safe:
 		floors = candidate
 		graph_version += 1
 		topology_done = true
 		topology.clear()
-		events.append({"type":"topology", "pos":Vector2(OPEN_CELL)})
+		events.append({"type":"topology", "pos":Vector2(open_cell)})
 	elif time >= topology.cancel_at:
 		topology.clear()
 		topology_done = true
-		events.append({"type":"topology_cancel", "pos":Vector2(OPEN_CELL)})
+		events.append({"type":"topology_cancel", "pos":Vector2(open_cell)})
 
