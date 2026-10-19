@@ -1,5 +1,10 @@
 # Procedência
 
+- Rodada 0.2: novos sinais de risco, pressão e Power e camadas musicais de 112 BPM
+  sintetizados por `scripts/generate_action_audio.py`, sem áudio de terceiros.
+  WAVs e código gerador incluídos nos fontes. A referência Gemini permanece
+  identificada em `referencias/` e é excluída do executável de distribuição.
+
 - Código GDScript/Python/PowerShell e malhas procedurais: implementação própria
   produzida neste trabalho. Personagens, paredes, reflexos, ícone e HUD não
   reutilizam sprites/ROMs do original.

@@ -5,14 +5,14 @@
       "godot",
       "--headless",
       "--path",
-      "/workspace/NeoGrid",
+      "/workspace/NeoGrid_Refino",
       "--editor",
       "--import",
       "--quit"
     ],
-    "cwd": "/workspace/NeoGrid",
+    "cwd": "/workspace/NeoGrid_Refino",
     "exit_code": 0,
-    "duration_seconds": 4.466
+    "duration_seconds": 6.14
   },
   {
     "id": "testes_logica",
@@ -20,13 +20,13 @@
       "godot",
       "--headless",
       "--path",
-      "/workspace/NeoGrid",
+      "/workspace/NeoGrid_Refino",
       "--script",
       "res://tests/test_rules.gd"
     ],
-    "cwd": "/workspace/NeoGrid",
+    "cwd": "/workspace/NeoGrid_Refino",
     "exit_code": 0,
-    "duration_seconds": 0.269
+    "duration_seconds": 0.261
   },
   {
     "id": "testes_integracao",
@@ -34,13 +34,27 @@
       "godot",
       "--headless",
       "--path",
-      "/workspace/NeoGrid",
+      "/workspace/NeoGrid_Refino",
       "--script",
       "res://tests/test_integration.gd"
     ],
-    "cwd": "/workspace/NeoGrid",
+    "cwd": "/workspace/NeoGrid_Refino",
     "exit_code": 0,
     "duration_seconds": 0.732
+  },
+  {
+    "id": "testes_acao",
+    "command": [
+      "godot",
+      "--headless",
+      "--path",
+      "/workspace/NeoGrid_Refino",
+      "--script",
+      "res://tests/test_action.gd"
+    ],
+    "cwd": "/workspace/NeoGrid_Refino",
+    "exit_code": 0,
+    "duration_seconds": 0.258
   },
   {
     "id": "smoke_headless",
@@ -48,7 +62,7 @@
       "godot",
       "--headless",
       "--path",
-      "/workspace/NeoGrid",
+      "/workspace/NeoGrid_Refino",
       "--fixed-fps",
       "60",
       "--quit-after",
@@ -56,9 +70,9 @@
       "--",
       "--smoke"
     ],
-    "cwd": "/workspace/NeoGrid",
+    "cwd": "/workspace/NeoGrid_Refino",
     "exit_code": 0,
-    "duration_seconds": 0.828
+    "duration_seconds": 0.918
   },
   {
     "id": "export_windows",
@@ -66,14 +80,14 @@
       "godot",
       "--headless",
       "--path",
-      "/workspace/NeoGrid",
+      "/workspace/NeoGrid_Refino",
       "--export-release",
       "Windows Desktop",
-      "/workspace/NeoGrid/entrega/MsPacMan_Aperfeicoado/MsPacMan_Aperfeicoado.exe"
+      "/workspace/NeoGrid_Refino/entrega/MsPacMan_Aperfeicoado/MsPacMan_Aperfeicoado.exe"
     ],
-    "cwd": "/workspace/NeoGrid",
+    "cwd": "/workspace/NeoGrid_Refino",
     "exit_code": 0,
-    "duration_seconds": 4.802
+    "duration_seconds": 5.167
   },
   {
     "id": "pacote_embutido",
@@ -81,7 +95,7 @@
       "godot",
       "--headless",
       "--main-pack",
-      "/tmp/NeoGrid Teste vers\u00e3o qlzz5fuc/MsPacMan_Aperfeicoado.exe",
+      "/tmp/NeoGrid Teste vers\u00e3o sdagq5w0/MsPacMan_Aperfeicoado.exe",
       "--fixed-fps",
       "60",
       "--quit-after",
@@ -89,8 +103,8 @@
       "--",
       "--smoke"
     ],
-    "cwd": "/tmp/NeoGrid Teste vers\u00e3o qlzz5fuc",
+    "cwd": "/tmp/NeoGrid Teste vers\u00e3o sdagq5w0",
     "exit_code": 0,
-    "duration_seconds": 1.29
+    "duration_seconds": 0.831
   }
 ]

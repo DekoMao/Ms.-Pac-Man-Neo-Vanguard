@@ -1,3 +1,15 @@
+# MV ação 0.2.0 — refinamento da base aprovada
+
+- Base e ZIP 0.1 preservados; fontes correspondentes publicados em branch própria.
+- Pressão em 8/20/32s com aviso de 0,8s; velocidade hostil limitada a +12%.
+- Quase colisão validada por varredura relativa, premiada só depois de escapar.
+- Power inverte câmera/áudio/sinalização; aviso de término e retorno à fuga.
+- Capturas 200/400/800/1600 e Flow existentes recebem altura musical e impacto crescentes.
+- Uma aposta opcional por fase, reutilizando energia, janela Power e capturas.
+- Camadas musicais sincronizadas, oito vozes de efeitos e controles de câmera.
+- Comparação reproduzível: mesma fase/semente e 5.400 comandos a 120 Hz.
+- Novas verificações preservam colisão contínua e prioridade temporal de Power.
+
 # MV 0.1.0 — implementação própria, entrega parcial
 
 - Retomado M0 real sem alterá-lo; referências v3.2 verificadas e usadas.

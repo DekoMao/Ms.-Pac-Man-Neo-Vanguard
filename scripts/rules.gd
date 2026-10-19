@@ -57,6 +57,12 @@ var graph_version := 0
 var collected := 0
 var initial_pellets := 0
 var rng := RandomNumberGenerator.new()
+var pressure_level := 0
+var pressure_warned := 0
+var power_warned := -1
+var close_passes: Dictionary = {}
+var near_ready: Dictionary = {}
+var risk: Dictionary = {}
 
 func _init(seed_value: int = 73021) -> void:
 	var file = FileAccess.open("res://assets/balance.json", FileAccess.READ)
@@ -108,6 +114,12 @@ func reset() -> void:
 	initial_pellets = pickups.size()
 	events.clear()
 	pending_events.clear()
+	pressure_level = 0
+	pressure_warned = 0
+	power_warned = -1
+	close_passes.clear()
+	near_ready.clear()
+	risk = {"state":"available", "progress":0, "window":-1, "deadline":-1.0}
 
 static func actor(pos: Vector2, dir: Vector2i) -> Dictionary:
 	return {"pos":pos, "previous":pos, "dir":dir}
@@ -148,6 +160,7 @@ func tick(dt: float = STEP) -> void:
 		time += dt
 		if time >= respawn_until: status = "playing"
 		return
+	update_pressure()
 	for a in [player] + ghosts: a.previous = a.pos
 	var speed: float = tuning.player_speed
 	if time < dash_until: speed = tuning.dash_cells / tuning.dash_duration
@@ -164,6 +177,7 @@ func tick(dt: float = STEP) -> void:
 			g.immune = window_id
 		if g.state in ["chase", "scatter"]: g.state = normal_state()
 		var gs: float = tuning.ghost_speed
+		if g.state in ["chase", "scatter"]: gs *= 1.0 + 0.04 * pressure_level
 		if g.state == "vulnerable": gs *= 0.65
 		if g.state == "returning": gs = 5.0
 		ghost_paths.append(advance(g, gs * dt if g.state != "house" else 0.0, false))
@@ -186,6 +200,8 @@ func tick(dt: float = STEP) -> void:
 			"pickup": collect(contact.cell, event_time)
 			"power_end":
 				if power_until <= event_time + 0.00000001:
+					finish_risk(false)
+					events.append({"type":"power_end", "pos":player.pos})
 					for g in ghosts:
 						if g.state == "vulnerable": g.state = normal_state()
 			"flow_end":
@@ -198,13 +214,80 @@ func tick(dt: float = STEP) -> void:
 					break
 	time += dt
 	if status == "playing":
+		update_close_passes(pp, ghost_paths)
+		if risk.state == "active" and (time >= risk.deadline or risk.window != window_id): finish_risk(false)
+		if time < power_until and power_until - time <= 1.5 and power_warned != window_id:
+			power_warned = window_id
+			events.append({"type":"power_warning", "pos":player.pos})
 		update_topology()
 		if pickups.is_empty():
 			status = "won"
 			events.append({"type":"won", "pos":player.pos})
 
 func normal_state() -> String:
-	return "scatter" if fmod(time, 20.0) < 5.0 else "chase"
+	return "scatter" if fmod(time, 20.0) < 5.0 - pressure_level * 0.7 else "chase"
+
+func update_pressure() -> void:
+	var next := mini(3, pressure_level + 1)
+	var threshold := 8.0 + (next - 1) * 12.0
+	if pressure_level >= 3: return
+	if time >= threshold - 0.8 and pressure_warned < next:
+		pressure_warned = next
+		events.append({"type":"pressure_warning", "pos":player.pos, "level":next})
+	if time >= threshold:
+		pressure_level = next
+		events.append({"type":"pressure", "pos":player.pos, "level":next})
+
+func request_risk() -> bool:
+	# One optional wager per phase, reusing Power, energy and the capture chain.
+	if status != "playing" or paused or risk.state != "available" or power_until - time < 2.0 or energy < 20.0:
+		return false
+	energy -= 20.0
+	risk = {"state":"active", "progress":0, "window":window_id, "deadline":power_until}
+	pending_events.append({"type":"risk_start", "pos":player.pos})
+	return true
+
+func finish_risk(success: bool) -> void:
+	if risk.state != "active": return
+	risk.state = "success" if success else "failed"
+	if success:
+		score += 600
+		energy = minf(100.0, energy + 35.0)
+	events.append({"type":"risk_success" if success else "risk_failed", "pos":player.pos})
+
+func update_close_passes(player_path: Array, ghost_paths: Array) -> void:
+	for i in ghosts.size():
+		var g: Dictionary = ghosts[i]
+		if g.state not in ["chase", "scatter"]:
+			close_passes.erase(i)
+			continue
+		var gap := path_clearance(player_path, ghost_paths[i])
+		var end_gap: float = player.pos.distance_to(g.pos)
+		var touching := gap <= PLAYER_RADIUS + GHOST_RADIUS + 0.000001
+		if touching:
+			close_passes.erase(i)
+			continue
+		if gap <= 0.95 and time >= near_ready.get(i, -1.0) and player.pos.distance_to(player.previous) > 0.001:
+			if not close_passes.has(i): close_passes[i] = {"dash":false}
+			close_passes[i].dash = close_passes[i].dash or time - STEP < dash_until
+		if close_passes.has(i) and end_gap > 1.12:
+			energy = minf(100.0, energy + 6.0)
+			events.append({"type":"near_miss", "pos":player.pos, "dash":close_passes[i].dash})
+			near_ready[i] = time + 3.0
+			close_passes.erase(i)
+
+static func path_clearance(a: Array, b: Array) -> float:
+	var nearest := INF
+	for sa in a:
+		for sb in b:
+			var lo: float = maxf(sa.t0, sb.t0)
+			var hi: float = minf(sa.t1, sb.t1)
+			if hi < lo: continue
+			var p := point_on(sa,lo) - point_on(sb,lo)
+			var v := point_on(sa,hi) - point_on(sb,hi) - p
+			var t := clampf(-p.dot(v) / v.length_squared(), 0.0, 1.0) if v.length_squared() > 0.000000001 else 0.0
+			nearest = minf(nearest, (p + v * t).length())
+	return nearest
 
 func collect(cell: Vector2i, at: float) -> void:
 	if not pickups.has(cell): return
@@ -212,6 +295,7 @@ func collect(cell: Vector2i, at: float) -> void:
 	pickups.erase(cell)
 	collected += 1
 	if kind == "power":
+		finish_risk(false)
 		window_id += 1
 		combo = 0
 		power_until = at + tuning.power_seconds
@@ -236,9 +320,14 @@ func capture(g: Dictionary, at: float) -> void:
 	g.immune = window_id
 	flow = minf(3.0, flow + 0.5)
 	flow_until = at + 5.0
-	events.append({"type":"capture", "pos":g.pos, "points":points})
+	events.append({"type":"capture", "pos":g.pos, "points":points, "chain":combo})
+	if risk.state == "active" and risk.window == window_id and at < risk.deadline:
+		risk.progress += 1
+		if risk.progress >= 2: finish_risk(true)
 
 func die() -> void:
+	finish_risk(false)
+	close_passes.clear()
 	lives -= 1
 	events.append({"type":"death", "pos":player.pos})
 	flow = 1.0

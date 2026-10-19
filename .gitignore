@@ -3,3 +3,9 @@
 entrega/
 *.tmp
 __pycache__/
+.env
+.env.*
+export_credentials.cfg
+*.pfx
+*.p12
+*.pid

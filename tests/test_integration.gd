@@ -43,6 +43,25 @@ func run() -> void:
 	game.show_quit_confirm();check("UI-11-quit-confirmation",game.current_screen=="quit" and game.sim.paused)
 	game.pause_game();game._notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)
 	check("UI-12-window-close-while-paused",game.current_screen=="quit")
+	game.start_game();game.pause_game()
+	check("AUDIO-02-pause-all-synchronized-layers",game.music.stream_paused and game.tension_music.stream_paused and game.hunt_music.stream_paused)
+	game.resume_game()
+	check("AUDIO-03-resume-all-layers",not game.music.stream_paused and not game.tension_music.stream_paused and not game.hunt_music.stream_paused)
+	game.voice_index=0;game.play_sound("power");game.play_sound("near_miss")
+	check("AUDIO-04-independent-cue-voices",game.voices[0].stream==game.sounds.power and game.voices[1].stream==game.sounds.near_miss)
+	var reduced_before:bool=game.settings.reduced
+	game.settings.reduced=true;game.feedback.reset()
+	game.feedback.react({"type":"power","pos":Vector2(1,9)},game.sim,true)
+	game._process(0.016)
+	check("ACCESS-02-reduced-camera-zero-impulse",game.camera.fov==45 and game.feedback.camera_offset(0)==Vector3.ZERO and game.feedback.effects.is_empty())
+	game.settings.reduced=reduced_before
+	var strength:float=game.settings.camera_motion;game.settings.camera_motion=0.0;game._process(0.016)
+	check("ACCESS-03-slider-zero-fov-fixed",game.camera.fov==45)
+	game.settings.camera_motion=strength
+	game.sim.pickups[Vector2i(1,9)]="power";game.sim.collect(Vector2i(1,9),game.sim.time)
+	await press(KEY_Q)
+	check("INPUT-01-risk-wager-key",game.sim.risk.state=="active" and game.sim.energy==80)
+	game.start_game();check("ACCESS-04-restart-clears-cosmetic-state",game.feedback.impact==0 and game.feedback.effects.is_empty())
 	var file=FileAccess.open("res://evidencias/testes_integracao.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify({"suite":"MV scene and input routing (headless, synthetic keys)","executed":checks.size(),"passed":checks.size()-failures,"failed":failures,"results":checks},"\t"));file.close()
 	game.queue_free();await process_frame

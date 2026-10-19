@@ -1,6 +1,6 @@
 Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
 
-NEOGRID_RUNTIME {"active_renderer":"forward_plus","adapter":"","display":"headless","driver":"vulkan","engine":"4.6.3-stable (official)","os":"Linux","requested_renderer":"forward_plus","version":"0.1.0-mv"}
+NEOGRID_RUNTIME {"active_renderer":"forward_plus","adapter":"","display":"headless","driver":"vulkan","engine":"4.6.3-stable (official)","os":"Linux","requested_renderer":"forward_plus","version":"0.2.0-action"}
 PASS AUDIO-01-full-musical-loop
 PASS UI-01-title-and-menu
 PASS SCENE-01-real-actors
@@ -15,4 +15,11 @@ PASS UI-09-records
 PASS UI-10-restart-clears-run
 PASS UI-11-quit-confirmation
 PASS UI-12-window-close-while-paused
-MV_INTEGRATION_RESULT executed=14 failed=0
+PASS AUDIO-02-pause-all-synchronized-layers
+PASS AUDIO-03-resume-all-layers
+PASS AUDIO-04-independent-cue-voices
+PASS ACCESS-02-reduced-camera-zero-impulse
+PASS ACCESS-03-slider-zero-fov-fixed
+PASS INPUT-01-risk-wager-key
+PASS ACCESS-04-restart-clears-cosmetic-state
+MV_INTEGRATION_RESULT executed=21 failed=0

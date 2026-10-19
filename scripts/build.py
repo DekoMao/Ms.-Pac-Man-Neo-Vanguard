@@ -52,6 +52,11 @@ def main():
         integration=json.loads((evidence/'testes_integracao.json').read_text())
         if integration['executed']<1 or integration['failed']:
             raise RuntimeError('Scene tests did not execute and pass')
+        (evidence/'testes_acao.json').unlink(missing_ok=True)
+        run('testes_acao',['--script','res://tests/test_action.gd'],90)
+        action=json.loads((evidence/'testes_acao.json').read_text())
+        if action['executed']<1 or action['failed']:
+            raise RuntimeError('Action tests did not execute and pass')
         run('smoke_headless',['--fixed-fps','60','--quit-after','240','--','--smoke'],45)
         run('export_windows',['--export-release','Windows Desktop',str(target)],180)
         resources=embed(target,ROOT/'assets/icon.ico')

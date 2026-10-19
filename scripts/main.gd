@@ -4,6 +4,7 @@ const Models=preload("res://scripts/models.gd")
 const Store=preload("res://scripts/storage.gd")
 const PlayerScene=preload("res://scenes/player.tscn")
 const GhostScene=preload("res://scenes/ghost.tscn")
+const Feedback=preload("res://scripts/feedback.gd")
 const COLORS=[Color("ff4765"),Color("ff78d0"),Color("3bdffc"),Color("ffac59")]
 const CELL:=1.4
 var sim=Rules.new()
@@ -51,6 +52,17 @@ var observed_events:Dictionary={}
 var shutdown_started:=false
 var ribbon:MeshInstance3D
 var ribbon_material:StandardMaterial3D
+var feedback:Node3D
+var voices:Array=[]
+var voice_index:=0
+var tension_music:AudioStreamPlayer
+var hunt_music:AudioStreamPlayer
+var phase_label:Label
+var risk_label:Label
+var power_caption:Label
+var floor_material:ShaderMaterial
+var toast_tween:Tween
+var camera_anchor:=Vector3.ZERO
 
 func _ready() -> void:
 	settings=Store.read_settings()
@@ -61,17 +73,18 @@ func _ready() -> void:
 		if arg.begins_with("--report="):report_path=arg.get_slice("=",1)
 		if arg.begins_with("--capture-dir="):screenshot_dir=arg.get_slice("=",1)
 	build_world()
+	feedback=Feedback.new();add_child(feedback)
 	build_ui()
 	setup_audio()
 	apply_settings()
 	show_title()
-	runtime_info={"version":"0.1.0-mv","engine":Engine.get_version_info().string,"os":OS.get_name(),"display":DisplayServer.get_name(),"requested_renderer":ProjectSettings.get_setting("rendering/renderer/rendering_method"),"active_renderer":RenderingServer.get_current_rendering_method(),"driver":RenderingServer.get_current_rendering_driver_name(),"adapter":RenderingServer.get_video_adapter_name()}
+	runtime_info={"version":"0.2.0-action","engine":Engine.get_version_info().string,"os":OS.get_name(),"display":DisplayServer.get_name(),"requested_renderer":ProjectSettings.get_setting("rendering/renderer/rendering_method"),"active_renderer":RenderingServer.get_current_rendering_method(),"driver":RenderingServer.get_current_rendering_driver_name(),"adapter":RenderingServer.get_video_adapter_name()}
 	print("NEOGRID_RUNTIME ",JSON.stringify(runtime_info))
 	if demo or smoke:start_game()
 	get_tree().auto_accept_quit=false
 
 func setup_input() -> void:
-	var mapping={"p1_up":[KEY_W,KEY_UP],"p1_down":[KEY_S,KEY_DOWN],"p1_left":[KEY_A,KEY_LEFT],"p1_right":[KEY_D,KEY_RIGHT],"p1_dash":[KEY_SPACE],"pause_game":[KEY_P,KEY_ESCAPE],"confirm_game":[KEY_ENTER],"toggle_camera":[KEY_C],"toggle_fullscreen":[KEY_F11]}
+	var mapping={"p1_up":[KEY_W,KEY_UP],"p1_down":[KEY_S,KEY_DOWN],"p1_left":[KEY_A,KEY_LEFT],"p1_right":[KEY_D,KEY_RIGHT],"p1_dash":[KEY_SPACE],"risk_wager":[KEY_Q],"pause_game":[KEY_P,KEY_ESCAPE],"confirm_game":[KEY_ENTER],"toggle_camera":[KEY_C],"toggle_fullscreen":[KEY_F11]}
 	for action in mapping:
 		if not InputMap.has_action(action):InputMap.add_action(action)
 		for code in mapping[action]:
@@ -97,6 +110,7 @@ func build_world() -> void:
 	add_child(Models.mesh_node(bottom,Models.material(Color("02050d")),Vector3(0,-1.8,0)))
 	var floor_mesh:=PlaneMesh.new();floor_mesh.size=Vector2(17*CELL,13*CELL)
 	var floor_mat:=ShaderMaterial.new();floor_mat.shader=load("res://assets/floor.gdshader")
+	floor_material=floor_mat
 	add_child(Models.mesh_node(floor_mesh,floor_mat,Vector3(0,-0.025,0)))
 	var wall_mesh=Models.bevel_box(Vector3(CELL*0.97,1.18,CELL*0.97),0.09)
 	for y in Rules.GRID.size():
@@ -168,6 +182,7 @@ func _unhandled_input(event:InputEvent) -> void:
 			key_stack.erase(action)
 			sim.held_dir=bindings[key_stack.back()] if not key_stack.is_empty() else Vector2i.ZERO
 	if event.is_action_pressed("p1_dash"):sim.request_dash()
+	if event.is_action_pressed("risk_wager"):sim.request_risk()
 
 func _notification(what:int) -> void:
 	if what==NOTIFICATION_APPLICATION_FOCUS_OUT:
@@ -183,17 +198,26 @@ func _physics_process(dt:float) -> void:
 	sim.tick(dt)
 	for event in sim.events:
 		observed_events[event.type]=observed_events.get(event.type,0)+1
+		feedback.react(event,sim,settings.reduced)
 		match event.type:
 			"dash":play_sound("dash");burst(coord(event.pos,0.4),Color("ffd568"),10)
 			"pellet":play_sound("pellet")
-			"power":burst(coord(event.pos,0.6),Color("72dcff"),22);play_sound("power");notify("POWER • CAPTURE OS FANTASMAS")
-			"capture":burst(coord(event.pos,0.7),Color("58dfff"),24);play_sound("capture");notify("+%d  •  FLOW ×%.1f"%[event.points,sim.flow])
+			"power":burst(coord(event.pos,0.6),Color("72dcff"),22);play_sound("power");notify("AGORA VOCÊ CAÇA  •  Q PARA APOSTAR")
+			"capture":burst(coord(event.pos,0.7),Color("58dfff"),16+event.chain*3);play_sound("capture",minf(1.36,1.0+(event.chain-1)*0.12));notify("CADEIA %d  •  +%d  •  FLOW ×%.1f"%[event.chain,event.points,sim.flow])
 			"fruit":burst(coord(event.pos,0.6),Color("ff86bb"),16);play_sound("fruit")
 			"drift":burst(coord(event.pos,0.3),Color("ffe576"),5)
 			"warning":notify("RECONFIGURANDO ROTAS • AGUARDE A LUZ")
 			"topology":burst(coord(event.pos,0.6),Color("75efff"),25);notify("NOVA ROTA ABERTA")
 			"topology_cancel":notify("ROTA PRESERVADA • PASSAGEM OCUPADA")
 			"death":burst(coord(event.pos,0.65),Color("ffd36c"),25);play_sound("death");notify("VIDA PERDIDA • PREPARE-SE")
+			"near_miss":play_sound("near_miss");notify("POR UM FIO  •  +6 DE ENERGIA")
+			"pressure_warning":play_sound("pressure");notify("O RITMO VAI SUBIR  •  NÍVEL %d"%event.level)
+			"pressure":play_sound("pressure",1.08)
+			"power_warning":play_sound("power_warning");notify("POWER TERMINANDO  •  PREPARE A FUGA")
+			"power_end":play_sound("power_end");notify("VOLTE A FUGIR  •  USE AS ROTAS")
+			"risk_start":play_sound("risk_start");notify("APOSTA: 2 CAPTURAS NESTE POWER  •  +600")
+			"risk_success":play_sound("risk_success");notify("APOSTA VENCIDA  •  +600  •  +35 ENERGIA")
+			"risk_failed":notify("APOSTA ENCERRADA  •  TENTE NA PRÓXIMA PARTIDA")
 	if sim.graph_version!=previous_graph:
 		walls[Rules.OPEN_CELL].visible=false;walls[Rules.CLOSE_CELL].visible=true;previous_graph=sim.graph_version
 	for cell in pickup_nodes.keys():
@@ -205,6 +229,7 @@ func _physics_process(dt:float) -> void:
 
 func _process(dt:float) -> void:
 	elapsed+=dt;menu_clock+=dt
+	if current_screen=="playing":feedback.update(dt,sim)
 	var now_us:=Time.get_ticks_usec()
 	if real_previous_us>0 and elapsed>2.0:frame_times.append((now_us-real_previous_us)/1000.0)
 	real_previous_us=now_us
@@ -225,9 +250,17 @@ func _process(dt:float) -> void:
 	if current_screen=="title":target=coord(Vector2(4.5,8))
 	if settings.camera_top:target=Vector3.ZERO
 	var offset:=Vector3(0.0,27,0.01) if settings.camera_top else Vector3(3.6,8.6,8.4)
-	if first_frame:camera.position=target+offset;first_frame=false
-	else:camera.position=camera.position.lerp(target+offset,1-exp(-dt*5))
+	var motion:float=0.0 if settings.reduced else settings.camera_motion
+	var lead:=Vector3.ZERO if settings.camera_top else Vector3(sim.player.dir.x,0,sim.player.dir.y)*0.24*motion
+	target+=lead
+	if first_frame:camera_anchor=target+offset;first_frame=false
+	else:camera_anchor=camera_anchor.lerp(target+offset,1-exp(-dt*5))
+	camera.position=camera_anchor+feedback.camera_offset(motion)
+	camera.fov=lerpf(camera.fov,45.0+feedback.fov_offset(sim,motion),1-exp(-dt*9.0)) if motion>0 else 45.0
 	camera.look_at(target,Vector3(0,0,-1) if settings.camera_top else Vector3.UP)
+	var hunting:bool=sim.time<sim.power_until
+	floor_material.set_shader_parameter("hunt_mix",1.0 if hunting else 0.0)
+	update_audio(dt,hunting)
 	# Fade the foreground obstacle when it can occlude the player.
 	for c in walls:
 		var node:MeshInstance3D=walls[c]
@@ -250,7 +283,6 @@ func _process(dt:float) -> void:
 	if demo and not screenshot_dir.is_empty():
 		for mark in [2,7]:
 			if sim.time>=mark and not screenshots_done.has(mark):screenshots_done[mark]=true;save_screenshot(mark)
-	if demo and elapsed>9.8:music.stop();sound.stop()
 	if smoke and elapsed>=3.0:
 		print("NEOGRID_SMOKE_OK ",JSON.stringify({"score":sim.score,"time":sim.time,"ghosts":ghosts.size(),"pickups":pickup_nodes.size()}));get_tree().quit()
 
@@ -288,7 +320,8 @@ func save_screenshot(mark:int) -> void:
 
 func notify(text:String) -> void:
 	toast.text=text;toast.modulate.a=1.0
-	var tween=create_tween();tween.tween_interval(2.0);tween.tween_property(toast,"modulate:a",0.0,0.8)
+	if toast_tween!=null and toast_tween.is_valid():toast_tween.kill()
+	toast_tween=create_tween();toast_tween.tween_interval(1.4);toast_tween.tween_property(toast,"modulate:a",0.0,0.5)
 
 func burst(pos:Vector3,color:Color,amount:int) -> void:
 	if settings.reduced:return
@@ -327,15 +360,38 @@ func update_trail(dt:float) -> void:
 	else:ribbon.visible=false
 
 func setup_audio() -> void:
-	sound=AudioStreamPlayer.new();add_child(sound);sound.max_polyphony=5
+	for i in 8:
+		var voice:=AudioStreamPlayer.new();add_child(voice);voices.append(voice)
+	sound=voices[0]
 	music=AudioStreamPlayer.new();add_child(music)
-	for n in ["pellet","power","capture","dash","death","fruit"]:sounds[n]=load("res://assets/audio/"+n+".wav")
+	for n in ["pellet","power","capture","dash","death","fruit","near_miss","pressure","power_warning","power_end","risk_start","risk_success"]:sounds[n]=load("res://assets/audio/"+n+".wav")
 	music.stream=load("res://assets/audio/pulse.wav")
 	if music.stream is AudioStreamWAV:music.stream.loop_mode=AudioStreamWAV.LOOP_FORWARD;music.stream.loop_end=roundi(music.stream.get_length()*music.stream.mix_rate)
 	music.volume_db=-15;music.play()
+	tension_music=AudioStreamPlayer.new();hunt_music=AudioStreamPlayer.new()
+	for pair in [[tension_music,"tension_layer"],[hunt_music,"hunt_layer"]]:
+		add_child(pair[0]);pair[0].stream=load("res://assets/audio/"+pair[1]+".wav")
+		pair[0].stream.loop_mode=AudioStreamWAV.LOOP_FORWARD
+		pair[0].stream.loop_end=roundi(pair[0].stream.get_length()*pair[0].stream.mix_rate)
+		pair[0].volume_db=-60;pair[0].play()
 
-func play_sound(kind:String) -> void:
-	if sounds.has(kind):sound.stream=sounds[kind];sound.volume_db=-18 if kind=="pellet" else -10;sound.play()
+func play_sound(kind:String,pitch:float=1.0) -> void:
+	if not sounds.has(kind):return
+	var voice:AudioStreamPlayer=voices[voice_index%voices.size()];voice_index+=1
+	voice.stop();voice.stream=sounds[kind];voice.pitch_scale=pitch
+	voice.volume_db=-24 if kind=="pellet" else -12;voice.play()
+
+func update_audio(dt:float,hunting:bool) -> void:
+	var active:bool=current_screen=="playing"
+	var danger:float=feedback.threat
+	var gain:float=0.14+sim.pressure_level*0.14+danger*0.25 if active and not hunting else 0.001
+	var hunt_gain:float=minf(0.95,0.48+(sim.flow-1)*0.20) if active and hunting else 0.001
+	tension_music.volume_db=lerpf(tension_music.volume_db,linear_to_db(maxf(0.001,gain))-16.0,1-exp(-dt*6))
+	hunt_music.volume_db=lerpf(hunt_music.volume_db,linear_to_db(maxf(0.001,hunt_gain))-14.0,1-exp(-dt*9))
+	music.volume_db=lerpf(music.volume_db,-17.0-feedback.chain_heat*2.0-feedback.power_heat*3.0,1-exp(-dt*10))
+
+func pause_music(paused:bool) -> void:
+	for track in [music,tension_music,hunt_music]:track.stream_paused=paused
 
 func apply_settings() -> void:
 	AudioServer.set_bus_mute(0,settings.mute)
@@ -372,6 +428,10 @@ func build_ui() -> void:
 	var col:=VBoxContainer.new();row.add_child(col);col.add_child(label("NEO—GRID  /  MV",13,Color("5de0eb")));score_label=label("000000",30);col.add_child(score_label)
 	var livescol:=VBoxContainer.new();row.add_child(livescol);livescol.add_child(label("VIDAS",11,Color("97a9c4")));life_label=label("● ● ●",22,Color("ffce68"));livescol.add_child(life_label)
 	var minimap_panel=panel();minimap_panel.position=Vector2(1090,20);hud.add_child(minimap_panel)
+	var phase_panel=panel();phase_panel.position=Vector2(420,20);phase_panel.custom_minimum_size=Vector2(420,0);hud.add_child(phase_panel)
+	phase_label=label("FUGA  /  RITMO 0",18,Color.WHITE);phase_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;phase_panel.add_child(phase_label)
+	var risk_panel=panel();risk_panel.position=Vector2(955,170);risk_panel.custom_minimum_size=Vector2(300,0);hud.add_child(risk_panel)
+	risk_label=label("APOSTA OPCIONAL",12,Color("bce8ff"));risk_label.custom_minimum_size.x=260;risk_panel.add_child(risk_label)
 	minimap=Control.new();minimap.set_script(load("res://scripts/minimap.gd"));minimap.sim=sim;minimap.custom_minimum_size=Vector2(136,104);minimap_panel.add_child(minimap)
 	var bottom=panel();bottom.position=Vector2(25,625);bottom.custom_minimum_size.x=420;hud.add_child(bottom)
 	var box:=VBoxContainer.new();bottom.add_child(box)
@@ -379,7 +439,7 @@ func build_ui() -> void:
 	energy_bar=ProgressBar.new();energy_bar.show_percentage=false;energy_bar.custom_minimum_size=Vector2(370,10);energy_bar.max_value=100;box.add_child(energy_bar)
 	status_label=label("ESPAÇO · DASH    C · CÂMERA    P · PAUSA",11,Color("9aacc4"));box.add_child(status_label)
 	var power_panel=panel();power_panel.position=Vector2(1000,637);power_panel.custom_minimum_size.x=250;hud.add_child(power_panel)
-	var pbox:=VBoxContainer.new();power_panel.add_child(pbox);pbox.add_child(label("POWER PELLET",11,Color("91e2ff")));power_bar=ProgressBar.new();power_bar.show_percentage=false;power_bar.custom_minimum_size=Vector2(200,8);power_bar.max_value=6;pbox.add_child(power_bar)
+	var pbox:=VBoxContainer.new();power_panel.add_child(pbox);power_caption=label("POWER PELLET",11,Color("91e2ff"));pbox.add_child(power_caption);power_bar=ProgressBar.new();power_bar.show_percentage=false;power_bar.custom_minimum_size=Vector2(200,8);power_bar.max_value=6;pbox.add_child(power_bar)
 	toast=label("",19,Color("fcdd8c"));toast.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;toast.position=Vector2(300,110);toast.size=Vector2(680,50);hud.add_child(toast)
 	menu=panel();menu.position=Vector2(65,100);menu.custom_minimum_size=Vector2(400,0);root.add_child(menu)
 	menu_content=VBoxContainer.new();menu_content.add_theme_constant_override("separation",12);menu.add_child(menu_content)
@@ -399,10 +459,12 @@ func show_title() -> void:
 	menu_content.add_child(button("Configurações",show_settings))
 	menu_content.add_child(button("Recorde  ·  %06d"%settings.record,show_records))
 	menu_content.add_child(button("Sair",func():get_tree().quit()))
-	menu_content.add_child(label("MV 0.1  •  IMPLEMENTAÇÃO PRÓPRIA",10,Color("7787a2")))
+	menu_content.add_child(label("MV 0.2  •  AÇÃO E FLOW",10,Color("7787a2")))
 
 func start_game() -> void:
 	sim.reset();sim.start();sim.paused=false;current_screen="playing";hud.visible=true;menu.visible=false;terminal_reported=false;previous_graph=0;music.stream_paused=false
+	feedback.reset();observed_events.clear();first_frame=true
+	for track in [music,tension_music,hunt_music]:track.stop();track.stream_paused=false;track.play(0.0)
 	walls[Rules.OPEN_CELL].visible=true;walls[Rules.CLOSE_CELL].visible=false
 	for n in pickup_nodes.values():n.queue_free()
 	pickup_nodes.clear()
@@ -411,17 +473,21 @@ func start_game() -> void:
 	notify("SEU PRÓXIMO MOVIMENTO MUDA TUDO")
 
 func pause_game() -> void:
-	current_screen="pause";sim.paused=true;key_stack.clear();sim.held_dir=Vector2i.ZERO;sim.buffer_dir=Vector2i.ZERO;music.stream_paused=true
+	current_screen="pause";sim.paused=true;key_stack.clear();sim.held_dir=Vector2i.ZERO;sim.buffer_dir=Vector2i.ZERO;pause_music(true)
 	clear_menu("PAUSA","Seu tempo está preservado.")
 	menu_content.add_child(button("Continuar",resume_game));menu_content.add_child(button("Reiniciar",start_game));menu_content.add_child(button("Configurações",show_settings));menu_content.add_child(button("Voltar à abertura",show_title));menu_content.add_child(button("Sair",show_quit_confirm))
 
 func resume_game() -> void:
-	current_screen="playing";sim.paused=false;menu.visible=false;hud.visible=true;music.stream_paused=false
+	current_screen="playing";sim.paused=false;menu.visible=false;hud.visible=true;pause_music(false)
 
 func show_help() -> void:
 	current_screen="help";sim.paused=true;clear_menu("COMO JOGAR")
 	for text in ["WASD / setas  ·  mover e antecipar curvas","Espaço  ·  dash, custo de 40 de energia","C  ·  vista oblíqua / superior   ·   F11  ·  tela cheia","P / Esc  ·  pausa   ·   Enter  ·  iniciar","Colete a esfera de luz para capturar fantasmas.","Capturas ativam Flow. Frutas abrem novas rotas.","Colete todos os itens para concluir a área MV."]:
 		menu_content.add_child(label(text,13))
+	menu_content.add_child(label("Q durante Power · aposte 20E em 2 capturas: +600 / +35E.",13))
+	menu_content.add_child(label("Uma aposta por fase. Não altera vidas nem colisões.",13))
+	menu_content.add_child(label("Ritmo sobe após aviso. Quase colisão só conta ao escapar.",13))
+	menu_content.add_child(label("Fantasmas que voltaram à cor original já são perigosos.",13))
 	menu_content.add_child(button("Voltar",show_title))
 
 func show_settings() -> void:
@@ -430,6 +496,9 @@ func show_settings() -> void:
 	quality.selected=settings.quality;quality.item_selected.connect(func(i):settings.quality=i;apply_settings());menu_content.add_child(quality)
 	var volume:=HSlider.new();volume.min_value=0;volume.max_value=1;volume.step=0.05;volume.value=settings.volume;volume.custom_minimum_size=Vector2(320,28)
 	menu_content.add_child(label("Volume",14));menu_content.add_child(volume);volume.value_changed.connect(func(v):settings.volume=v;apply_settings())
+	var motion:=HSlider.new();motion.min_value=0;motion.max_value=1;motion.step=0.05;motion.value=settings.camera_motion
+	motion.custom_minimum_size=Vector2(320,28);menu_content.add_child(label("Intensidade da câmera  ·  0 desativa impulsos",13));menu_content.add_child(motion)
+	motion.value_changed.connect(func(v):settings.camera_motion=v;apply_settings())
 	for pair in [["mute","Silenciar"],["reduced","Reduzir efeitos e movimento"],["camera_top","Câmera superior 3D"]]:
 		var check:=CheckButton.new();check.text=pair[1];check.button_pressed=settings[pair[0]];check.toggled.connect(func(v):settings[pair[0]]=v;apply_settings());menu_content.add_child(check)
 	menu_content.add_child(button("Voltar",func():pause_game() if hud.visible else show_title()))
@@ -452,16 +521,28 @@ func update_hud() -> void:
 	life_label.text="● ".repeat(maxi(0,sim.lives))
 	flow_label.text="FLOW ×%.1f    ·    DASH %d%%"%[sim.flow,sim.energy]
 	energy_bar.value=sim.energy;power_bar.value=maxf(0,sim.power_until-sim.time)
+	var hunting:bool=sim.time<sim.power_until
+	phase_label.text=("CAÇA  /  CADEIA %d"%sim.combo if hunting else "FUGA  /  RITMO %d"%sim.pressure_level)
+	phase_label.modulate=Color("76e9ff") if hunting else Color("ffcb79").lerp(Color("ff7c88"),feedback.threat*0.6)
+	power_caption.text="CAÇA  •  %.1fs"%maxf(0,sim.power_until-sim.time) if hunting else "POWER PELLET  /  BUSQUE A LUZ"
+	match sim.risk.state:
+		"available":risk_label.text="APOSTA OPCIONAL  /  Q\n20E: 2 capturas no mesmo Power\nRecompensa: +600 pontos / +35E" if hunting else "APOSTA OPCIONAL  /  +600\nConsuma Power para apostar (Q)\nCusto 20E  •  uma tentativa por fase"
+		"active":risk_label.text="APOSTA  %d / 2  •  %.1fs\nCapture antes de acabar este Power"%[sim.risk.progress,maxf(0,sim.risk.deadline-sim.time)]
+		"success":risk_label.text="APOSTA VENCIDA\n+600 pontos  /  +35 energia"
+		"failed":risk_label.text="APOSTA ENCERRADA\nSua partida continua. Sem perder vida."
 	minimap.queue_redraw()
 
 func _exit_tree() -> void:
 	if is_instance_valid(sound):sound.stop();sound.stream=null
 	if is_instance_valid(music):music.stop();music.stream=null
+	for voice in voices:voice.stop();voice.stream=null
+	for track in [tension_music,hunt_music]:
+		if is_instance_valid(track):track.stop();track.stream=null
 	sounds.clear()
 	OS.delay_msec(100)
 	if not report_path.is_empty():
 		frame_times.sort()
-		var metrics:Dictionary={"runtime":runtime_info,"frames_after_warmup":frame_times.size(),"recorded_events":observed_events,"score":sim.score,"lives":sim.lives,"simulation_seconds":sim.time,"preset":settings.quality,"resolution":get_viewport().get_visible_rect().size,"wall_clock_frame_times_ms":true,"gpu_time_ms":null,"note":"Software renderer / Movie Maker is not native Windows validation or a physical GPU benchmark."}
+		var metrics:Dictionary={"runtime":runtime_info,"frames_after_warmup":frame_times.size(),"recorded_events":observed_events,"score":sim.score,"lives":sim.lives,"simulation_seconds":sim.time,"pressure_level":sim.pressure_level,"risk":sim.risk,"preset":settings.quality,"resolution":get_viewport().get_visible_rect().size,"wall_clock_frame_times_ms":true,"gpu_time_ms":null,"note":"Software renderer / Movie Maker is not native Windows validation or a physical GPU benchmark."}
 		if not frame_times.is_empty():
 			metrics.p95_ms=frame_times[mini(frame_times.size()-1,int(frame_times.size()*0.95))]
 			metrics.p99_ms=frame_times[mini(frame_times.size()-1,int(frame_times.size()*0.99))]

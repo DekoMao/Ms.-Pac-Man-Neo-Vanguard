@@ -1,5 +1,17 @@
-MS. PAC-MAN: NEO-GRID — MV 0.1.0
-ENTREGA PARCIAL DO DEMONSTRADOR 3D
+MS. PAC-MAN: NEO-GRID — MV ACAO 0.2.0
+REFINO DA BASE APROVADA
+
+NOVIDADES E CONTROLES
+Ritmo de perseguicao sobe em tres niveis, sempre com aviso previo.
+Dash, quase colisoes e capturas recebem resposta de camera e audio.
+Q durante Power: aposta opcional de 20 de energia. Capture dois fantasmas
+antes do fim desse mesmo Power para ganhar 600 pontos e 35 de energia.
+Uma tentativa por fase; falhar nao tira vidas. Novo Power nao prolonga a aposta.
+Em Configuracoes, ajuste Intensidade da camera ate zero ou ative
+Reduzir efeitos e movimento. As mensagens essenciais continuam visiveis.
+Fantasmas que voltaram a cor original ja sao perigosos, mesmo durante Power.
+
+Validacao nativa Windows e desempenho em GPU fisica ainda pendentes.
 
 ABRIR NO WINDOWS
 Extraia o ZIP inteiro e abra MsPacMan_Aperfeicoado.exe por duplo clique.

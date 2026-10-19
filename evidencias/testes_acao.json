@@ -1,0 +1,116 @@
+{
+	"executed": 27,
+	"failed": 0,
+	"passed": 27,
+	"results": [
+		{
+			"id": "PRESSURE-01-advance-warning",
+			"passed": true
+		},
+		{
+			"id": "PRESSURE-02-warning-once",
+			"passed": true
+		},
+		{
+			"id": "PRESSURE-03-tier-after-warning",
+			"passed": true
+		},
+		{
+			"id": "PRESSURE-04-bounded-progression",
+			"passed": true
+		},
+		{
+			"id": "PRESSURE-05-speed-cap",
+			"passed": true
+		},
+		{
+			"id": "PRESSURE-06-pause-safe",
+			"passed": true
+		},
+		{
+			"id": "PRESSURE-07-restart-clean",
+			"passed": true
+		},
+		{
+			"id": "NEAR-01-relative-swept-clearance",
+			"passed": true
+		},
+		{
+			"id": "NEAR-02-approach-no-premature-reward",
+			"passed": true
+		},
+		{
+			"id": "NEAR-03-reward-after-safe-exit",
+			"passed": true
+		},
+		{
+			"id": "NEAR-04-per-opponent-cooldown",
+			"passed": true
+		},
+		{
+			"id": "NEAR-05-collision-never-rewarded",
+			"passed": true
+		},
+		{
+			"id": "NEAR-06-hunt-not-farmable",
+			"passed": true
+		},
+		{
+			"id": "RISK-01-requires-power",
+			"passed": true
+		},
+		{
+			"id": "RISK-02-paused-no-cost",
+			"passed": true
+		},
+		{
+			"id": "RISK-03-insufficient-no-cost",
+			"passed": true
+		},
+		{
+			"id": "RISK-04-explicit-cost-and-deadline",
+			"passed": true
+		},
+		{
+			"id": "RISK-05-no-double-charge",
+			"passed": true
+		},
+		{
+			"id": "RISK-06-two-captures-reward",
+			"passed": true
+		},
+		{
+			"id": "RISK-07-once-per-phase",
+			"passed": true
+		},
+		{
+			"id": "RISK-08-expiry-no-life-penalty",
+			"passed": true
+		},
+		{
+			"id": "RISK-09-new-window-cannot-extend-wager",
+			"passed": true
+		},
+		{
+			"id": "RISK-10-death-fails-and-clears-escape",
+			"passed": true
+		},
+		{
+			"id": "RISK-11-restart-offers-new-attempt",
+			"passed": true
+		},
+		{
+			"id": "POWER-03-warning-before-expiry",
+			"passed": true
+		},
+		{
+			"id": "POWER-04-warning-once",
+			"passed": true
+		},
+		{
+			"id": "ACCESS-01-default-camera-strength",
+			"passed": true
+		}
+	],
+	"suite": "Action refinement: pressure, escape geometry, optional risk"
+}

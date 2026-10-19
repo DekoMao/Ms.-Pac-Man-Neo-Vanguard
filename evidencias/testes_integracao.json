@@ -1,7 +1,7 @@
 {
-	"executed": 14,
+	"executed": 21,
 	"failed": 0,
-	"passed": 14,
+	"passed": 21,
 	"results": [
 		{
 			"id": "AUDIO-01-full-musical-loop",
@@ -57,6 +57,34 @@
 		},
 		{
 			"id": "UI-12-window-close-while-paused",
+			"passed": true
+		},
+		{
+			"id": "AUDIO-02-pause-all-synchronized-layers",
+			"passed": true
+		},
+		{
+			"id": "AUDIO-03-resume-all-layers",
+			"passed": true
+		},
+		{
+			"id": "AUDIO-04-independent-cue-voices",
+			"passed": true
+		},
+		{
+			"id": "ACCESS-02-reduced-camera-zero-impulse",
+			"passed": true
+		},
+		{
+			"id": "ACCESS-03-slider-zero-fov-fixed",
+			"passed": true
+		},
+		{
+			"id": "INPUT-01-risk-wager-key",
+			"passed": true
+		},
+		{
+			"id": "ACCESS-04-restart-clears-cosmetic-state",
 			"passed": true
 		}
 	],

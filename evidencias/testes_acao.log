@@ -1,0 +1,29 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PASS PRESSURE-01-advance-warning
+PASS PRESSURE-02-warning-once
+PASS PRESSURE-03-tier-after-warning
+PASS PRESSURE-04-bounded-progression
+PASS PRESSURE-05-speed-cap
+PASS PRESSURE-06-pause-safe
+PASS PRESSURE-07-restart-clean
+PASS NEAR-01-relative-swept-clearance
+PASS NEAR-02-approach-no-premature-reward
+PASS NEAR-03-reward-after-safe-exit
+PASS NEAR-04-per-opponent-cooldown
+PASS NEAR-05-collision-never-rewarded
+PASS NEAR-06-hunt-not-farmable
+PASS RISK-01-requires-power
+PASS RISK-02-paused-no-cost
+PASS RISK-03-insufficient-no-cost
+PASS RISK-04-explicit-cost-and-deadline
+PASS RISK-05-no-double-charge
+PASS RISK-06-two-captures-reward
+PASS RISK-07-once-per-phase
+PASS RISK-08-expiry-no-life-penalty
+PASS RISK-09-new-window-cannot-extend-wager
+PASS RISK-10-death-fails-and-clears-escape
+PASS RISK-11-restart-offers-new-attempt
+PASS POWER-03-warning-before-expiry
+PASS POWER-04-warning-once
+PASS ACCESS-01-default-camera-strength

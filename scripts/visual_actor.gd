@@ -25,7 +25,7 @@ func animate(t:float, direction:Vector2i, state:String="", power_time:float=0.0,
 	reflection.position.y=-model.position.y
 	if ghost_actor:
 		var color:=tint
-		if state=="vulnerable":color=Color("3eaeff") if power_time>1.5 or int(t*6)%2==0 else Color("c5e9ff")
+		if state=="vulnerable":color=Color("3eaeff") if reduce_motion or power_time>1.5 or int(t*3)%2==0 else Color("c5e9ff")
 		if state=="returning":color=Color("9daabf")
 		var mat:StandardMaterial3D=body.material_override
 		mat.albedo_color=Color(color,0.74);mat.emission=color

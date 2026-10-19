@@ -1,4 +1,38 @@
-# Validação — entrega parcial MV
+# Validação — rodada de ação 0.2
+
+## Resultados atuais
+
+- Godot 4.6.3 e templates compatíveis, reaproveitados da base com verificação SHA-512.
+- **87 verificações passaram, zero falhas:** 39 de regras/persistência, 27 de ação
+  e 21 de cena/input/acessibilidade/áudio. `evidencias/testes_*.json` e respectivos logs.
+- As sete etapas de `scripts/build.py` encerraram com código zero: importação,
+  três suítes, smoke do projeto, exportação Windows e smoke do pacote embutido.
+- PE AMD64 GUI real, PCK embutido, seis imagens de ícone e versão 0.2.0.0.
+  `evidencias/build_artefato.json` e `windows_resources.json` registram tamanho e hash.
+- Reproduzidos os 5.400 comandos/45s também pelo PCK do próprio EXE, em diretório
+  temporário fora das fontes. Pontos/vidas/eventos coincidiram com a execução das
+  fontes: 6500 pontos, 3 vidas, 10 capturas, 2 quase colisões e aposta concluída.
+  Isso é validação do pacote no **host Linux**, não execução nativa do PE.
+- Base e refino receberam a mesma fita, fase, semente e condições iniciais, conferidas
+  por igualdade dos objetos `initial`. Ver `REFINO_ACAO.md` e `comparacao_*.json`.
+- Fontes da base preservadas e recuperadas por clone Git independente; nenhum cache,
+  credencial de exportação ou token faz parte do projeto publicado.
+- A saída do Movie Maker foi ajustada para drenar os loops durante quatro frames
+  antes de encerrar. O ensaio gráfico final terminou sem recursos de áudio vazados;
+  ensaios preliminares com o problema estão identificados no histórico.
+
+## Limites que permanecem
+
+Não há Windows nem GPU física nesta máquina. Não foram aprovados execução nativa,
+latência de controle em hardware, desempenho 60fps, percentis de GPU física ou
+percepção humana do novo acabamento. A base foi aprovada pelo usuário; o refino
+é entregue para avaliação. Não há expansão de fases, multiplayer ou outros modos.
+
+O replay usa comandos de movimento/dash/aposta públicos e não altera a simulação.
+Testes geométricos isolados posicionam atores para verificar casos de borda, como
+é normal em testes; esses cenários não são inseridos na gravação de gameplay.
+
+## Histórico da entrega 0.1 (preservado abaixo)
 
 ## Resultados executados
 

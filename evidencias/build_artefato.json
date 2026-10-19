@@ -1,8 +1,8 @@
 {
   "editor_version": "4.6.3.stable.official.7d41c59c4",
-  "artifact": "/workspace/NeoGrid/entrega/MsPacMan_Aperfeicoado/MsPacMan_Aperfeicoado.exe",
-  "bytes": 105501320,
-  "sha256": "50eb9573090ad2c43a14e658ee0553f5d4c9ff70ebbf9fe14e1621d64f0d61a1",
+  "artifact": "/workspace/NeoGrid_Refino/entrega/MsPacMan_Aperfeicoado/MsPacMan_Aperfeicoado.exe",
+  "bytes": 105860208,
+  "sha256": "e8a73a94e4a51359fbb50fa089c59a97a15f10e502469c0c89bec6001ebe34da",
   "pe_amd64": true,
   "embedded_pack_smoke_on_host": true,
   "native_windows_tested": false,

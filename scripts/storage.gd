@@ -2,7 +2,7 @@ class_name NeoStorage
 extends RefCounted
 const PATH := "user://neo_grid_mv.json"
 static func defaults() -> Dictionary:
-	return {"schema":1,"record":0,"volume":0.55,"mute":false,"quality":2,"reduced":false,"camera_top":false}
+	return {"schema":2,"record":0,"volume":0.55,"mute":false,"quality":2,"reduced":false,"camera_top":false,"camera_motion":0.65}
 static func read_settings(path:String=PATH) -> Dictionary:
 	var result:=defaults()
 	if not FileAccess.file_exists(path):return result
@@ -21,6 +21,7 @@ static func read_settings(path:String=PATH) -> Dictionary:
 	if parsed.get("record") is float or parsed.get("record") is int:result.record=maxi(0,int(parsed.record))
 	if parsed.get("quality") is float or parsed.get("quality") is int:result.quality=clampi(int(parsed.quality),0,2)
 	result.volume=clampf(float(parsed.get("volume",0.55)) if parsed.get("volume",0.55) is float or parsed.get("volume",0.55) is int else 0.55,0.0,1.0)
+	result.camera_motion=clampf(float(parsed.get("camera_motion",0.65)) if parsed.get("camera_motion",0.65) is float or parsed.get("camera_motion",0.65) is int else 0.65,0.0,1.0)
 	return result
 static func write_settings(data:Dictionary,path:String=PATH) -> Error:
 	var file=FileAccess.open(path+".tmp",FileAccess.WRITE)

@@ -1,4 +1,25 @@
-# Ms. PAC-Man: Neo-Grid — MV 0.1.0
+# Ms. PAC-Man: Neo-Grid — ação 0.2.0
+
+A base aprovada foi preservada em `fontes/mv-base-20261019`, commit
+`f28df2ff46465d1a3df88d343b258f5d3c0348e5`. Esta branch refina o mesmo MV:
+perseguição anunciada, resposta de dash/escape, reversão para caça, capturas/Flow
+e uma aposta opcional por fase. Não acrescenta modos nem multiplayer.
+
+Leia [mudanças e comparação](docs/REFINO_ACAO.md) e [validação atual](docs/VALIDACAO.md).
+Abra `project.godot` no Godot **4.6.3**. Para importar, testar as três suítes,
+exportar Windows e verificar o pacote embutido no host:
+`python scripts/build.py --godot godot`. Inicialize os diretórios XDG graváveis
+como indicado abaixo se o HOME do ambiente for somente leitura.
+
+**Q durante Power:** aposta opcional de 20E por duas capturas na mesma janela.
+**Configurações:** intensidade de câmera 0–100%; zero desativa impulsos/FOV,
+e “Reduzir efeitos e movimento” também elimina partículas, anéis e piscadas.
+
+As seções abaixo registram a preparação da base 0.1. A homologação nativa
+Windows e o desempenho em GPU física continuam pendentes. A base foi aprovada
+pelo usuário; a rodada 0.2 aguarda sua avaliação.
+
+## Histórico da base 0.1
 
 Demonstrador 3D próprio em Godot 4.6.3, produzido a partir do prompt v3.2 e
 referências do kit. **Entrega parcial**: cena/regras/PE/vídeo existem; aprovação

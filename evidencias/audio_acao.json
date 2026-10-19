@@ -1,0 +1,78 @@
+{
+  "camadas_duracao_sincronizada": true,
+  "wav_sem_clipping": true,
+  "arquivos": [
+    {
+      "nome": "pulse",
+      "sample_rate": 22050,
+      "channels": 2,
+      "seconds": 17.142857142857142,
+      "absolute_peak_pcm16": 11969,
+      "sha256": "56d0671ff15196e950cd5072212ae9b4ab3581ef67123c80abcebb4f5b3a6ff9"
+    },
+    {
+      "nome": "tension_layer",
+      "sample_rate": 22050,
+      "channels": 1,
+      "seconds": 17.142857142857142,
+      "absolute_peak_pcm16": 17973,
+      "sha256": "041ecd7ceb8da698e7f01d4ae39960a23f7011911a74453eea55e94922f5adad"
+    },
+    {
+      "nome": "hunt_layer",
+      "sample_rate": 22050,
+      "channels": 1,
+      "seconds": 17.142857142857142,
+      "absolute_peak_pcm16": 8534,
+      "sha256": "26946b5b2a53cd5f0a3c389695f2eaedd85fee78fbd1cdc88a022e2815c1e81c"
+    },
+    {
+      "nome": "near_miss",
+      "sample_rate": 22050,
+      "channels": 1,
+      "seconds": 0.48,
+      "absolute_peak_pcm16": 17794,
+      "sha256": "a8ae291b9a726b048df6df10aad2b0b35f02cb83ed1a68d4a21adc4e05ff125c"
+    },
+    {
+      "nome": "pressure",
+      "sample_rate": 22050,
+      "channels": 1,
+      "seconds": 0.7500226757369615,
+      "absolute_peak_pcm16": 15004,
+      "sha256": "bfc4ec820da3f5c0f2779b455606688d78f35a900fcf22eaf46145214b92e397"
+    },
+    {
+      "nome": "power_warning",
+      "sample_rate": 22050,
+      "channels": 1,
+      "seconds": 0.8,
+      "absolute_peak_pcm16": 13322,
+      "sha256": "85d3cd76ac468544a2fbe9cb8c1fe9927bfc739222c3d2678cdd1ba1ce386c2c"
+    },
+    {
+      "nome": "power_end",
+      "sample_rate": 22050,
+      "channels": 1,
+      "seconds": 0.5,
+      "absolute_peak_pcm16": 12652,
+      "sha256": "7975985ca5ff947695e22734e98021fef16e9c05361b1500786d2b096c133000"
+    },
+    {
+      "nome": "risk_start",
+      "sample_rate": 22050,
+      "channels": 1,
+      "seconds": 0.4,
+      "absolute_peak_pcm16": 15475,
+      "sha256": "eebdcf77df4acd86b38e6327fb0dd2eb8e7b24494085f5c99d96400a55d4c309"
+    },
+    {
+      "nome": "risk_success",
+      "sample_rate": 22050,
+      "channels": 1,
+      "seconds": 0.9,
+      "absolute_peak_pcm16": 16714,
+      "sha256": "d2d23b6e33dc288ed92380e15f1df15bffec4c051f984a4ee288a6e0910e71b1"
+    }
+  ]
+}

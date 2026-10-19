@@ -1,12 +1,14 @@
 {
-  "status": "ENTREGA_PARCIAL",
-  "project": "/workspace/NeoGrid",
-  "prompt": "3.2",
-  "M0": "Base e exportação preparadas; análise da pasta Windows pendente",
-  "MV": "Fontes/cenas/testes/PE/vídeo reais; homologação visual/GPU/Windows parcial",
-  "M1": "Não iniciado",
-  "M2": "Não iniciado",
-  "M3": "Não iniciado",
-  "previous_checkpoint_preserved": true,
-  "next_steps": "docs/RETOMADA.md"
+  "version": "0.2.0-action",
+  "base_aprovada_preservada": true,
+  "base_sources_commit": "f28df2ff46465d1a3df88d343b258f5d3c0348e5",
+  "base_portable_commit": "c623b5323f21a873ccd1202d1ea50a609eab24ea",
+  "refino_implementado": true,
+  "verificacoes_passaram": 87,
+  "export_windows_real": true,
+  "pck_replay_45s_verificado_no_host": true,
+  "captura_continua": "em andamento",
+  "native_windows_tested": false,
+  "physical_gpu_tested": false,
+  "multiplayer_novos_modos": "nao expandidos"
 }

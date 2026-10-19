@@ -1,5 +1,5 @@
 {
-  "rules_version": "mv-0.1.0",
+  "rules_version": "mv-0.2.0-action",
   "player_speed": 3.2,
   "ghost_speed": 2.0,
   "turn_buffer": 0.12,
