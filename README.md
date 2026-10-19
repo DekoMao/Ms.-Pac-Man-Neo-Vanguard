@@ -1,8 +1,13 @@
-# NeoGrid — Essência Arcade 0.4.0
+# NeoGrid — Neon Architecture 0.5.0
 
-Área 3D separada do HUD, visão geral do labirinto, dois pares de túneis laterais,
-casa central de regeneração e fantasmas com silhueta/rostos mais legíveis.
-Menus limitados à tela, com texto ajustável e rolagem quando necessário.
+Arquitetura metálica 3D com painéis ciano/magenta, paredes mais estreitas,
+piso polido com SSR em Forward+, iluminação de contato e câmera em perspectiva
+que acompanha a protagonista. A referência ao arcade clássico orienta o
+**layout e os túneis**, preservando a direção visual neon.
+
+**A partida aguarda a primeira direção:** Ms. Pac-Man, relógio e liberação dos
+fantasmas ficam parados até uma seta/WASD. Espaço sozinho não inicia movimento.
+Reinício e troca de fase limpam a direção anterior; a música continua na espera.
 
 Arcade 3D para Windows com três fases autorais, poderes limitados, nove medalhas
 e rastro cosmético desbloqueável. Movimento, música, Flow, contador e mapa ampliado
@@ -36,11 +41,13 @@ python scripts/build.py --godot godot
 O builder exige seis suítes, faz smoke, exporta Windows, aplica ícone/versão
 e testa o PCK embutido no motor do host fora das fontes.
 
-**196 verificações aprovadas.** Inclui coleta dos três mapas por movimento
+**215 verificações aprovadas.** Inclui coleta dos três mapas por movimento
 automatizado, com inimigos desativados para verificar alcançabilidade.
 **Windows nativo, GPU física e equilíbrio com jogadores permanecem pendentes.**
-Capturas Linux/Xvfb em Compatibility/llvmpipe não comprovam acabamento Forward+.
+As novas capturas são reais do motor Linux/Xvfb em Forward+/Vulkan por software
+(llvmpipe), incluindo uma rota automatizada com fantasmas ativos. Não medem GPU física.
 
+- [Direção visual e correção de início da 0.5](docs/DIRECAO_VISUAL_NEON.md)
 - [Interface, túneis e fantasmas da 0.4](docs/ESSENCIA_ARCADE.md)
 - [Regras e evidências históricas da 0.3](docs/CIRCUITO_NEON.md)
 - [Correção do mapa 0.2.1](docs/CORRECAO_MAPA.md)

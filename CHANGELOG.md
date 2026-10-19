@@ -1,3 +1,17 @@
+# MV neon 0.5.0 — arquitetura e primeira direção
+
+- Interpretação corrigida: essência clássica no layout, com direção artística neon 3D.
+- Paredes metálicas com faces recuadas, painéis, molduras, aletas e iluminação no piso.
+- Fachadas instanciadas por material, mantendo redução de obstáculos perto da protagonista.
+- Perspectiva próxima acompanhando a ação; C mantém a visão superior de todo o mapa.
+- Piso opaco polido para SSR em Forward+, sem a antiga transparência que prejudicava reflexos.
+- Detalhes na caixa de regeneração, base da arena e janelas da cidade.
+- Corpos dos fantasmas com brilho de contorno, conservando rostos e estados legíveis.
+- Direção inicial nula; relógio/liberação aguardam primeiro comando na abertura de cada fase.
+- Direção + dash funcionam no mesmo quadro de entrada; Espaço sozinho não inicia movimento.
+- 19 verificações adicionais de início, reinício, troca de fase e respawn.
+- Capturas reais em Forward+/Vulkan por software; Windows nativo/GPU física ainda pendentes.
+
 # MV essência arcade 0.4.0 — clareza, túneis e regeneração
 
 - HUD e área 3D em retângulos separados, com câmera de visão geral.

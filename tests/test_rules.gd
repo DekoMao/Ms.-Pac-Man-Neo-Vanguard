@@ -9,13 +9,29 @@ func check(name:String,condition:bool,detail:String="") -> void:
 	if not condition:failed+=1
 	print("PASS " if condition else "FAIL ",name," ",detail)
 func quiet():
-	var r=Rules.new();r.start()
+	var r=Rules.new();r.start();r.request_direction(Vector2i.RIGHT)
 	for g in r.ghosts:g.release=100000.0
 	r.pickups.clear();r.pickups[Vector2i(15,1)]="pellet"
 	return r
 func advance(r,seconds:float) -> void:
 	for i in roundi(seconds/Rules.STEP):r.tick()
 func run() -> void:
+	# Fresh rounds must remain still even across many simulation ticks.
+	for level in 3:
+		var idle=Rules.new();idle.reset(level,true);idle.start()
+		for g in idle.ghosts:g.release=100000.0
+		var spawn:Vector2=idle.player.pos;var count:int=idle.pickups.size()
+		advance(idle,5.0)
+		check("START-%d-no-direction-no-movement"%level,idle.player.pos==spawn and idle.player.dir==Vector2i.ZERO and idle.pickups.size()==count)
+		check("START-%d-dash-cannot-start-alone"%level,not idle.request_dash() and idle.energy==100)
+		idle.request_direction(Vector2i.RIGHT);advance(idle,0.1)
+		check("START-%d-first-direction-moves"%level,idle.player.pos.x>spawn.x and idle.player.pos.y==spawn.y)
+		idle.reset(level,true);idle.start()
+		check("START-%d-restart-restores-idle"%level,idle.player.dir==Vector2i.ZERO and idle.held_dir==Vector2i.ZERO and idle.buffer_dir==Vector2i.ZERO)
+	var respawn=quiet();respawn.request_direction(Vector2i.RIGHT);advance(respawn,0.1);respawn.die()
+	for g in respawn.ghosts:g.release=100000.0
+	advance(respawn,2.0)
+	check("START-respawn-also-waits-for-direction",respawn.status=="playing" and respawn.player.pos==Vector2(1,9) and respawn.player.dir==Vector2i.ZERO)
 	var r=Rules.new()
 	check("MAP-01-connected",r.topology_valid(r.floors))
 	check("MAP-02-rectangular",r.GRID.all(func(row):return row.length()==17))
@@ -90,3 +106,4 @@ func run() -> void:
 	output.store_string(JSON.stringify({"suite":"MV rules and persistence","engine":Engine.get_version_info().string,"executed":results.size(),"passed":results.size()-failed,"failed":failed,"results":results},"\t"));output.close()
 	print("MV_TEST_RESULT executed=",results.size()," failed=",failed)
 	quit(1 if failed>0 else 0)
+

@@ -1,0 +1,10 @@
+{
+  "zip": "/workspace/scratch/7740f940f7a4/neogrid-map/entrega/NeoGrid_0.5_DesignNeon_Windows_x64.zip",
+  "bytes": 39195716,
+  "sha256": "3ac31a2dea760ee3d551d3aa84ac5d2e2c99b760ef35569ae1f1a906280a9aa1",
+  "entries": 23,
+  "crc_valid": true,
+  "exe_sha256": "14dcb8a8baeae9450440a15c6361c6d6d81ffb09973193aa5945616b3f7d9a21",
+  "tests": 215,
+  "native_windows_tested": false
+}

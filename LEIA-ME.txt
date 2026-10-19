@@ -1,15 +1,13 @@
-NEO-GRID — ESSENCIA ARCADE 0.4.0
+NEO-GRID 0.5 — NEON ARCHITECTURE
 
-NOVO NESTA VERSAO
-HUD fora da area 3D; camera mostra o labirinto inteiro.
-Menus centralizados, texto ajustado e rolagem para conteudo longo.
-Saidas laterais nas duas alturas iluminadas levam para a borda oposta.
-Fantasmas tambem usam tuneis. Chegar do outro lado nao da invulnerabilidade.
-Casa central: olhos retornam, corpo regenera e fantasma sai pela porta.
-O jogador nao entra na casa. Novos corpos, olhos e expressao de vulnerabilidade.
+Extraia o ZIP inteiro e execute MsPacMan_Aperfeicoado.exe.
+O jogo aguarda uma seta ou WASD para começar a movimentação.
+C alterna perspectiva/visão completa. M abre mapa e pausa.
+Espaço: dash. E: escudo. R: ímã a partir da fase 2. Q: aposta no Power.
+P/Esc: pausa. F11: tela cheia.
 
-Extraia o ZIP inteiro e abra MsPacMan_Aperfeicoado.exe.
-Nao precisa instalar Godot, Python, MAME ou ROMs para jogar.
+Três fases, túneis laterais, caixa de regeneração e nove medalhas.
+A música, pontuação e poderes existentes foram preservados.
 
 CONTROLES E PODERES
 WASD/setas: mover. Espaco: dash (40E). Enter: iniciar.
@@ -36,13 +34,13 @@ e tres vidas. Save guarda fases/medalhas/configuracoes, sem retomar partidas.
 O recorde anterior MV foi preservado, separado do recorde do Circuito Neon.
 
 VALIDACAO
-196 verificacoes automaticas aprovadas no Godot 4.6.3 / Linux.
+215 verificacoes automaticas aprovadas no Godot 4.6.3 / Linux.
 Inclui coleta dos tres mapas via movimento com inimigos desativados, testes
 de poderes, transicoes e migracao do save. Windows x64, PCK embutido, icone
-e versao 0.4.0.0, sem assinatura. Smoke do PCK passou no motor Linux:
+e versao 0.5.0.0, sem assinatura. Smoke do PCK passou no motor Linux:
 isso nao executa o PE no Windows. Windows nativo e GPU fisica pendentes.
 Dificuldade e tempos precisam de teste humano. Imagens sao preparacoes de
-QA no motor Linux Compatibility/llvmpipe, sem comprovar acabamento Forward+.
+QA no motor Linux Forward+/Vulkan/llvmpipe, com renderizacao por software.
 
 Dados: user://neo_grid_mv.json (Godot/AppData). Ha backup .bak e copia de
 arquivo corrompido. Nao apague o save ao atualizar.

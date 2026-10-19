@@ -102,7 +102,7 @@ func reset(level:int=0, circuit:bool=false, carry:Dictionary={}) -> void:
 				var c := Vector2i(x,y)
 				floors[c] = true
 				pickups[c] = "power" if grid[y][x] == "o" else "pellet"
-	player = actor(Vector2(1,9), Vector2i.RIGHT)
+	player = actor(Vector2(1,9), Vector2i.ZERO)
 	ghosts.clear()
 	for i in 4:
 		var g := actor(Vector2(HOME[i]), Vector2i.UP)
@@ -175,6 +175,10 @@ func request_direction(dir: Vector2i) -> void:
 	buffer_dir = dir
 	held_dir = dir
 	buffer_time = time
+	# Establish the first direction immediately so direction + dash works in one
+	# input frame. A fresh reset has no implicit direction.
+	if player.dir == Vector2i.ZERO and walkable(neighbor(Vector2i(player.pos.round()),dir)):
+		player.dir = dir
 	if dash_until <= time and dir == -player.dir:
 		player.dir = dir
 

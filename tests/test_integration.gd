@@ -29,6 +29,13 @@ func run() -> void:
 	check("SCENE-01-real-actors",game.hero.get_node("Protagonista/Body").mesh is ArrayMesh and game.ghosts.size()==4)
 	await press(KEY_ENTER)
 	check("UI-02-enter-start",game.current_screen=="playing" and not game.sim.paused)
+	check("START-UI-01-enter-does-not-move",game.sim.player.dir==Vector2i.ZERO and game.sim.player.pos==Vector2(1,9) and game.sim.time==0.0)
+	for i in 600:game._physics_process(1.0/120.0)
+	check("START-UI-05-clock-and-house-wait-for-input",game.sim.time==0 and game.sim.ghosts.all(func(g):return g.state=="house"))
+	await press(KEY_SPACE)
+	check("START-UI-06-dash-alone-stays-idle",game.sim.time==0 and game.sim.energy==100 and game.sim.player.pos==Vector2(1,9))
+	await press(KEY_D)
+	check("START-UI-02-direction-starts-movement",game.sim.player.dir==Vector2i.RIGHT)
 	await press(KEY_P)
 	var now:float=game.sim.time
 	await physics_frame;await physics_frame
@@ -44,6 +51,7 @@ func run() -> void:
 	game.show_settings();check("UI-08-settings",game.current_screen=="settings")
 	game.show_title();game.show_records();check("UI-09-records",game.current_screen=="records")
 	game.start_game();game.sim.score=900;game.sim.flow=3;game.start_game()
+	check("START-UI-03-restart-clears-direction",game.sim.player.dir==Vector2i.ZERO and game.sim.held_dir==Vector2i.ZERO and game.key_stack.is_empty())
 	check("UI-10-restart-clears-run",game.sim.score==0 and game.sim.flow==1 and game.sim.lives==3)
 	game.show_quit_confirm();check("UI-11-quit-confirmation",game.current_screen=="quit" and game.sim.paused)
 	game.pause_game();game._notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)
@@ -58,10 +66,10 @@ func run() -> void:
 	game.settings.reduced=true;game.feedback.reset()
 	game.feedback.react({"type":"power","pos":Vector2(1,9)},game.sim,true)
 	game._process(0.016)
-	check("ACCESS-02-reduced-camera-zero-impulse",game.camera.fov==45 and game.feedback.camera_offset(0)==Vector3.ZERO and game.feedback.effects.is_empty())
+	check("ACCESS-02-reduced-camera-zero-impulse",game.camera.fov==49 and game.feedback.camera_offset(0)==Vector3.ZERO and game.feedback.effects.is_empty())
 	game.settings.reduced=reduced_before
 	var strength:float=game.settings.camera_motion;game.settings.camera_motion=0.0;game._process(0.016)
-	check("ACCESS-03-slider-zero-fov-fixed",game.camera.fov==45)
+	check("ACCESS-03-slider-zero-fov-fixed",game.camera.fov==49)
 	game.settings.camera_motion=strength
 	game.sim.pickups[Vector2i(1,9)]="power";game.sim.collect(Vector2i(1,9),game.sim.time)
 	await press(KEY_Q)
@@ -101,6 +109,7 @@ func run() -> void:
 	check("CIRCUIT-UI-04-win-records-unlock-and-medals",game.current_screen=="results" and game.settings.unlocked>=1 and game.settings.medals[0]==7 and game.settings.circuit_record==game.sim.score)
 	var carry_score:int=game.sim.score;game.sim.lives=1;game.next_stage()
 	check("CIRCUIT-UI-05-next-carries-score-and-life",game.sim.stage_id==1 and game.sim.score==carry_score and game.sim.lives==2 and game.sim.magnet_charges==1)
+	check("START-UI-04-next-phase-waits",game.sim.player.pos==Vector2(1,9) and game.sim.player.dir==Vector2i.ZERO)
 	check("CIRCUIT-UI-06-rebuilds-visual-map",game.walls.has(Vector2i(8,1)) and not game.walls.has(Vector2i(3,2)) and game.pickup_nodes.size()==game.sim.pickups.size())
 	await press(KEY_E);await press(KEY_R)
 	check("CIRCUIT-UI-07-second-phase-powers",game.sim.shield_until>game.sim.time and game.sim.magnet_until>game.sim.time)

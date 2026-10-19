@@ -1,7 +1,7 @@
 {
-	"executed": 45,
+	"executed": 51,
 	"failed": 0,
-	"passed": 45,
+	"passed": 51,
 	"results": [
 		{
 			"id": "AUDIO-01-full-musical-loop",
@@ -17,6 +17,22 @@
 		},
 		{
 			"id": "UI-02-enter-start",
+			"passed": true
+		},
+		{
+			"id": "START-UI-01-enter-does-not-move",
+			"passed": true
+		},
+		{
+			"id": "START-UI-05-clock-and-house-wait-for-input",
+			"passed": true
+		},
+		{
+			"id": "START-UI-06-dash-alone-stays-idle",
+			"passed": true
+		},
+		{
+			"id": "START-UI-02-direction-starts-movement",
 			"passed": true
 		},
 		{
@@ -45,6 +61,10 @@
 		},
 		{
 			"id": "UI-09-records",
+			"passed": true
+		},
+		{
+			"id": "START-UI-03-restart-clears-direction",
 			"passed": true
 		},
 		{
@@ -145,6 +165,10 @@
 		},
 		{
 			"id": "CIRCUIT-UI-05-next-carries-score-and-life",
+			"passed": true
+		},
+		{
+			"id": "START-UI-04-next-phase-waits",
 			"passed": true
 		},
 		{
