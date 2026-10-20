@@ -90,6 +90,7 @@ var max_chain:=0
 var bonus=preload("res://scripts/bonus_fruit.gd").new()
 var boss=preload("res://scripts/colossus.gd").new()
 var train=preload("res://scripts/ghost_train.gd").new()
+var fusion=preload("res://scripts/fusion.gd").new()
 
 func _init(seed_value: int = 73021) -> void:
 	var file = FileAccess.open("res://assets/balance.json", FileAccess.READ)
@@ -100,7 +101,7 @@ func _init(seed_value: int = 73021) -> void:
 func reset(level:int=0, circuit:bool=false, carry:Dictionary={}) -> void:
 	stage_id = clampi(level,0,5)
 	mode=str(carry.get("mode","circuit"))
-	if mode not in ["circuit","overdrive","train"]:mode="circuit"
+	if mode not in ["circuit","overdrive","train","fusion"]:mode="circuit"
 	run_elapsed=maxf(0,float(carry.get("run_elapsed",0)))
 	pulse_index=int(carry.get("pulse_index",floori(run_elapsed/40)))
 	upgrade=str(carry.get("upgrade",""))
@@ -169,6 +170,8 @@ func reset(level:int=0, circuit:bool=false, carry:Dictionary={}) -> void:
 	close_passes.clear()
 	near_ready.clear()
 	risk = {"state":"available", "progress":0, "window":-1, "deadline":-1.0}
+	fusion.reset(self,carry)
+	initial_pellets=pickups.size()
 
 static func actor(pos: Vector2, dir: Vector2i) -> Dictionary:
 	return {"pos":pos, "previous":pos, "dir":dir}
@@ -219,8 +222,31 @@ func request_dash() -> bool:
 	return true
 
 func tick(dt: float = STEP) -> void:
+	if mode!="fusion":_tick_step(dt);return
+	if paused or status in ["ready","won","game_over","time_up"]:return
+	# Resolve fuses at exact simulation boundaries, even for coarse caller dt.
+	# Only the hybrid mode uses this subdivision; existing modes retain rules.
+	var remaining:=maxf(0,dt)
+	var output:Array=[]
+	while remaining>0.00000001 and status in ["playing","respawning"]:
+		var part:=minf(STEP,remaining)
+		part=minf(part,fusion.next_deadline(time)-time)
+		_tick_step(part)
+		output.append_array(events);events.clear()
+		remaining-=part
+		if status=="playing":
+			fusion.update(self);fusion.boundary_hits(self)
+			output.append_array(events);events.clear()
+	events=output
+
+func timed_mode() -> bool:return mode in ["overdrive","train"]
+func request_bomb() -> bool:return fusion.request(self)
+func can_enter(c:Vector2i,a:Dictionary,is_player:bool) -> bool:
+	return walkable(c,not is_player and a.get("state","") in ["returning","leaving","house"]) and (mode!="fusion" or fusion.can_enter(c,a,is_player))
+
+func _tick_step(dt:float) -> void:
 	if paused or status in ["ready", "won", "game_over","time_up"]: return
-	if campaign and mode!="circuit":
+	if campaign and timed_mode():
 		dt=minf(dt,maxf(0,180.0-run_time()))
 		if dt<=0:status="time_up";return
 	events.assign(pending_events)
@@ -228,8 +254,9 @@ func tick(dt: float = STEP) -> void:
 	if status == "respawning":
 		time += dt
 		if time >= respawn_until: status = "playing"
-		if campaign and mode!="circuit" and run_time()>=180:status="time_up";bonus.active=false
+		if campaign and timed_mode() and run_time()>=180:status="time_up";bonus.active=false
 		return
+	if mode=="fusion":fusion.update(self)
 	boss.update(self)
 	if mode=="overdrive" and floori(run_time()/40)>pulse_index:
 		pulse_index=floori(run_time()/40)
@@ -259,12 +286,14 @@ func tick(dt: float = STEP) -> void:
 		if g.state in ["chase", "scatter"]: g.state = normal_state()
 		var gs: float = tuning.ghost_speed
 		if campaign: gs *= Stages.INFO[stage_id].speed
-		if mode!="circuit":gs*=0.90+0.18*minf(1,run_time()/180)
+		if timed_mode():gs*=0.90+0.18*minf(1,run_time()/180)
 		if g.state in ["chase", "scatter"]: gs *= 1.0 + 0.04 * pressure_level
 		if g.state == "vulnerable": gs *= 0.65
 		if g.state == "returning": gs = 5.0
+		if time<g.get("stunned_until",-1.0):gs=0
 		ghost_paths.append(advance(g, gs * dt if g.state != "house" else 0.0, false))
 	var contacts: Array = []
+	if mode=="fusion":contacts.append_array(fusion.contacts(self,pp,ghost_paths,dt))
 	if bonus.active:
 		var toi:float=path_contact(pp,fruit_path,0.43)
 		if toi<=1:contacts.append({"at":toi,"priority":0,"type":"bonus"})
@@ -276,6 +305,7 @@ func tick(dt: float = STEP) -> void:
 			var toi:float=path_contact(pp,[{"a":Vector2(c),"b":Vector2(c),"t0":0.0,"t1":1.0}],0.33)
 			if toi<=1 and time+dt*toi<boss.next_at:contacts.append({"at":toi,"priority":2,"type":"hazard"})
 	for cell in pickups:
+		if fusion.crates.has(cell):continue
 		var toi := path_contact(pp, [{"a":Vector2(cell), "b":Vector2(cell), "t0":0.0, "t1":1.0}], 0.23)
 		if pickups[cell] == "pellet" and time < magnet_until:
 			# Only the same/adjacent floor cell: never reach through a wall or diagonally.
@@ -283,14 +313,14 @@ func tick(dt: float = STEP) -> void:
 			var before := Vector2i(player.previous.round())
 			var adjacent := absi(cell.x-here.x)+absi(cell.y-here.y) <= (2 if upgrade=="magnet" else 1) or absi(cell.x-before.x)+absi(cell.y-before.y) <= (2 if upgrade=="magnet" else 1)
 			if upgrade=="magnet":adjacent=path_distance(here,cell)<=2 or path_distance(before,cell)<=2
-			if adjacent:
+			if adjacent and walkable(cell):
 				var magnetic_toi := path_contact(pp, [{"a":Vector2(cell), "b":Vector2(cell), "t0":0.0, "t1":1.0}], 2.05 if upgrade=="magnet" else 1.05)
 				if time + dt * magnetic_toi < magnet_until: toi = minf(toi, magnetic_toi)
 		if toi <= 1.0: contacts.append({"at":toi, "priority":0, "type":"pickup", "cell":cell})
 	for i in ghosts.size():
 		if ghosts[i].state in ["house","leaving"]: continue
 		var toi := path_contact(pp, ghost_paths[i], PLAYER_RADIUS + GHOST_RADIUS)
-		if toi <= 1.0: contacts.append({"at":toi, "priority":2, "type":"ghost", "index":i})
+		if toi <= 1.0: contacts.append({"at":toi, "priority":3 if mode=="fusion" else 2, "type":"ghost", "index":i})
 	if power_until >= time and power_until <= time + dt:
 		contacts.append({"at":(power_until-time)/dt, "priority":1, "type":"power_end"})
 	if flow_until >= time and flow_until <= time + dt:
@@ -299,6 +329,11 @@ func tick(dt: float = STEP) -> void:
 	for contact in contacts:
 		var event_time: float = time + dt * contact.at
 		match contact.type:
+			"flame_player":
+				if block_hit(event_time):continue
+				die();break
+			"flame_ghost":fusion.hit_ghost(self,ghosts[contact.index],contact.flame,event_time)
+			"bomb_upgrade":fusion.collect_drop(self,contact.cell)
 			"bonus":bonus.collect(self,event_time)
 			"train":
 				var g:Dictionary=contact.actor
@@ -322,6 +357,7 @@ func tick(dt: float = STEP) -> void:
 				var g: Dictionary = ghosts[contact.index]
 				if g.state == "vulnerable": capture(g, event_time)
 				elif g.state in ["chase", "scatter"]:
+					if event_time<g.get("stunned_until",-1.0):continue
 					if block_hit(event_time): continue
 					die()
 					break
@@ -334,13 +370,13 @@ func tick(dt: float = STEP) -> void:
 			power_warned = window_id
 			events.append({"type":"power_warning", "pos":player.pos})
 		update_topology()
-		if pickups.is_empty() and campaign and mode=="circuit" and stage_id==5 and not boss.active and not boss.defeated:
+		if pickups.is_empty() and campaign and mode in ["circuit","fusion"] and stage_id==5 and not boss.active and not boss.defeated:
 			boss.start(self)
 		elif (boss.defeated or (pickups.is_empty() and not boss.active)):
 			status="won";bonus.active=false
 			if campaign:score+=stage_result().bonus
 			events.append({"type":"won","pos":player.pos})
-	if campaign and mode!="circuit" and run_time()>=180.0:
+	if campaign and timed_mode() and run_time()>=180.0:
 		status="time_up";bonus.active=false
 
 func run_time() -> float:return run_elapsed+time
@@ -375,6 +411,7 @@ func block_hit(at:float) -> bool:
 	return true
 
 func challenge_met() -> bool:
+	if mode=="fusion":return fusion.chained>=1
 	match stage_id:
 		0: return stage_captures >= 2
 		1: return stage_deaths == 0
@@ -458,7 +495,7 @@ static func path_clearance(a: Array, b: Array) -> float:
 	return nearest
 
 func collect(cell: Vector2i, at: float) -> void:
-	if not pickups.has(cell): return
+	if not pickups.has(cell) or fusion.crates.has(cell): return
 	var kind: String = pickups[cell]
 	pickups.erase(cell)
 	collected += 1
@@ -491,6 +528,7 @@ func capture(g: Dictionary, at: float) -> void:
 		if risk.progress >= 2: finish_risk(true)
 
 func die() -> void:
+	fusion.on_death(self)
 	bonus.active=false;boss.on_death(self);train.followers.clear()
 	stage_deaths += 1
 	shield_until = -1.0
@@ -525,7 +563,6 @@ func advance(a: Dictionary, distance: float, is_player: bool) -> Array:
 	var total := maxf(distance, 0.000001)
 	var spent := 0.0
 	var guard := 0
-	var house_access:bool = not is_player and a.get("state","") in ["returning","leaving","house"]
 	while distance > 0.000001 and guard < 12:
 		guard += 1
 		var p: Vector2 = a.pos
@@ -534,7 +571,7 @@ func advance(a: Dictionary, distance: float, is_player: bool) -> Array:
 			a.pos = Vector2(center)
 			if is_player:
 				var wanted := buffer_dir if time-buffer_time <= tuning.turn_buffer else held_dir
-				if wanted != Vector2i.ZERO and time >= dash_until and walkable(neighbor(center,wanted)):
+				if wanted != Vector2i.ZERO and time >= dash_until and can_enter(neighbor(center,wanted),a,true):
 					if a.dir != Vector2i.ZERO and Vector2(wanted).dot(Vector2(a.dir)) == 0 and time-buffer_time <= tuning.drift_window and time >= drift_ready:
 						drift_until = time + 0.2
 						drift_ready = time + 0.35
@@ -544,7 +581,7 @@ func advance(a: Dictionary, distance: float, is_player: bool) -> Array:
 			elif a.get("state","")=="bonus":a.dir=bonus.direction(self,center)
 			elif a.get("train",false):a.dir=train.direction(self,a,center)
 			else: a.dir = choose_direction(a, center)
-			if not walkable(neighbor(center,a.dir),house_access): break
+			if not can_enter(neighbor(center,a.dir),a,is_player): break
 		if a.dir == Vector2i.ZERO: break
 		var d: Vector2i = a.dir
 		var next: Vector2 = p
@@ -571,7 +608,7 @@ func choose_direction(g: Dictionary, c: Vector2i) -> Vector2i:
 	var options: Array = []
 	var access:bool = g.state in ["returning","leaving","house"]
 	for d in DIRS:
-		if walkable(neighbor(c,d),access): options.append(d)
+		if can_enter(neighbor(c,d),g,false): options.append(d)
 	if options.is_empty(): return Vector2i.ZERO
 	if options.size() > 1 and not access: options.erase(-g.dir)
 	var target := Vector2i(player.pos.round())
@@ -586,6 +623,13 @@ func choose_direction(g: Dictionary, c: Vector2i) -> Vector2i:
 	for d in options:
 		var dist := path_distance(neighbor(c,d), target, access)
 		var utility := float(dist if g.state == "vulnerable" else -dist)
+		if mode=="fusion" and not access:
+			# Prefer a safe route when a bomb is about to detonate, without
+			# revealing hidden information or making ghosts permanently timid.
+			for b in fusion.bombs:
+				if b.at-time<0.85 and neighbor(c,d) in fusion.ray_cells(self,b):utility-=100
+			for f in fusion.flames:
+				if neighbor(c,d) in f.cells:utility-=200
 		if utility > value:
 			value = utility
 			best = d
@@ -601,7 +645,7 @@ func neighbor(c:Vector2i,d:Vector2i) -> Vector2i:
 	return normalize_cell(c+d)
 
 func walkable(c:Vector2i,house_access:bool=false) -> bool:
-	return floors.has(c) and (not campaign or house_access or (c not in HOUSE and c!=DOOR))
+	return floors.has(c) and not fusion.crates.has(c) and (not campaign or house_access or (c not in HOUSE and c!=DOOR))
 
 func path_distance(start_cell: Vector2i, target: Vector2i, house_access:bool=false) -> int:
 	start_cell=normalize_cell(start_cell)
@@ -661,6 +705,7 @@ static func path_contact(a: Array, b: Array, radius: float) -> float:
 	return earliest
 
 func queue_topology() -> void:
+	if mode=="fusion":return # Bombs open the new routes in this mode.
 	if topology_done or not topology.is_empty(): return
 	topology = {"apply_at":time+1.5, "cancel_at":time+4.5}
 	events.append({"type":"warning", "pos":Vector2(open_cell)})

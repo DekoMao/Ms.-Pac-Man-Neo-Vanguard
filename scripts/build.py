@@ -77,6 +77,11 @@ def main():
         expansion=json.loads((evidence/'testes_expansao.json').read_text())
         if expansion['executed']<1 or expansion['failed']:
             raise RuntimeError('Expanded modes, rewards and input tests failed')
+        (evidence/'testes_fusao.json').unlink(missing_ok=True)
+        run('testes_fusao',['--script','res://tests/test_fusion.gd'],180)
+        fusion=json.loads((evidence/'testes_fusao.json').read_text())
+        if fusion['executed']<1 or fusion['failed']:
+            raise RuntimeError('Hybrid bomb simulation and integration tests failed')
         run('smoke_headless',['--fixed-fps','60','--quit-after','240','--','--smoke'],45)
         run('export_windows',['--export-release','Windows Desktop',str(target)],180)
         resources=embed(target,ROOT/'assets/icon.ico')
@@ -86,9 +91,13 @@ def main():
             copy=Path(temp)/target.name
             shutil.copyfile(target,copy)
             run('pacote_embutido',['--main-pack',str(copy),'--fixed-fps','60','--quit-after','240','--','--smoke'],45,packaged=True,working_directory=temp)
+            run('pacote_fusao_embutido',['--main-pack',str(copy),'--fixed-fps','60','--quit-after','240','--','--smoke-fusion'],45,packaged=True,working_directory=temp)
         text=(evidence/'pacote_embutido.log').read_text()
         if 'NEOGRID_SMOKE_OK' not in text:
             raise RuntimeError('Embedded pack did not reach functional smoke check')
+        fusion_text=(evidence/'pacote_fusao_embutido.log').read_text()
+        if 'NEOGRID_SMOKE_OK' not in fusion_text or '"mode":"fusion"' not in fusion_text:
+            raise RuntimeError('Embedded hybrid mode did not exercise bomb detonation')
         (evidence/'build_artefato.json').write_text(json.dumps({'editor_version':version,'artifact':str(target),'bytes':target.stat().st_size,'sha256':hashlib.sha256(target.read_bytes()).hexdigest(),'pe_amd64':True,'embedded_pack_smoke_on_host':True,'native_windows_tested':False,'code_signed':False},indent=2)+'\n')
         print('Windows PE: '+str(target),flush=True)
     finally:

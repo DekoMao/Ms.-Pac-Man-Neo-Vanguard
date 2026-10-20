@@ -1,3 +1,15 @@
+# 0.9.0 — Fusão / Bomber Chase
+
+- Novo modo híbrido sobre os seis mapas da 0.8, com identidade neon preservada.
+- Bombas B/B pad: pavio 2,3s, alcance ortogonal, capacidade e reação em cadeia.
+- Seis caches por mapa abrem atalhos, revelam pontos obrigatórios e melhorias.
+- Explosão atordoa fantasmas; Power converte o impacto em captura com Flow.
+- Dano próprio, escudo, colisão de bombas e fuga/reentrada tratados na simulação.
+- Upgrades de bombas seguem entre fases; revanche reinicia o arsenal.
+- Recorde próprio, mapa atualizado e avisos no piso sem painéis sobre o jogo.
+- Mecânicas reimplementadas em Godot; nenhuma cópia de código ou assets Unity.
+- 445 verificações, pacote Windows e QA visual no motor Linux; execução nativa pendente.
+
 # 0.8.0 — Circuito Vivo (roteiro 0.6–0.8)
 
 - Capturas crescentes com quatro arpejos originais, faíscas e uma legenda por vez.

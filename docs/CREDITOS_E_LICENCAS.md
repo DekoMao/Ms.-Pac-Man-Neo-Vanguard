@@ -30,3 +30,10 @@ ou remoção de proteção de licença nem publicação/distribuição pública.
 A versão 0.8 acrescenta seis sinais sonoros originais sintetizados por
 `scripts/generate_reward_audio.py`. A trilha aprovada anterior foi preservada.
 Fruta móvel, seguidores e Colosso reutilizam malhas procedurais próprias.
+
+
+A 0.9 usa o projeto MauricioSuporte/Super-Bomberman-6-Unity como benchmark
+de mecanicas, commit 79bffa5accfd519f9be40235b1353fd4502d9493. Nao incorpora
+codigo, sprites, cenas ou audio daquele projeto. Bombas, caches e explosoes
+foram reimplementados em Godot; efeitos sonoros originais sao sintetizados
+por scripts/generate_fusion_audio.py. Analise e links em FUSAO_BOMBER_CHASE.md.

@@ -47,6 +47,9 @@ func animate(t:float, direction:Vector2i, state:String="", power_time:float=0.0,
 		var color:=tint
 		if state=="vulnerable":color=Color("2455c4") if reduce_motion or power_time>1.5 or int(t*3)%2==0 else Color("cadbff")
 		if state=="returning":color=Color("9daabf")
+		if state=="stunned":
+			color=Color("b79ee4")
+			if not reduce_motion:model.rotation.z=sin(t*12)*0.12
 		var mat:StandardMaterial3D=body.material_override
 		mat.albedo_color=Color(color,1.0);mat.emission=color
 		body.visible=state!="returning"

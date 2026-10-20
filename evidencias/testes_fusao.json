@@ -1,0 +1,426 @@
+{
+	"checks": [
+		{
+			"id": "FUSION-0-six-distributed-caches",
+			"passed": true
+		},
+		{
+			"id": "FUSION-0-all-original-corridors-preserved",
+			"passed": true
+		},
+		{
+			"id": "FUSION-0-caches-add-floor-and-hidden-required-point",
+			"passed": true
+		},
+		{
+			"id": "FUSION-0-cache-accessible-from-two-original-lanes",
+			"passed": true
+		},
+		{
+			"id": "FUSION-0-protected-house-and-tunnels",
+			"passed": true
+		},
+		{
+			"id": "FUSION-1-six-distributed-caches",
+			"passed": true
+		},
+		{
+			"id": "FUSION-1-all-original-corridors-preserved",
+			"passed": true
+		},
+		{
+			"id": "FUSION-1-caches-add-floor-and-hidden-required-point",
+			"passed": true
+		},
+		{
+			"id": "FUSION-1-cache-accessible-from-two-original-lanes",
+			"passed": true
+		},
+		{
+			"id": "FUSION-1-protected-house-and-tunnels",
+			"passed": true
+		},
+		{
+			"id": "FUSION-2-six-distributed-caches",
+			"passed": true
+		},
+		{
+			"id": "FUSION-2-all-original-corridors-preserved",
+			"passed": true
+		},
+		{
+			"id": "FUSION-2-caches-add-floor-and-hidden-required-point",
+			"passed": true
+		},
+		{
+			"id": "FUSION-2-cache-accessible-from-two-original-lanes",
+			"passed": true
+		},
+		{
+			"id": "FUSION-2-protected-house-and-tunnels",
+			"passed": true
+		},
+		{
+			"id": "FUSION-3-six-distributed-caches",
+			"passed": true
+		},
+		{
+			"id": "FUSION-3-all-original-corridors-preserved",
+			"passed": true
+		},
+		{
+			"id": "FUSION-3-caches-add-floor-and-hidden-required-point",
+			"passed": true
+		},
+		{
+			"id": "FUSION-3-cache-accessible-from-two-original-lanes",
+			"passed": true
+		},
+		{
+			"id": "FUSION-3-protected-house-and-tunnels",
+			"passed": true
+		},
+		{
+			"id": "FUSION-4-six-distributed-caches",
+			"passed": true
+		},
+		{
+			"id": "FUSION-4-all-original-corridors-preserved",
+			"passed": true
+		},
+		{
+			"id": "FUSION-4-caches-add-floor-and-hidden-required-point",
+			"passed": true
+		},
+		{
+			"id": "FUSION-4-cache-accessible-from-two-original-lanes",
+			"passed": true
+		},
+		{
+			"id": "FUSION-4-protected-house-and-tunnels",
+			"passed": true
+		},
+		{
+			"id": "FUSION-5-six-distributed-caches",
+			"passed": true
+		},
+		{
+			"id": "FUSION-5-all-original-corridors-preserved",
+			"passed": true
+		},
+		{
+			"id": "FUSION-5-caches-add-floor-and-hidden-required-point",
+			"passed": true
+		},
+		{
+			"id": "FUSION-5-cache-accessible-from-two-original-lanes",
+			"passed": true
+		},
+		{
+			"id": "FUSION-5-protected-house-and-tunnels",
+			"passed": true
+		},
+		{
+			"id": "BOMB-start-stationary",
+			"passed": true
+		},
+		{
+			"id": "BOMB-place-allowed-while-standing",
+			"passed": true
+		},
+		{
+			"id": "BOMB-duplicate-tile-rejected",
+			"passed": true
+		},
+		{
+			"id": "BOMB-second-capacity",
+			"passed": true
+		},
+		{
+			"id": "BOMB-capacity-bounded",
+			"passed": true
+		},
+		{
+			"id": "BOMB-pause-input-blocked",
+			"passed": true
+		},
+		{
+			"id": "BOMB-pause-freezes-fuse",
+			"passed": true
+		},
+		{
+			"id": "BOMB-not-early",
+			"passed": true
+		},
+		{
+			"id": "BOMB-exact-fuse-and-capacity-return",
+			"passed": true
+		},
+		{
+			"id": "BOMB-range-two-orthogonal-no-diagonals",
+			"passed": true
+		},
+		{
+			"id": "BOMB-flame-expires-half-open",
+			"passed": true
+		},
+		{
+			"id": "BOMB-owner-can-exit-new-bomb",
+			"passed": true
+		},
+		{
+			"id": "BOMB-owner-cannot-reenter-after-full-exit",
+			"passed": true
+		},
+		{
+			"id": "BOMB-blocks-other-ghost",
+			"passed": true
+		},
+		{
+			"id": "BOMB-returning-eyes-can-pass",
+			"passed": true
+		},
+		{
+			"id": "BOMB-rays-stop-at-solid-wall",
+			"passed": true
+		},
+		{
+			"id": "BOMB-tunnel-no-wrapped-flame",
+			"passed": true
+		},
+		{
+			"id": "CACHE-ray-stops-at-first-cache",
+			"passed": true
+		},
+		{
+			"id": "CACHE-simultaneous-blasts-use-same-blocker-snapshot",
+			"passed": true
+		},
+		{
+			"id": "CHAIN-triggered-with-short-delay",
+			"passed": true
+		},
+		{
+			"id": "CHAIN-not-premature",
+			"passed": true
+		},
+		{
+			"id": "CHAIN-exact-delay-once",
+			"passed": true
+		},
+		{
+			"id": "CHAIN-no-double-detonation",
+			"passed": true
+		},
+		{
+			"id": "DAMAGE-self-blast-costs-one-life",
+			"passed": true
+		},
+		{
+			"id": "DAMAGE-death-clears-all-active-ordnance",
+			"passed": true
+		},
+		{
+			"id": "DAMAGE-power-does-not-protect-hero",
+			"passed": true
+		},
+		{
+			"id": "DAMAGE-shield-absorbs-blast",
+			"passed": true
+		},
+		{
+			"id": "DAMAGE-grace-prevents-overlap-repeat",
+			"passed": true
+		},
+		{
+			"id": "GHOST-unpowered-blast-stuns-not-captures",
+			"passed": true
+		},
+		{
+			"id": "GHOST-one-stun-per-blast",
+			"passed": true
+		},
+		{
+			"id": "GHOST-stunned-body-harmless",
+			"passed": true
+		},
+		{
+			"id": "GHOST-contact-danger-returns-after-stun",
+			"passed": true
+		},
+		{
+			"id": "GHOST-powered-blast-captures-with-flow",
+			"passed": true
+		},
+		{
+			"id": "GHOST-no-capture-farming",
+			"passed": true
+		},
+		{
+			"id": "GHOST-power-expiry-at-detonation-is-not-capture",
+			"passed": true
+		},
+		{
+			"id": "GHOST-power-during-live-flame-captures-stunned-ghost",
+			"passed": true
+		},
+		{
+			"id": "DAMAGE-dash-swept-through-live-flame",
+			"passed": true
+		},
+		{
+			"id": "CACHE-hidden-required-item-cannot-be-collected",
+			"passed": true
+		},
+		{
+			"id": "CACHE-explosion-opens-route-and-reveals-upgrade",
+			"passed": true
+		},
+		{
+			"id": "CACHE-blast-stops-on-cache",
+			"passed": true
+		},
+		{
+			"id": "CACHE-drop-waits-for-flame-clear",
+			"passed": true
+		},
+		{
+			"id": "CACHE-drop-collected-and-required-point-counted",
+			"passed": true
+		},
+		{
+			"id": "UPGRADE-range-and-shield-charge",
+			"passed": true
+		},
+		{
+			"id": "UPGRADE-hard-limits",
+			"passed": true
+		},
+		{
+			"id": "UPGRADE-carries-to-next-phase",
+			"passed": true
+		},
+		{
+			"id": "UPGRADE-new-run-resets-loadout",
+			"passed": true
+		},
+		{
+			"id": "FUSION-no-time-limit",
+			"passed": true
+		},
+		{
+			"id": "REGRESSION-circuit-has-no-bombs-caches-or-new-items",
+			"passed": true
+		},
+		{
+			"id": "COMPLETION-0-all-six-caches-openable",
+			"passed": true
+		},
+		{
+			"id": "COMPLETION-0-all-hidden-points-reachable-and-clearable",
+			"passed": true
+		},
+		{
+			"id": "COMPLETION-1-all-six-caches-openable",
+			"passed": true
+		},
+		{
+			"id": "COMPLETION-1-all-hidden-points-reachable-and-clearable",
+			"passed": true
+		},
+		{
+			"id": "COMPLETION-2-all-six-caches-openable",
+			"passed": true
+		},
+		{
+			"id": "COMPLETION-2-all-hidden-points-reachable-and-clearable",
+			"passed": true
+		},
+		{
+			"id": "COMPLETION-3-all-six-caches-openable",
+			"passed": true
+		},
+		{
+			"id": "COMPLETION-3-all-hidden-points-reachable-and-clearable",
+			"passed": true
+		},
+		{
+			"id": "COMPLETION-4-all-six-caches-openable",
+			"passed": true
+		},
+		{
+			"id": "COMPLETION-4-all-hidden-points-reachable-and-clearable",
+			"passed": true
+		},
+		{
+			"id": "COMPLETION-5-all-six-caches-openable",
+			"passed": true
+		},
+		{
+			"id": "COMPLETION-5-all-hidden-points-reachable-and-clearable",
+			"passed": true
+		},
+		{
+			"id": "UI-fusion-launch-stationary-with-six-caches",
+			"passed": true
+		},
+		{
+			"id": "INPUT-keyboard-bomb",
+			"passed": true
+		},
+		{
+			"id": "INPUT-controller-B-bomb",
+			"passed": true
+		},
+		{
+			"id": "UI-pause-freezes-real-bomb",
+			"passed": true
+		},
+		{
+			"id": "UI-next-phase-preserves-bomb-upgrades",
+			"passed": true
+		},
+		{
+			"id": "UI-rematch-clears-bombs-and-loadout",
+			"passed": true
+		},
+		{
+			"id": "UI-counter-and-bomb-resources-visible",
+			"passed": true
+		},
+		{
+			"id": "UI-fusion-sidebar-bounds-960",
+			"passed": true
+		},
+		{
+			"id": "UI-fusion-sidebar-bounds-1280",
+			"passed": true
+		},
+		{
+			"id": "UI-fusion-sidebar-bounds-1920",
+			"passed": true
+		},
+		{
+			"id": "UI-fusion-win-stops-for-result-not-timed-wave",
+			"passed": true
+		},
+		{
+			"id": "UI-fusion-next-choice-available",
+			"passed": true
+		},
+		{
+			"id": "SAVE-independent-fusion-record",
+			"passed": true
+		},
+		{
+			"id": "UI-menu-bounded-with-new-mode",
+			"passed": true
+		},
+		{
+			"id": "VISUAL-approved-camera-and-materials-preserved",
+			"passed": true
+		}
+	],
+	"executed": 105,
+	"failed": 0
+}
