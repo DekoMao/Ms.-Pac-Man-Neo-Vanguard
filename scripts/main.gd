@@ -88,6 +88,15 @@ var menu_scrim:ColorRect
 var menu_scroll:ScrollContainer
 var play_rect:Rect2
 var house_gate:MeshInstance3D
+var bonus_visual:Node3D
+var bonus_caption:Label
+var boss_visual:Node3D
+var train_visuals:Array=[]
+var hazard_visuals:Array=[]
+var reveal_tween:Tween
+var best_before_run:=0
+var session_metrics:Dictionary={"attempts":0,"retries":0,"death_cells":{},"abilities":{}}
+
 
 func _ready() -> void:
 	settings=Store.read_settings()
@@ -103,17 +112,22 @@ func _ready() -> void:
 	setup_audio()
 	apply_settings()
 	show_title()
-	runtime_info={"version":"0.5.0-neon","engine":Engine.get_version_info().string,"os":OS.get_name(),"display":DisplayServer.get_name(),"requested_renderer":ProjectSettings.get_setting("rendering/renderer/rendering_method"),"active_renderer":RenderingServer.get_current_rendering_method(),"driver":RenderingServer.get_current_rendering_driver_name(),"adapter":RenderingServer.get_video_adapter_name()}
+	runtime_info={"version":"0.8.0-living-arcade","engine":Engine.get_version_info().string,"os":OS.get_name(),"display":DisplayServer.get_name(),"requested_renderer":ProjectSettings.get_setting("rendering/renderer/rendering_method"),"active_renderer":RenderingServer.get_current_rendering_method(),"driver":RenderingServer.get_current_rendering_driver_name(),"adapter":RenderingServer.get_video_adapter_name()}
 	print("NEOGRID_RUNTIME ",JSON.stringify(runtime_info))
 	if demo or smoke:start_game()
 	get_tree().auto_accept_quit=false
 
 func setup_input() -> void:
-	var mapping={"p1_up":[KEY_W,KEY_UP],"p1_down":[KEY_S,KEY_DOWN],"p1_left":[KEY_A,KEY_LEFT],"p1_right":[KEY_D,KEY_RIGHT],"p1_dash":[KEY_SPACE],"risk_wager":[KEY_Q],"pause_game":[KEY_P,KEY_ESCAPE],"confirm_game":[KEY_ENTER],"toggle_camera":[KEY_C],"toggle_fullscreen":[KEY_F11],"toggle_map":[KEY_M],"shield":[KEY_E],"magnet":[KEY_R]}
+	var mapping={"p1_up":[KEY_W,KEY_UP],"p1_down":[KEY_S,KEY_DOWN],"p1_left":[KEY_A,KEY_LEFT],"p1_right":[KEY_D,KEY_RIGHT],"p1_dash":[KEY_SPACE],"risk_wager":[KEY_Q],"pause_game":[KEY_P,KEY_ESCAPE],"confirm_game":[KEY_ENTER],"toggle_camera":[KEY_C],"toggle_fullscreen":[KEY_F11],"toggle_map":[KEY_M],"shield":[KEY_E],"magnet":[KEY_R],"boss_pulse":[KEY_F]}
 	for action in mapping:
 		if not InputMap.has_action(action):InputMap.add_action(action)
 		for code in mapping[action]:
 			var event:=InputEventKey.new();event.physical_keycode=code;InputMap.action_add_event(action,event)
+	var pad={"p1_up":JOY_BUTTON_DPAD_UP,"p1_down":JOY_BUTTON_DPAD_DOWN,"p1_left":JOY_BUTTON_DPAD_LEFT,"p1_right":JOY_BUTTON_DPAD_RIGHT,"p1_dash":JOY_BUTTON_X,"shield":JOY_BUTTON_A,"magnet":JOY_BUTTON_Y,"risk_wager":JOY_BUTTON_LEFT_SHOULDER,"boss_pulse":JOY_BUTTON_RIGHT_SHOULDER,"pause_game":JOY_BUTTON_START,"confirm_game":JOY_BUTTON_A,"toggle_map":JOY_BUTTON_BACK}
+	for action in pad:
+		var e:=InputEventJoypadButton.new();e.button_index=pad[action];InputMap.action_add_event(action,e)
+	for tuple in [["p1_left",JOY_AXIS_LEFT_X,-1.0],["p1_right",JOY_AXIS_LEFT_X,1.0],["p1_up",JOY_AXIS_LEFT_Y,-1.0],["p1_down",JOY_AXIS_LEFT_Y,1.0]]:
+		var e:=InputEventJoypadMotion.new();e.axis=tuple[1];e.axis_value=tuple[2];InputMap.action_add_event(tuple[0],e);InputMap.action_set_deadzone(tuple[0],0.5)
 
 func coord(p:Vector2,y:float=0.0) -> Vector3:
 	return Vector3((p.x-8)*CELL,y,(p.y-6)*CELL)
@@ -145,6 +159,14 @@ func build_world() -> void:
 	power_field=Models.mesh_node(field,power_field_material);power_field.visible=false;add_child(power_field)
 	for i in 4:
 		var ghost=GhostScene.instantiate();ghost.tint=COLORS[i];ghost.scale=Vector3.ONE*CELL;add_child(ghost);ghosts.append(ghost)
+	bonus_visual=Models.bonus_fruit();bonus_visual.visible=false;add_child(bonus_visual)
+	boss_visual=Models.ghost(Color("bd8cff"));boss_visual.scale=Vector3.ONE*CELL*2.2;boss_visual.visible=false;add_child(boss_visual)
+	for i in 8:
+		var follower=GhostScene.instantiate();follower.tint=COLORS[i%4];follower.scale=Vector3.ONE*CELL*0.68;follower.visible=false;add_child(follower);train_visuals.append(follower)
+	for i in 17:
+		var plate:=PlaneMesh.new();plate.size=Vector2.ONE*CELL*0.92
+		var mat=Models.material(Color(1,0.22,0.34,0.25),0.6);mat.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED
+		var n=Models.mesh_node(plate,mat);n.visible=false;add_child(n);hazard_visuals.append(n)
 	camera=Camera3D.new();camera.fov=45;camera.near=0.15;camera.far=90;add_child(camera);camera.current=true
 	ribbon=MeshInstance3D.new();ribbon.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	ribbon_material=Models.material(Color(1.0,0.68,0.13,0.7),1.2)
@@ -184,7 +206,7 @@ func rebuild_maze() -> void:
 	Architecture.deck(maze_root,primary,secondary)
 	Architecture.routes(maze_root,sim.floors,Rules.HOUSE,primary)
 	build_ghost_house(primary,secondary)
-	for row in Rules.TUNNEL_ROWS:
+	for row in sim.tunnel_rows():
 		for x in [0,16]:build_tunnel(Vector2i(x,row),primary if row==5 else secondary)
 	for c in sim.pickups:create_pickup(c,sim.pickups[c])
 
@@ -263,18 +285,20 @@ func _unhandled_input(event:InputEvent) -> void:
 		return
 	if current_screen!="playing":
 		if event.is_action_pressed("confirm_game") and current_screen=="title":start_game()
+		elif event.is_action_pressed("confirm_game") and current_screen=="results":retry_run()
 		return
 	var bindings={"p1_right":Vector2i.RIGHT,"p1_down":Vector2i.DOWN,"p1_left":Vector2i.LEFT,"p1_up":Vector2i.UP}
 	for action in bindings:
 		if event.is_action_pressed(action):
 			key_stack.erase(action);key_stack.append(action);sim.request_direction(bindings[action])
-		if event.is_action_released(action):
+		if event.is_action_released(action) and not Input.is_action_pressed(action):
 			key_stack.erase(action)
 			sim.held_dir=bindings[key_stack.back()] if not key_stack.is_empty() else Vector2i.ZERO
 	if event.is_action_pressed("p1_dash"):sim.request_dash()
 	if event.is_action_pressed("risk_wager"):sim.request_risk()
 	if event.is_action_pressed("shield"):sim.request_shield()
 	if event.is_action_pressed("magnet"):sim.request_magnet()
+	if event.is_action_pressed("boss_pulse"):sim.request_boss_pulse()
 
 func _notification(what:int) -> void:
 	if what==NOTIFICATION_APPLICATION_FOCUS_OUT:
@@ -288,18 +312,44 @@ func _physics_process(dt:float) -> void:
 	if current_screen!="playing":return
 	if demo:demo_input()
 	# The opening is safe: the phase clock and house release wait for direction.
-	if sim.time==0.0 and sim.player.dir==Vector2i.ZERO and sim.held_dir==Vector2i.ZERO and not sim.pickups.is_empty():return
+	if sim.time==0.0 and (sim.mode=="circuit" or sim.run_elapsed==0) and sim.player.dir==Vector2i.ZERO and sim.held_dir==Vector2i.ZERO and not sim.pickups.is_empty():return
 	sim.tick(dt)
 	for event in sim.events:
 		observed_events[event.type]=observed_events.get(event.type,0)+1
 		feedback.react(event,sim,settings.reduced)
+		if event.type in ["dash","shield_armed","magnet"]:session_metrics.abilities[event.type]=int(session_metrics.abilities.get(event.type,0))+1
+		if event.type=="death":
+			var cell:String=str(Vector2i(event.pos.round()));session_metrics.death_cells[cell]=int(session_metrics.death_cells.get(cell,0))+1
 		match event.type:
-			"dash":play_sound("dash");burst(coord(event.pos,0.4),Color("ffd568"),10)
+			"dash":
+				play_sound("dash");burst(coord(event.pos,0.4),Color("ffd568"),10)
+				if not settings.reduced:hero.react("dash")
 			"pellet":play_sound("pellet")
 			"power":burst(coord(event.pos,0.6),Color("72dcff"),22);play_sound("power");notify("AGORA VOCÊ CAÇA  •  Q PARA APOSTAR")
-			"capture":burst(coord(event.pos,0.7),Color("58dfff"),16+event.chain*3);play_sound("capture",minf(1.36,1.0+(event.chain-1)*0.12));notify("CADEIA %d  •  +%d  •  FLOW ×%.1f"%[event.chain,event.points,sim.flow])
+			"capture":
+				burst(coord(event.pos,0.7),Color("58dfff"),12+mini(event.chain,4)*3)
+				play_sound("capture",1.0+(mini(event.chain,4)-1)*0.08,-17);play_sound("capture_%d"%mini(event.chain,4),1,-17)
+				if not settings.reduced:hero.react("capture")
+				notify(("CAÇADA PERFEITA!" if event.chain==4 else "CADEIA %d"%event.chain)+"  •  +%d  •  FLOW ×%.1f"%[event.points,sim.flow])
+			"bonus_spawn":play_sound("bonus_spawn",1,-18);notify("FRUTA MÓVEL!  •  BÔNUS OPCIONAL")
+			"bonus_caught":
+				burst(coord(event.pos,0.5),Color("ffe188"),18);play_sound("bonus_caught",1,-15)
+				if not settings.reduced:hero.react("bonus_caught")
+				notify("BÔNUS +%d  •  +15 ENERGIA"%event.points)
+			"bonus_expired":notify("A FRUTA ESCAPOU  •  CONTINUE A LIMPEZA")
+			"train_spawn":play_sound("pressure",1,-18);notify("TREM FANTASMA  •  %d SEGUIDORES"%event.count)
+			"overdrive_pulse":notify("OVERDRIVE  •  3s PARA CAÇAR")
+			"boss_intro":
+				for c in sim.pickups:
+					if not pickup_nodes.has(c):create_pickup(c,sim.pickups[c])
+				notify("COLOSSO: COLETE NÚCLEOS. F / RB QUANDO VULNERÁVEL")
+			"boss_warning":notify("COLOSSO: SAIA DA ROTA VERMELHA")
+			"boss_recover":notify("COLOSSO VULNERÁVEL  •  F / RB: PULSO")
+			"boss_hit":play_sound("risk_success",1,-15);notify("NÚCLEO ATINGIDO  •  %d RESTANTES"%event.hp)
 			"fruit":burst(coord(event.pos,0.6),Color("ff86bb"),16);play_sound("fruit")
-			"drift":burst(coord(event.pos,0.3),Color("ffe576"),5)
+			"drift":
+				burst(coord(event.pos,0.3),Color("ffe576"),5)
+				if not settings.reduced:hero.react("drift")
 			"wrap":
 				if event.player:
 					first_frame=true
@@ -324,23 +374,31 @@ func _physics_process(dt:float) -> void:
 		walls[sim.open_cell].visible=false;walls[sim.close_cell].visible=true;previous_graph=sim.graph_version
 	for cell in pickup_nodes.keys():
 		if not sim.pickups.has(cell):pickup_nodes[cell].queue_free();pickup_nodes.erase(cell)
-	if sim.status in ["won","game_over"] and not terminal_reported:
+	if sim.status=="won" and sim.mode!="circuit":
+		var direction:Vector2i=sim.held_dir if sim.held_dir!=Vector2i.ZERO else sim.player.dir
+		var held:Array=key_stack.duplicate()
+		start_game((sim.stage_id+1)%6,{"mode":sim.mode,"score":sim.score,"lives":mini(3,sim.lives+1),"run_elapsed":sim.run_time(),"pulse_index":sim.pulse_index,"train_next_at":sim.train.next_at,"continuing":true,"best_before":best_before_run})
+		key_stack=held
+		if direction!=Vector2i.ZERO:sim.request_direction(direction)
+		return
+	if sim.status in ["won","game_over","time_up"] and not terminal_reported:
 		terminal_reported=true
-		settings.circuit_record=maxi(settings.circuit_record,sim.score)
-		if sim.status=="won":
-			settings.unlocked=maxi(settings.unlocked,mini(2,sim.stage_id+1))
+		var record_key:String=sim.mode+"_record"
+		settings[record_key]=maxi(settings[record_key],sim.score)
+		if sim.mode=="circuit" and sim.status=="won":
+			settings.unlocked=maxi(settings.unlocked,mini(5,sim.stage_id+1))
 			settings.medals[sim.stage_id]=int(settings.medals[sim.stage_id]) | int(sim.stage_result().mask)
-		Store.write_settings(settings)
-		show_results()
+			settings.experts[sim.stage_id]=int(settings.experts[sim.stage_id]) | int(sim.stage_result().expert_mask)
+		Store.write_settings(settings);show_results()
 
 func _process(dt:float) -> void:
 	elapsed+=dt;menu_clock+=dt
-	if current_screen=="playing":feedback.update(dt,sim)
+	if current_screen=="playing" and not sim.paused:feedback.update(dt,sim)
 	var now_us:=Time.get_ticks_usec()
 	if real_previous_us>0 and elapsed>2.0:frame_times.append((now_us-real_previous_us)/1000.0)
 	real_previous_us=now_us
 	if frame_times.size()>10000:frame_times.pop_front()
-	var alpha:=Engine.get_physics_interpolation_fraction()
+	var alpha:float=1.0 if sim.paused else Engine.get_physics_interpolation_fraction()
 	var p:Vector2=sim.player.previous.lerp(sim.player.pos,alpha)
 	hero.position=coord(p)
 	power_field.position=coord(p,0.1)
@@ -350,17 +408,40 @@ func _process(dt:float) -> void:
 	power_field_material.albedo_color=Color("8affb9") if magnetic else Color("64eaff")
 	power_field_material.emission=power_field_material.albedo_color
 	var visual_time:float=sim.time if current_screen!="title" else menu_clock
-	hero.animate(visual_time,sim.player.dir,"",0.0,settings.reduced)
+	var animation_dt:float=dt if current_screen=="title" or (current_screen=="playing" and not sim.paused) else 0
+	hero.animate(visual_time,sim.player.dir,"",0.0,settings.reduced,animation_dt)
 	if sim.player.dir==Vector2i.ZERO and sim.time==0:
 		var facing:Vector3=camera.position-hero.position
 		hero.rotation.y=-atan2(facing.z,facing.x)
 	for i in ghosts.size():
 		var g:Dictionary=sim.ghosts[i]
 		ghosts[i].position=coord(g.previous.lerp(g.pos,alpha))
-		ghosts[i].animate(visual_time+i,g.dir,g.state,maxf(0,sim.power_until-sim.time),settings.reduced)
+		ghosts[i].animate(visual_time+i,g.dir,g.state,maxf(0,sim.power_until-sim.time),settings.reduced,animation_dt)
 		# Expressive faces orient toward the camera; collision/direction stay planar.
 		var facing:Vector3=camera.position-ghosts[i].position
 		ghosts[i].rotation.y=-atan2(facing.z,facing.x)
+	bonus_visual.visible=sim.bonus.active and sim.status=="playing"
+	if bonus_visual.visible:bonus_visual.position=coord(sim.bonus.actor.previous.lerp(sim.bonus.actor.pos,alpha),0.10 if settings.reduced else 0.10+sin(visual_time*7)*0.07)
+	for i in 8:
+		train_visuals[i].visible=i<sim.train.followers.size() and sim.status=="playing"
+		if not train_visuals[i].visible:continue
+		var g:Dictionary=sim.train.followers[i]
+		train_visuals[i].visible=g.state!="returning"
+		train_visuals[i].position=coord(g.previous.lerp(g.pos,alpha));train_visuals[i].animate(visual_time+i,g.dir,g.state,maxf(0,sim.power_until-sim.time),settings.reduced,animation_dt)
+		var facing:Vector3=camera.position-train_visuals[i].position;train_visuals[i].rotation.y=-atan2(facing.z,facing.x)
+	boss_visual.visible=sim.boss.active
+	if boss_visual.visible:
+		boss_visual.position=coord(Vector2(8,5.5),0.45 if settings.reduced else 0.45+sin(visual_time*2)*0.1)
+		var facing:Vector3=camera.position-boss_visual.position;boss_visual.rotation.y=-atan2(facing.z,facing.x)
+		var mat:StandardMaterial3D=boss_visual.get_node("Body").material_override
+		var tint:=Color("6eeeff") if sim.boss.phase=="recover" else Color("bd8cff")
+		mat.transparency=BaseMaterial3D.TRANSPARENCY_ALPHA;mat.albedo_color=Color(tint,0.62);mat.emission=tint
+	for i in hazard_visuals.size():
+		hazard_visuals[i].visible=sim.boss.active and sim.boss.phase in ["warning","attack"] and i<sim.boss.cells.size()
+		if hazard_visuals[i].visible:
+			hazard_visuals[i].position=coord(Vector2(sim.boss.cells[i]),0.04)
+			var mat:StandardMaterial3D=hazard_visuals[i].material_override
+			mat.albedo_color.a=0.65 if sim.boss.phase=="attack" else 0.23
 	# A close, oblique perspective is the main view. C provides the full maze.
 	var target:=hero.position+Vector3(1.4,0.25,-0.6)
 	if current_screen=="title":target=Vector3(0,0.25,0)
@@ -487,7 +568,7 @@ func setup_audio() -> void:
 		var voice:=AudioStreamPlayer.new();add_child(voice);voices.append(voice)
 	sound=voices[0]
 	music=AudioStreamPlayer.new();add_child(music)
-	for n in ["pellet","power","capture","dash","death","fruit","near_miss","pressure","power_warning","power_end","risk_start","risk_success"]:sounds[n]=load("res://assets/audio/"+n+".wav")
+	for n in ["pellet","power","capture","dash","death","fruit","near_miss","pressure","power_warning","power_end","risk_start","risk_success","capture_1","capture_2","capture_3","capture_4","bonus_spawn","bonus_caught"]:sounds[n]=load("res://assets/audio/"+n+".wav")
 	music.stream=load("res://assets/audio/pulse.wav")
 	if music.stream is AudioStreamWAV:music.stream.loop_mode=AudioStreamWAV.LOOP_FORWARD;music.stream.loop_end=roundi(music.stream.get_length()*music.stream.mix_rate)
 	music.volume_db=-15;music.play()
@@ -498,11 +579,11 @@ func setup_audio() -> void:
 		pair[0].stream.loop_end=roundi(pair[0].stream.get_length()*pair[0].stream.mix_rate)
 		pair[0].volume_db=-60;pair[0].play()
 
-func play_sound(kind:String,pitch:float=1.0) -> void:
+func play_sound(kind:String,pitch:float=1.0,gain_db:float=-12.0) -> void:
 	if not sounds.has(kind):return
 	var voice:AudioStreamPlayer=voices[voice_index%voices.size()];voice_index+=1
 	voice.stop();voice.stream=sounds[kind];voice.pitch_scale=pitch
-	voice.volume_db=-24 if kind=="pellet" else -12;voice.play()
+	voice.volume_db=-24 if kind=="pellet" else gain_db;voice.play()
 
 func update_audio(dt:float,hunting:bool) -> void:
 	var active:bool=current_screen=="playing"
@@ -545,6 +626,8 @@ func build_ui() -> void:
 	Interface.build(self)
 
 func clear_menu(title:String,subtitle:String="") -> void:
+	if reveal_tween!=null and reveal_tween.is_valid():reveal_tween.kill()
+	menu.modulate=Color.WHITE;menu.scale=Vector2.ONE
 	map_overlay.visible=false
 	for c in menu_content.get_children():menu_content.remove_child(c);c.queue_free()
 	menu.visible=true
@@ -557,21 +640,30 @@ func show_title() -> void:
 	current_screen="title";sim.paused=true;hud.visible=false
 	clear_menu("NEO—GRID","MS. PAC-MAN  /  UMA NOVA ÓRBITA ARCADE")
 	menu_content.add_child(label("Corra entre luzes. Transforme a caçada.",13))
-	menu_content.add_child(button("Jogar Circuito Neon · 3 fases",start_game))
+	menu_content.add_child(button("Jogar Circuito Neon · 6 fases",start_game))
+	menu_content.add_child(button("Overdrive · 3 minutos",func():start_mode("overdrive")))
+	menu_content.add_child(button("Trem Fantasma · 3 minutos",func():start_mode("train")))
 	menu_content.add_child(button("Fases, medalhas e extras",show_campaign))
 	menu_content.add_child(button("Como jogar",show_help))
 	menu_content.add_child(button("Configurações",show_settings))
 	menu_content.add_child(button("Melhor pontuação · %06d"%settings.circuit_record,show_records))
 	menu_content.add_child(button("Sair",func():get_tree().quit()))
-	menu_content.add_child(label("MV 0.5  •  NEON ARCHITECTURE",10,Color("7787a2")))
+	menu_content.add_child(label("MV 0.8  •  CIRCUITO VIVO",10,Color("7787a2")))
 
 func start_game(level:int=0, carry:Dictionary={}) -> void:
 	key_stack.clear();first_frame=true
-	level=clampi(level,0,2)
+	level=clampi(level,0,5)
+	if not carry.get("continuing",false):
+		session_metrics.attempts+=1
+		best_before_run=int(settings[str(carry.get("mode","circuit"))+"_record"])
+	else:best_before_run=int(carry.get("best_before",best_before_run))
 	map_overlay.visible=false
 	sim.reset(level,true,carry);sim.start();sim.paused=false;current_screen="playing";hud.visible=true;menu.visible=false;terminal_reported=false;previous_graph=0;music.stream_paused=false
 	menu_scrim.visible=false;Interface.layout(self)
-	feedback.reset();observed_events.clear();first_frame=true
+	feedback.reset();hero.reset_expression()
+	for ghost in ghosts:ghost.reset_expression()
+	bonus_visual.visible=false
+	observed_events.clear();first_frame=true
 	for track in [music,tension_music,hunt_music]:track.stop();track.stream_paused=false;track.play(0.0)
 	rebuild_maze()
 	for entry in trail:entry.node.queue_free()
@@ -579,9 +671,17 @@ func start_game(level:int=0, carry:Dictionary={}) -> void:
 	key_stack.clear();last_trail=0
 	notify("SETAS / WASD PARA COMEÇAR  •  C: VER TODO O MAPA")
 
-func next_stage() -> void:
-	if sim.status!="won" or sim.stage_id>=2:return
-	start_game(sim.stage_id+1,{"score":sim.score,"lives":mini(3,sim.lives+1)})
+func start_mode(mode:String) -> void:start_game(0,{"mode":mode})
+func retry_run() -> void:
+	session_metrics.retries+=1;start_mode(sim.mode)
+func next_stage(choice:String="") -> void:
+	if sim.status!="won" or sim.stage_id>=5:return
+	start_game(sim.stage_id+1,{"mode":sim.mode,"score":sim.score,"lives":mini(3,sim.lives+1),"upgrade":choice,"continuing":true,"best_before":best_before_run})
+func show_upgrade_choice() -> void:
+	current_screen="upgrade";clear_menu("PREPARE A PRÓXIMA ROTA","Escolha uma melhoria válida apenas na próxima fase.")
+	for item in [["shield","Escudo reativo · 11 segundos"],["magnet","Ímã ampliado · 9s / até 2 células conectadas"],["dash","Dash econômico · custa 30 de energia"]]:
+		var key:String=item[0];menu_content.add_child(button(item[1],func():next_stage(key)))
+	menu_content.add_child(button("Seguir com poderes padrão",func():next_stage()))
 
 func total_medals() -> int:
 	var count:=0
@@ -590,13 +690,14 @@ func total_medals() -> int:
 
 func show_campaign() -> void:
 	current_screen="campaign";sim.paused=true;hud.visible=false;pause_music(true)
-	clear_menu("CIRCUITO NEON","%d / 9 medalhas  ·  supere sua melhor rota"%total_medals())
-	for i in 3:
+	clear_menu("CIRCUITO NEON","%d / 18 medalhas  ·  extras por habilidade"%total_medals())
+	for i in 6:
 		var unlocked:bool=i<=settings.unlocked
 		var stars:int=Stages.medal_count(int(settings.medals[i]))
 		var entry=button("%d · %s  %s"%[i+1,Stages.INFO[i].name,"★".repeat(stars)+"☆".repeat(3-stars) if unlocked else "BLOQUEADA"],func():start_game(i))
 		entry.disabled=not unlocked;menu_content.add_child(entry)
-	menu_content.add_child(label("Cada fase: concluir + desafio + tempo-alvo.\nMedalhas de tentativas diferentes se somam.",13,Color("9fc5d3")))
+		menu_content.add_child(label("Extras: "+" • ".join(expert_names(int(settings.experts[i]))),11,Color("adbedb")))
+	menu_content.add_child(label("Cada fase: concluir + desafio + tempo.\nExtras: sem dash, sem mortes e cadeia de 4.\nExtras conquistados: %d / 18"%expert_medals()+"",13,Color("9fc5d3")))
 	var cosmetic=button("Rastro: %s"%("Turquesa" if settings.trail_style==1 else "Dourado"),func():settings.trail_style=1-settings.trail_style;Store.write_settings(settings);show_campaign())
 	cosmetic.disabled=total_medals()<3;menu_content.add_child(cosmetic)
 	menu_content.add_child(label("Rastro turquesa: obtenha 3 medalhas.\nÍmã: disponível a partir da fase 2.",12,Color("9fc5d3")))
@@ -605,7 +706,7 @@ func show_campaign() -> void:
 func pause_game() -> void:
 	current_screen="pause";sim.paused=true;key_stack.clear();sim.held_dir=Vector2i.ZERO;sim.buffer_dir=Vector2i.ZERO;pause_music(true)
 	clear_menu("PAUSA","Seu tempo está preservado.")
-	menu_content.add_child(button("Continuar",resume_game));menu_content.add_child(button("Mapa da área · M",show_map));menu_content.add_child(button("Reiniciar circuito",start_game));menu_content.add_child(button("Configurações",show_settings));menu_content.add_child(button("Voltar à abertura",show_title));menu_content.add_child(button("Sair",show_quit_confirm))
+	menu_content.add_child(button("Continuar",resume_game));menu_content.add_child(button("Mapa da área · M",show_map));menu_content.add_child(button("Reiniciar este modo",retry_run));menu_content.add_child(button("Configurações",show_settings));menu_content.add_child(button("Voltar à abertura",show_title));menu_content.add_child(button("Sair",show_quit_confirm))
 
 func show_map() -> void:
 	pause_game()
@@ -629,6 +730,9 @@ func show_help() -> void:
 	menu_content.add_child(label("E · escudo de um impacto / 8s. R · ímã de pontos / 6s (fase 2+).",13))
 	menu_content.add_child(label("Uma carga por poder por fase. Morrer encerra os efeitos; não recarrega.",13))
 	menu_content.add_child(label("Fantasmas que voltaram à cor original já são perigosos.",13))
+	menu_content.add_child(label("Fruta dourada móvel: bônus opcional. Não entra no contador.",13))
+	menu_content.add_child(label("Colosso: colete 3 núcleos e use F / RB na recuperação.",13))
+	menu_content.add_child(label("Controle: direcional/analógico; X dash; A escudo; Y ímã; LB aposta; RB pulso; Start pausa.",13))
 	menu_content.add_child(button("Voltar",show_title))
 
 func show_settings() -> void:
@@ -644,24 +748,43 @@ func show_settings() -> void:
 		var check:=CheckButton.new();check.text=pair[1];check.button_pressed=settings[pair[0]];check.toggled.connect(func(v):settings[pair[0]]=v;apply_settings());menu_content.add_child(check)
 	menu_content.add_child(button("Voltar",func():pause_game() if hud.visible else show_title()))
 
+func expert_medals() -> int:
+	var count:=0
+	for mask in settings.experts:count+=Stages.medal_count(int(mask))
+	return count
 func show_records() -> void:
-	current_screen="records";clear_menu("SEU RECORDE","Circuito Neon 0.3 • um jogador")
-	menu_content.add_child(label("%06d"%settings.circuit_record,48))
-	menu_content.add_child(label("Recorde anterior MV: %06d"%settings.record,13))
+	current_screen="records";clear_menu("SEUS RECORDES","Uma classificação separada para cada modo")
+	for item in [["Circuito",settings.circuit_record],["Overdrive",settings.overdrive_record],["Trem Fantasma",settings.train_record]]:menu_content.add_child(label("%s · %06d"%[item[0],item[1]],22))
+	menu_content.add_child(label("Circuito anterior de 3 fases: %06d"%settings.legacy_circuit_record,13))
 	menu_content.add_child(button("Voltar",show_title))
-
 func show_results() -> void:
 	current_screen="results";sim.paused=true;hud.visible=false;pause_music(true)
 	var won:bool=sim.status=="won"
-	clear_menu(("CIRCUITO CONCLUÍDO!" if sim.stage_id==2 else "FASE CONCLUÍDA!") if won else "FIM DE JOGO","%06d pontos  •  Melhor %06d"%[sim.score,settings.circuit_record])
-	if won:
+	var title:String=("CIRCUITO CONCLUÍDO!" if sim.stage_id==5 else "FASE CONCLUÍDA!") if won else ("TEMPO ENCERRADO!" if sim.status=="time_up" else "FIM DE JOGO")
+	clear_menu(title,"%06d pontos  •  Melhor %06d"%[sim.score,settings[sim.mode+"_record"]])
+	if sim.mode!="circuit":
+		var difference:int=sim.score-best_before_run
+		menu_content.add_child(label("NOVO RECORDE! +%d"%difference if difference>0 else ("Recorde igualado" if difference==0 else "Faltaram %d pontos para seu recorde"%-difference),20,Color("8affb9")))
+		menu_content.add_child(label("Tempo jogado: %.1fs / 180s"%sim.run_time(),14))
+	if won and sim.mode=="circuit":
 		var result:Dictionary=sim.stage_result()
 		menu_content.add_child(label("★".repeat(result.stars)+"☆".repeat(3-result.stars),32,Color("ffdb76")))
+		menu_content.add_child(label("Frutas móveis: %d / 2  •  +%d pontos"%[sim.bonus.caught,sim.bonus.earned],13,Color("b8e9d2")))
 		menu_content.add_child(label("Área limpa: +500\n%s: %s\nTempo %.1fs / alvo %.0fs: %s"%[Stages.INFO[sim.stage_id].challenge,"+250" if result.challenge else "tente novamente",sim.time,Stages.INFO[sim.stage_id].par,"+250" if result.fast else "tente novamente"],14))
-		if sim.stage_id<2:
-			menu_content.add_child(button("Próxima fase · +1 vida (máx. 3)",next_stage))
-		if total_medals()>=3:menu_content.add_child(label("Extra liberado: rastro turquesa em Fases e extras.",12,Color("8affb9")))
-	menu_content.add_child(button("Recomeçar circuito",start_game));menu_content.add_child(button("Fases e extras",show_campaign));menu_content.add_child(button("Voltar à abertura",show_title))
+		menu_content.add_child(label("Extras desta fase: %s"%" • ".join(expert_names(result.expert_mask)),12,Color("b9c8ef")))
+		if sim.stage_id<5:menu_content.add_child(button("Próxima fase · escolher melhoria",show_upgrade_choice))
+	menu_content.add_child(button("Jogar novamente · Enter / A",retry_run));menu_content.add_child(button("Fases e extras",show_campaign));menu_content.add_child(button("Voltar à abertura",show_title))
+	Interface.layout(self)
+	if won and not settings.reduced:
+		menu.pivot_offset=menu.size*0.5;menu.scale=Vector2.ONE*0.98;menu.modulate.a=0
+		reveal_tween=create_tween().set_parallel(true);reveal_tween.tween_property(menu,"modulate:a",1.0,0.18)
+		reveal_tween.tween_property(menu,"scale",Vector2.ONE,0.18).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+func expert_names(mask:int) -> PackedStringArray:
+	var names:=PackedStringArray()
+	for i in 3:
+		if mask & (1<<i):names.append(["sem dash","sem mortes","cadeia de 4"][i])
+	if names.is_empty():names.append("tente novamente")
+	return names
 
 func show_quit_confirm() -> void:
 	sim.paused=true;current_screen="quit";clear_menu("ENCERRAR PARTIDA?","A partida atual será encerrada.")
@@ -684,7 +807,15 @@ func update_hud() -> void:
 	flow_label.text="FLOW ×%.1f"%sim.flow
 	energy_bar.value=sim.energy;power_bar.value=maxf(0,sim.power_until-sim.time)
 	var hunting:bool=sim.time<sim.power_until
-	phase_label.text="%d/3 · %s\n%s"%[sim.stage_id+1,Stages.INFO[sim.stage_id].name,"CAÇA / CADEIA %d"%sim.combo if hunting else "FUGA / RITMO %d"%sim.pressure_level]
+	bonus_caption.visible=sim.bonus.active
+	bonus_caption.text="FRUTA MÓVEL · %.1fs\nBônus opcional · +%d × Flow"%[maxf(0,sim.bonus.end_at-sim.time),300+100*sim.stage_id] if sim.bonus.active else ""
+	phase_label.text="%d/6 · %s\n%s"%[sim.stage_id+1,Stages.INFO[sim.stage_id].name,"CAÇA / CADEIA %d"%sim.combo if hunting else "FUGA / RITMO %d"%sim.pressure_level]
+	if sim.mode!="circuit":phase_label.text=("OVERDRIVE" if sim.mode=="overdrive" else "TREM FANTASMA")+" · %02d:%02d"%[int(ceilf(180-sim.run_time()))/60,int(ceilf(180-sim.run_time()))%60]+"\nFLOW ×%.1f"%sim.flow
+	if sim.boss.active:
+		collection_label.text="COLOSSO · %d / 3"%sim.boss.hp
+		collection_caption.text="%d cargas · F / RB"%sim.boss.charges
+		collection_bar.max_value=3;collection_bar.value=3-sim.boss.hp
+		collection_detail.text={"warning":"AVISO: saia da rota vermelha","attack":"VARREDURA ATIVA","recover":"VULNERÁVEL: use seu pulso"}.get(sim.boss.phase,"")
 	var stage:Dictionary=Stages.INFO[sim.stage_id]
 	var challenge_status:String="Cumprido" if sim.challenge_met() else "Em andamento"
 	if sim.stage_id==0 and not sim.challenge_met():challenge_status="%d / 2 capturas"%sim.stage_captures
@@ -716,7 +847,7 @@ func _exit_tree() -> void:
 	OS.delay_msec(100)
 	if not report_path.is_empty():
 		frame_times.sort()
-		var metrics:Dictionary={"runtime":runtime_info,"frames_after_warmup":frame_times.size(),"recorded_events":observed_events,"score":sim.score,"lives":sim.lives,"simulation_seconds":sim.time,"pressure_level":sim.pressure_level,"risk":sim.risk,"preset":settings.quality,"resolution":get_viewport().get_visible_rect().size,"wall_clock_frame_times_ms":true,"gpu_time_ms":null,"note":"Software renderer / Movie Maker is not native Windows validation or a physical GPU benchmark."}
+		var metrics:Dictionary={"runtime":runtime_info,"frames_after_warmup":frame_times.size(),"recorded_events":observed_events,"score":sim.score,"lives":sim.lives,"simulation_seconds":sim.time,"pressure_level":sim.pressure_level,"risk":sim.risk,"preset":settings.quality,"resolution":get_viewport().get_visible_rect().size,"wall_clock_frame_times_ms":true,"gpu_time_ms":null,"local_session_metrics":session_metrics,"mode":sim.mode,"run_seconds":sim.run_time(),"controller_ids":Input.get_connected_joypads(),"note":"Wall-clock observations on the reported adapter, not GPU timestamps."}
 		if not frame_times.is_empty():
 			metrics.p95_ms=frame_times[mini(frame_times.size()-1,int(frame_times.size()*0.95))]
 			metrics.p99_ms=frame_times[mini(frame_times.size()-1,int(frame_times.size()*0.99))]

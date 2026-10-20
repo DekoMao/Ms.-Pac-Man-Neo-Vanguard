@@ -25,3 +25,8 @@
 Os nomes e conceitos do briefing não atribuem licenças de terceiros ao novo
 código. A licença do REA não licencia jogos analisados. Não houve contorno
 ou remoção de proteção de licença nem publicação/distribuição pública.
+
+
+A versão 0.8 acrescenta seis sinais sonoros originais sintetizados por
+`scripts/generate_reward_audio.py`. A trilha aprovada anterior foi preservada.
+Fruta móvel, seguidores e Colosso reutilizam malhas procedurais próprias.

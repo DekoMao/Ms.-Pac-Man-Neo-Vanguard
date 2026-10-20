@@ -1,7 +1,7 @@
 {
-	"executed": 51,
+	"executed": 52,
 	"failed": 0,
-	"passed": 51,
+	"passed": 52,
 	"results": [
 		{
 			"id": "AUDIO-01-full-musical-loop",
@@ -188,23 +188,27 @@
 			"passed": true
 		},
 		{
-			"id": "CIRCUIT-UI-10-campaign-finale",
+			"id": "CIRCUIT-UI-10-third-is-intermediate",
 			"passed": true
 		},
 		{
-			"id": "CIRCUIT-UI-11-final-phase-does-not-wrap",
+			"id": "CIRCUIT-UI-11-fourth-phase-accessible",
 			"passed": true
 		},
 		{
-			"id": "CIRCUIT-UI-12-extras-and-nine-medals",
+			"id": "CIRCUIT-UI-12-six-phase-finale",
 			"passed": true
 		},
 		{
-			"id": "CIRCUIT-UI-13-phase-selector-callback",
+			"id": "CIRCUIT-UI-13-final-does-not-wrap",
 			"passed": true
 		},
 		{
-			"id": "CIRCUIT-UI-14-restart-preserves-earned-progress",
+			"id": "CIRCUIT-UI-14-selector-preserved",
+			"passed": true
+		},
+		{
+			"id": "CIRCUIT-UI-15-progress-preserved",
 			"passed": true
 		}
 	],

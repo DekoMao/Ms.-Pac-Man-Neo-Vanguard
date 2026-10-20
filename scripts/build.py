@@ -72,6 +72,11 @@ def main():
         arcade=json.loads((evidence/'testes_arcade.json').read_text())
         if arcade['executed']<1 or arcade['failed']:
             raise RuntimeError('Arcade navigation and layout tests did not pass')
+        (evidence/'testes_expansao.json').unlink(missing_ok=True)
+        run('testes_expansao',['--script','res://tests/test_expansion.gd'],180)
+        expansion=json.loads((evidence/'testes_expansao.json').read_text())
+        if expansion['executed']<1 or expansion['failed']:
+            raise RuntimeError('Expanded modes, rewards and input tests failed')
         run('smoke_headless',['--fixed-fps','60','--quit-after','240','--','--smoke'],45)
         run('export_windows',['--export-release','Windows Desktop',str(target)],180)
         resources=embed(target,ROOT/'assets/icon.ico')

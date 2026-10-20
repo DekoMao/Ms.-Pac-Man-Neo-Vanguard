@@ -1,59 +1,46 @@
-# NeoGrid — Neon Architecture 0.5.0
+# NeoGrid 0.8 — Circuito Vivo
 
-Arquitetura metálica 3D com painéis ciano/magenta, paredes mais estreitas,
-piso polido com SSR em Forward+, iluminação de contato e câmera em perspectiva
-que acompanha a protagonista. A referência ao arcade clássico orienta o
-**layout e os túneis**, preservando a direção visual neon.
+Arcade 3D para Windows que preserva o visual neon aprovado da 0.5 e acrescenta:
 
-**A partida aguarda a primeira direção:** Ms. Pac-Man, relógio e liberação dos
-fantasmas ficam parados até uma seta/WASD. Espaço sozinho não inicia movimento.
-Reinício e troca de fase limpam a direção anterior; a música continua na espera.
+- Capturas com quatro níveis sonoros, faíscas e animações expressivas.
+- Frutas móveis opcionais, com tempo limitado, recompensa e marcador próprio.
+- **Circuito de seis áreas**, 18 medalhas e 18 extras de habilidade.
+- Escolha de melhoria temporária entre áreas: escudo, ímã ou dash.
+- **Overdrive de três minutos**, recorde próprio e revanche imediata.
+- **Trem Fantasma**, modo cronometrado com seguidores em cadeia, limitado a oito.
+- **Colosso** ao fim do Circuito: rotas anunciadas, núcleos e pulsos táticos.
+- Teclado e suporte a controle com zona morta. Diagnóstico opcional local.
 
-Arcade 3D para Windows com três fases autorais, poderes limitados, nove medalhas
-e rastro cosmético desbloqueável. Movimento, música, Flow, contador e mapa ampliado
-da versão aprovada foram preservados. Extraia o ZIP inteiro e execute
-`MsPacMan_Aperfeicoado.exe`; o jogador não precisa instalar Godot ou Python.
+A protagonista fica parada até o primeiro comando. Túneis, casa de regeneração,
+Flow, música, mapa e contador de itens obrigatórios foram preservados. A fruta
+móvel não impede completar a área. O visual clássico orienta o layout; o cenário
+continua metálico, ciano/magenta, com piso polido e câmera em perspectiva.
 
-| Fase | Desafio opcional | Tempo-alvo | Itens |
-| --- | --- | ---: | ---: |
-| Pórtico Neon | Capture 2 fantasmas | 110s | 103 |
-| Jardim Iônico | Sem perder vidas | 125s | 107 |
-| Reator Solar | Vença uma aposta Q | 140s | 101 |
+Extraia o ZIP e execute `MsPacMan_Aperfeicoado.exe`. O jogador não precisa de Godot
+ou Python. C alterna visão superior/perspectiva; M abre o mapa com pausa.
+WASD/setas movem; Espaço dash; E escudo; R ímã (fase 2+); Q aposta; F pulso do Colosso.
+No controle: direcional/analógico, X/A/Y/LB/RB, Start pausa, Back mapa.
 
-WASD/setas: mover; Espaço: dash; **E: escudo**; **R: ímã (fase 2+)**;
-Q: aposta durante Power; M: mapa/pausa; C: câmera; P/Esc: pausa; F11: tela cheia.
+## Reconstrução e evidências
 
-Uma carga por poder por fase. Morte encerra efeitos sem repor cargas.
-Cada fase rende medalhas por limpeza, desafio e tempo. Desafios não bloqueiam
-o avanço. Medalhas de tentativas diferentes se acumulam; três liberam rastro
-turquesa no menu de fases/extras. Avanço carrega pontos e devolve uma vida, até
-três. O seletor inicia nova tentativa com zero pontos/três vidas. O save guarda
-fases e medalhas, sem retomar partidas interrompidas.
-
-## Fontes e validação
-
-Godot **4.6.3 stable**, templates oficiais **4.6.3.stable**, Python 3.10+:
+Godot 4.6.3 stable, templates oficiais 4.6.3.stable e Python 3.10+:
 
 ```bash
 python scripts/build.py --godot godot
 ```
 
-O builder exige seis suítes, faz smoke, exporta Windows, aplica ícone/versão
-e testa o PCK embutido no motor do host fora das fontes.
+O builder exige sete suítes, realiza smoke, exporta Windows, aplica ícone/versão e
+abre o PCK embutido no motor do host fora das fontes. **340 verificações aprovadas.**
+Capturas reais em Linux/X11, Forward+/Vulkan por software. Execução Windows,
+controle físico, GPU física e equilíbrio com jogadores ainda estão pendentes.
 
-**215 verificações aprovadas.** Inclui coleta dos três mapas por movimento
-automatizado, com inimigos desativados para verificar alcançabilidade.
-**Windows nativo, GPU física e equilíbrio com jogadores permanecem pendentes.**
-As novas capturas são reais do motor Linux/Xvfb em Forward+/Vulkan por software
-(llvmpipe), incluindo uma rota automatizada com fantasmas ativos. Não medem GPU física.
-
-- [Direção visual e correção de início da 0.5](docs/DIRECAO_VISUAL_NEON.md)
-- [Interface, túneis e fantasmas da 0.4](docs/ESSENCIA_ARCADE.md)
-- [Regras e evidências históricas da 0.3](docs/CIRCUITO_NEON.md)
-- [Correção do mapa 0.2.1](docs/CORRECAO_MAPA.md)
+- [Regras completas e condições de validação](docs/CIRCUITO_VIVO.md)
+- [Teste no Windows e relatório local](docs/VALIDACAO_WINDOWS.md)
+- [Direção visual aprovada da 0.5](docs/DIRECAO_VISUAL_NEON.md)
 - [Histórico](CHANGELOG.md)
 - [Créditos e licenças](docs/CREDITOS_E_LICENCAS.md)
 
-Implementação própria, sem ROMs/MAME. Entregas anteriores preservadas nos commits.
-Caches, credenciais e binários ficam fora da branch de fontes.
-
+Save migrado sem perder medalhas anteriores. O recorde do Circuito de três fases
+fica arquivado em Recordes; os três modos novos usam placares separados. Não há
+telemetria em servidor. Implementação própria, sem ROMs/MAME. Entregas anteriores
+preservadas; binários, caches e credenciais ficam fora da branch de fontes.

@@ -13,7 +13,7 @@ func quiet(index:int=0):
 	var r=Rules.new();r.reset(index,true);r.start()
 	for g in r.ghosts:g.release=100000.0
 	return r
-func navigate_to_nearest(r) -> Vector2i:
+static func navigate_to_nearest(r) -> Vector2i:
 	var start:=Vector2i(r.player.pos.round())
 	var queue:Array=[start]
 	var first:Dictionary={start:Vector2i.ZERO}
@@ -25,7 +25,7 @@ func navigate_to_nearest(r) -> Vector2i:
 				first[next]=d if cell==start else first[cell]
 				queue.append(next)
 	return Vector2i.ZERO
-func solve_without_enemies(r) -> bool:
+static func solve_without_enemies(r) -> bool:
 	for frame in 40000:
 		if r.status=="won":return true
 		if r.player.pos.x>=0 and r.player.pos.x<=16 and r.player.pos.distance_to(r.player.pos.round())<0.04:
@@ -90,13 +90,13 @@ func run() -> void:
 	var path="user://circuit-test-"+str(Time.get_ticks_usec())+".json"
 	var file=FileAccess.open(path,FileAccess.WRITE);file.store_string('{"schema":2,"record":2240,"volume":0.4}');file.close()
 	var data=Store.read_settings(path)
-	check("SAVE-migrates-without-losing-record",data.schema==3 and data.record==2240 and data.unlocked==0 and data.medals==[0,0,0])
+	check("SAVE-migrates-without-losing-record",data.schema==4 and data.record==2240 and data.unlocked==0 and data.medals==[0,0,0,0,0,0])
 	data.unlocked=2;data.medals=[7,3,1];data.circuit_record=9999;data.trail_style=1
 	Store.write_settings(data,path);data=Store.read_settings(path)
-	check("SAVE-retains-campaign-and-cosmetic",data.unlocked==2 and data.medals==[7,3,1] and data.trail_style==1 and data.circuit_record==9999)
+	check("SAVE-retains-campaign-and-cosmetic",data.unlocked==2 and data.medals==[7,3,1,0,0,0] and data.trail_style==1 and data.circuit_record==9999)
 	file=FileAccess.open(path,FileAccess.WRITE);file.store_string('{"unlocked":99,"medals":[99,"bad",-1,7],"trail_style":99}');file.close()
 	data=Store.read_settings(path)
-	check("SAVE-bounded-unlocks-and-medals",data.unlocked==2 and data.medals==[7,0,0] and data.trail_style==1)
+	check("SAVE-bounded-unlocks-and-medals",data.unlocked==5 and data.medals==[7,0,0,7,0,0] and data.trail_style==1)
 	var dir=DirAccess.open("user://")
 	for name in dir.get_files():
 		if name.begins_with(path.get_file()):dir.remove(name)

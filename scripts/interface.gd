@@ -52,6 +52,7 @@ static func build(g) -> void:
 	var map_button:Button=g.button("M · ampliar mapa",g.show_map)
 	map_button.focus_mode=Control.FOCUS_NONE
 	map_button.custom_minimum_size=Vector2(0,28);map_button.add_theme_font_size_override("font_size",12);side.add_child(map_button)
+	g.bonus_caption=g.label("",11,Color("ffe188"));g.bonus_caption.visible=false;side.add_child(g.bonus_caption)
 	side.add_child(HSeparator.new())
 	g.mission_label=g.label("",12,Color("a9d7c4"));g.mission_label.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;side.add_child(g.mission_label)
 	g.ability_label=g.label("",11,Color("aaceda"));side.add_child(g.ability_label)
@@ -61,7 +62,7 @@ static func build(g) -> void:
 	g.power_bar=bar();g.power_bar.max_value=6;side.add_child(g.power_bar)
 	g.risk_label=g.label("",11,Color("b5c9d5"));g.risk_label.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;side.add_child(g.risk_label)
 	g.toast=g.label("",11,Color("ffd18c"));g.toast.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;g.toast.max_lines_visible=3;side.add_child(g.toast)
-	g.status_label=g.label("WASD / SETAS · MOVER    ESPAÇO · DASH    E / R · PODERES    M · MAPA    C · CÂMERA    P / ESC · PAUSA",11,Color("7e9bae"))
+	g.status_label=g.label("WASD / SETAS · MOVER    ESPAÇO · DASH    E / R · PODERES    M · MAPA    C · CÂMERA    F · PULSO    P / ESC · PAUSA",11,Color("7e9bae"))
 	g.status_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;g.hud.add_child(g.status_label)
 	g.menu_scrim=ColorRect.new();g.menu_scrim.color=Color(0.01,0.02,0.05,0.68);g.menu_scrim.mouse_filter=Control.MOUSE_FILTER_IGNORE;root.add_child(g.menu_scrim)
 	g.menu=g.panel();root.add_child(g.menu)
@@ -75,7 +76,7 @@ static func build(g) -> void:
 	g.overview_caption=g.label("",14);overview.add_child(g.overview_caption)
 	g.overview_map=Control.new();g.overview_map.set_script(load("res://scripts/minimap.gd"));g.overview_map.sim=g.sim;overview.add_child(g.overview_map)
 	overview.add_child(g.label("• Pontos  ◉ Power  ◆ Fruta  ▲ Você  ↔ Túneis",12,Color("b3d1df")))
-	overview.add_child(g.label("Últimos 10 itens: círculo branco. Tempo pausado.",11,Color("91afbf")))
+	overview.add_child(g.label("Últimos 10: círculo branco. Bônus móvel: losango dourado.",11,Color("91afbf")))
 	overview.add_child(g.button("Retomar · M / Esc",g.resume_game))
 	root.resized.connect(func():layout(g));layout(g)
 

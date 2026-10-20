@@ -1,0 +1,504 @@
+{
+	"executed": 124,
+	"failed": 0,
+	"passed": 124,
+	"results": [
+		{
+			"id": "MAP-0-rectangular-connected",
+			"passed": true
+		},
+		{
+			"id": "MAP-0-all-required-items-reachable",
+			"passed": true
+		},
+		{
+			"id": "MAP-0-safe-dynamic-route",
+			"passed": true
+		},
+		{
+			"id": "MAP-1-rectangular-connected",
+			"passed": true
+		},
+		{
+			"id": "MAP-1-all-required-items-reachable",
+			"passed": true
+		},
+		{
+			"id": "MAP-1-safe-dynamic-route",
+			"passed": true
+		},
+		{
+			"id": "MAP-2-rectangular-connected",
+			"passed": true
+		},
+		{
+			"id": "MAP-2-all-required-items-reachable",
+			"passed": true
+		},
+		{
+			"id": "MAP-2-safe-dynamic-route",
+			"passed": true
+		},
+		{
+			"id": "MAP-3-rectangular-connected",
+			"passed": true
+		},
+		{
+			"id": "MAP-3-all-required-items-reachable",
+			"passed": true
+		},
+		{
+			"id": "MAP-3-safe-dynamic-route",
+			"passed": true
+		},
+		{
+			"id": "MAP-3-complete-via-movement",
+			"passed": true
+		},
+		{
+			"id": "MAP-4-rectangular-connected",
+			"passed": true
+		},
+		{
+			"id": "MAP-4-all-required-items-reachable",
+			"passed": true
+		},
+		{
+			"id": "MAP-4-safe-dynamic-route",
+			"passed": true
+		},
+		{
+			"id": "MAP-4-complete-via-movement",
+			"passed": true
+		},
+		{
+			"id": "MAP-5-rectangular-connected",
+			"passed": true
+		},
+		{
+			"id": "MAP-5-all-required-items-reachable",
+			"passed": true
+		},
+		{
+			"id": "MAP-5-safe-dynamic-route",
+			"passed": true
+		},
+		{
+			"id": "MAP-six-distinct-layouts",
+			"passed": true
+		},
+		{
+			"id": "MAP-ring-extra-tunnel",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-0-not-early",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-0-spawn-and-independent-counter",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-0-legal-moving-path",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-0-catchable-without-dash",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-1-not-early",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-1-spawn-and-independent-counter",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-1-legal-moving-path",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-1-catchable-without-dash",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-2-not-early",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-2-spawn-and-independent-counter",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-2-legal-moving-path",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-2-catchable-without-dash",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-3-not-early",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-3-spawn-and-independent-counter",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-3-legal-moving-path",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-3-catchable-without-dash",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-4-not-early",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-4-spawn-and-independent-counter",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-4-legal-moving-path",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-4-catchable-without-dash",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-5-not-early",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-5-spawn-and-independent-counter",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-5-legal-moving-path",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-5-catchable-without-dash",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-pause-freezes-opportunity",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-expiry-has-no-penalty",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-expiry-event-once",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-second-opportunity",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-two-only",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-flow-reward-no-required-collection",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-exact-expiry-rejected",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-relative-sweep-dash",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-later-reward-not-collected-after-death",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-does-not-block-victory",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-defers-occupied-topology",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-releases-topology",
+			"passed": true
+		},
+		{
+			"id": "TIMER-overdrive-exact-180",
+			"passed": true
+		},
+		{
+			"id": "TIMER-overdrive-pause",
+			"passed": true
+		},
+		{
+			"id": "TIMER-overdrive-respawn-cannot-exceed-limit",
+			"passed": true
+		},
+		{
+			"id": "TIMER-train-exact-180",
+			"passed": true
+		},
+		{
+			"id": "TIMER-train-pause",
+			"passed": true
+		},
+		{
+			"id": "TIMER-train-respawn-cannot-exceed-limit",
+			"passed": true
+		},
+		{
+			"id": "OVERDRIVE-scheduled-power",
+			"passed": true
+		},
+		{
+			"id": "OVERDRIVE-no-repeat-pulse",
+			"passed": true
+		},
+		{
+			"id": "OVERDRIVE-pulse-preserves-longer-power-and-chain",
+			"passed": true
+		},
+		{
+			"id": "OVERDRIVE-wave-carries-time-and-score",
+			"passed": true
+		},
+		{
+			"id": "OVERDRIVE-wave-boundary-does-not-skip-pulse",
+			"passed": true
+		},
+		{
+			"id": "TRAIN-wave-boundary-does-not-skip-followers",
+			"passed": true
+		},
+		{
+			"id": "TIMER-respawn-finishes-in-boundary-step",
+			"passed": true
+		},
+		{
+			"id": "UPGRADE-long-shield",
+			"passed": true
+		},
+		{
+			"id": "UPGRADE-shield-does-not-stack",
+			"passed": true
+		},
+		{
+			"id": "UPGRADE-long-magnet",
+			"passed": true
+		},
+		{
+			"id": "UPGRADE-magnet-does-not-stack",
+			"passed": true
+		},
+		{
+			"id": "UPGRADE-cheaper-dash",
+			"passed": true
+		},
+		{
+			"id": "UPGRADE-dash-does-not-stack",
+			"passed": true
+		},
+		{
+			"id": "UPGRADE-magnet-no-through-wall",
+			"passed": true
+		},
+		{
+			"id": "EXTRAS-three-skill-badges",
+			"passed": true
+		},
+		{
+			"id": "EXTRAS-independent-criteria",
+			"passed": true
+		},
+		{
+			"id": "EXTRAS-only-on-completion",
+			"passed": true
+		},
+		{
+			"id": "TRAIN-spawns-in-special-mode",
+			"passed": true
+		},
+		{
+			"id": "TRAIN-bounded-to-eight",
+			"passed": true
+		},
+		{
+			"id": "TRAIN-pause",
+			"passed": true
+		},
+		{
+			"id": "TRAIN-earlier-power-enables-capture",
+			"passed": true
+		},
+		{
+			"id": "TRAIN-later-power-cannot-save",
+			"passed": true
+		},
+		{
+			"id": "TRAIN-expiry-before-contact-is-hostile",
+			"passed": true
+		},
+		{
+			"id": "BOSS-only-after-final-maze",
+			"passed": true
+		},
+		{
+			"id": "BOSS-warning-not-vulnerable",
+			"passed": true
+		},
+		{
+			"id": "BOSS-warning-before-attack",
+			"passed": true
+		},
+		{
+			"id": "BOSS-recovery-window",
+			"passed": true
+		},
+		{
+			"id": "BOSS-three-cores-reachable-and-charged",
+			"passed": true
+		},
+		{
+			"id": "BOSS-one-hit-per-cycle",
+			"passed": true
+		},
+		{
+			"id": "BOSS-three-cycles-win",
+			"passed": true
+		},
+		{
+			"id": "BOSS-announced-hazard-damages-once",
+			"passed": true
+		},
+		{
+			"id": "BOSS-not-in-timed-modes",
+			"passed": true
+		},
+		{
+			"id": "SAVE-archives-three-stage-record",
+			"passed": true
+		},
+		{
+			"id": "SAVE-expands-without-losing-medals",
+			"passed": true
+		},
+		{
+			"id": "FEEDBACK-does-not-mutate-rules",
+			"passed": true
+		},
+		{
+			"id": "FEEDBACK-one-caption-budget",
+			"passed": true
+		},
+		{
+			"id": "FEEDBACK-reduced-effects-neutral",
+			"passed": true
+		},
+		{
+			"id": "ANIMATION-dash-stretch",
+			"passed": true
+		},
+		{
+			"id": "ANIMATION-reduced-motion-neutral",
+			"passed": true
+		},
+		{
+			"id": "ANIMATION-restart-clears-impulses",
+			"passed": true
+		},
+		{
+			"id": "AUDIO-distinct-capture-crescendo",
+			"passed": true
+		},
+		{
+			"id": "AUDIO-simultaneous-reward-voices",
+			"passed": true
+		},
+		{
+			"id": "PAD-dpad-direction",
+			"passed": true
+		},
+		{
+			"id": "PAD-dash",
+			"passed": true
+		},
+		{
+			"id": "PAD-shield",
+			"passed": true
+		},
+		{
+			"id": "PAD-magnet",
+			"passed": true
+		},
+		{
+			"id": "PAD-deadzone-prevents-drift",
+			"passed": true
+		},
+		{
+			"id": "PAD-stick-starts-direction",
+			"passed": true
+		},
+		{
+			"id": "FRUIT-UI-caption-and-model",
+			"passed": true
+		},
+		{
+			"id": "HUD-bonus-safe-960x720",
+			"passed": true
+		},
+		{
+			"id": "HUD-bonus-safe-1280x720",
+			"passed": true
+		},
+		{
+			"id": "HUD-bonus-safe-1920x1080",
+			"passed": true
+		},
+		{
+			"id": "UPGRADE-UI-three-choices-plus-standard",
+			"passed": true
+		},
+		{
+			"id": "UPGRADE-UI-callback-carries-choice",
+			"passed": true
+		},
+		{
+			"id": "OVERDRIVE-UI-results-and-record-isolation",
+			"passed": true
+		},
+		{
+			"id": "OVERDRIVE-UI-immediate-rematch",
+			"passed": true
+		},
+		{
+			"id": "OVERDRIVE-UI-continuous-wave-time",
+			"passed": true
+		},
+		{
+			"id": "BOSS-UI-active-warning-and-core-counter",
+			"passed": true
+		},
+		{
+			"id": "PAD-boss-pulse",
+			"passed": true
+		},
+		{
+			"id": "TRAIN-UI-visible-followers",
+			"passed": true
+		}
+	],
+	"suite": "Expanded arcade: six maps, moving fruit, modes, upgrades, skills, train, boss and pad"
+}

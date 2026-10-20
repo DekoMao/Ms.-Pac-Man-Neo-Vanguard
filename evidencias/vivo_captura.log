@@ -1,0 +1,14 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+Vulkan 1.4.318 - Forward+ - Using Device #0: Unknown - llvmpipe (LLVM 20.1.2, 256 bits)
+
+NEOGRID_RUNTIME {"active_renderer":"forward_plus","adapter":"llvmpipe (LLVM 20.1.2, 256 bits)","display":"X11","driver":"vulkan","engine":"4.6.3-stable (official)","os":"Linux","requested_renderer":"forward_plus","version":"0.8.0-living-arcade"}
+LIVING_CAPTURE vivo_inicio_080 renderer=forward_plus draw_calls=4564
+LIVING_CAPTURE vivo_fruta_080 renderer=forward_plus draw_calls=4516
+LIVING_CAPTURE vivo_captura_080 renderer=forward_plus draw_calls=4747
+LIVING_CAPTURE vivo_trem_080 renderer=forward_plus draw_calls=4544
+LIVING_CAPTURE vivo_colosso_080 renderer=forward_plus draw_calls=3725
+LIVING_CAPTURE vivo_colosso_vulneravel_080 renderer=forward_plus draw_calls=3699
+LIVING_CAPTURE vivo_melhorias_080 renderer=forward_plus draw_calls=3695
+LIVING_CAPTURE vivo_overdrive_080 renderer=forward_plus draw_calls=4490
+LIVING_CAPTURE vivo_fases_080 renderer=forward_plus draw_calls=4506
+LIVING_CAPTURE vivo_menu_080 renderer=forward_plus draw_calls=4582
