@@ -18,7 +18,11 @@ Verifique no seu computador:
 7. Escolha cada melhoria e confira seu efeito apenas na área seguinte.
 8. Conclua a sexta área. Evite a faixa vermelha anunciada, carregue pulsos e use
    F/RB apenas na recuperação do Colosso. Uma carga por ciclo; três acertos vencem.
-9. Observe legibilidade, resposta dos controles, quedas de quadros e volume dos
+9. Em Fusao, plante B/B pad, saia e tente reentrar. Confira o pavio de 2,3s,
+   aviso no piso, parede bloqueando raios, caches abrindo e cadeia entre bombas.
+   Verifique dano proprio, escudo, atordoamento e captura por explosao com Power.
+   Colete os pontos escondidos e melhorias; siga de fase e depois use revanche.
+10. Observe legibilidade, resposta dos controles, quedas de quadros e volume dos
    efeitos em relação à música. Use a qualidade e a redução de movimento se desejar.
 
 O relatório identifica sistema, renderizador e adaptador e registra p95/p99 de

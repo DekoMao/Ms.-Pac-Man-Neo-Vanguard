@@ -45,6 +45,16 @@ func _draw() -> void:
 					center+Vector2(0,r),center+Vector2(-r,0)]), Color("ff8bc7"))
 			_:
 				draw_circle(center, radius, Color("f8e5b0"))
+	if sim.mode=="fusion":
+		for c in sim.fusion.crates:
+			draw_rect(Rect2(origin+(Vector2(c)+Vector2.ONE*0.16)*cell,Vector2.ONE*cell*0.68),Color("e9a45d"))
+		for b in sim.fusion.bombs:
+			var center:Vector2=origin+(Vector2(b.cell)+Vector2.ONE*0.5)*cell
+			draw_circle(center,cell*0.30,Color("ffa375"));draw_circle(center,cell*0.16,Color("172333"))
+		for f in sim.fusion.flames:
+			for c in f.cells:draw_rect(Rect2(origin+Vector2(c)*cell,Vector2.ONE*cell),Color(1,0.59,0.26,0.65))
+		for c in sim.fusion.drops:
+			draw_circle(origin+(Vector2(c)+Vector2.ONE*0.5)*cell,cell*0.29,Color("91f6df"),false,maxf(1,cell*0.08))
 	if sim.bonus.active:
 		var center:Vector2=origin+(Vector2(clampf(sim.bonus.actor.pos.x,0,16),sim.bonus.actor.pos.y)+Vector2.ONE*0.5)*cell
 		var br:float=cell*0.37

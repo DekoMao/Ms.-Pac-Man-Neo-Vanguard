@@ -45,6 +45,7 @@ var last_trail:=0.0
 var first_frame:=true
 var demo:=false
 var smoke:=false
+var smoke_fusion:=false
 var elapsed:=0.0
 var frame_times:Array=[]
 var previous_graph:=0
@@ -94,6 +95,7 @@ var boss_visual:Node3D
 var train_visuals:Array=[]
 var hazard_visuals:Array=[]
 var reveal_tween:Tween
+var fusion_visual:Node3D
 var best_before_run:=0
 var session_metrics:Dictionary={"attempts":0,"retries":0,"death_cells":{},"abilities":{}}
 
@@ -104,26 +106,31 @@ func _ready() -> void:
 	for arg in OS.get_cmdline_user_args():
 		if arg=="--demo":demo=true
 		if arg=="--smoke":smoke=true
+		if arg=="--smoke-fusion":smoke=true;smoke_fusion=true
 		if arg.begins_with("--report="):report_path=arg.get_slice("=",1)
 		if arg.begins_with("--capture-dir="):screenshot_dir=arg.get_slice("=",1)
 	build_world()
+	fusion_visual=preload("res://scripts/fusion_visual.gd").new();add_child(fusion_visual)
 	feedback=Feedback.new();add_child(feedback)
 	build_ui()
 	setup_audio()
 	apply_settings()
 	show_title()
-	runtime_info={"version":"0.8.0-living-arcade","engine":Engine.get_version_info().string,"os":OS.get_name(),"display":DisplayServer.get_name(),"requested_renderer":ProjectSettings.get_setting("rendering/renderer/rendering_method"),"active_renderer":RenderingServer.get_current_rendering_method(),"driver":RenderingServer.get_current_rendering_driver_name(),"adapter":RenderingServer.get_video_adapter_name()}
+	runtime_info={"version":"0.9.0-fusion","engine":Engine.get_version_info().string,"os":OS.get_name(),"display":DisplayServer.get_name(),"requested_renderer":ProjectSettings.get_setting("rendering/renderer/rendering_method"),"active_renderer":RenderingServer.get_current_rendering_method(),"driver":RenderingServer.get_current_rendering_driver_name(),"adapter":RenderingServer.get_video_adapter_name()}
 	print("NEOGRID_RUNTIME ",JSON.stringify(runtime_info))
 	if demo or smoke:start_game()
+	if smoke_fusion:
+		start_mode("fusion");sim.player.pos=Vector2(3,9);sim.player.previous=sim.player.pos
+		sim.request_bomb();sim.request_direction(Vector2i.RIGHT)
 	get_tree().auto_accept_quit=false
 
 func setup_input() -> void:
-	var mapping={"p1_up":[KEY_W,KEY_UP],"p1_down":[KEY_S,KEY_DOWN],"p1_left":[KEY_A,KEY_LEFT],"p1_right":[KEY_D,KEY_RIGHT],"p1_dash":[KEY_SPACE],"risk_wager":[KEY_Q],"pause_game":[KEY_P,KEY_ESCAPE],"confirm_game":[KEY_ENTER],"toggle_camera":[KEY_C],"toggle_fullscreen":[KEY_F11],"toggle_map":[KEY_M],"shield":[KEY_E],"magnet":[KEY_R],"boss_pulse":[KEY_F]}
+	var mapping={"p1_up":[KEY_W,KEY_UP],"p1_down":[KEY_S,KEY_DOWN],"p1_left":[KEY_A,KEY_LEFT],"p1_right":[KEY_D,KEY_RIGHT],"p1_dash":[KEY_SPACE],"risk_wager":[KEY_Q],"pause_game":[KEY_P,KEY_ESCAPE],"confirm_game":[KEY_ENTER],"toggle_camera":[KEY_C],"toggle_fullscreen":[KEY_F11],"toggle_map":[KEY_M],"shield":[KEY_E],"magnet":[KEY_R],"boss_pulse":[KEY_F],"bomb":[KEY_B]}
 	for action in mapping:
 		if not InputMap.has_action(action):InputMap.add_action(action)
 		for code in mapping[action]:
 			var event:=InputEventKey.new();event.physical_keycode=code;InputMap.action_add_event(action,event)
-	var pad={"p1_up":JOY_BUTTON_DPAD_UP,"p1_down":JOY_BUTTON_DPAD_DOWN,"p1_left":JOY_BUTTON_DPAD_LEFT,"p1_right":JOY_BUTTON_DPAD_RIGHT,"p1_dash":JOY_BUTTON_X,"shield":JOY_BUTTON_A,"magnet":JOY_BUTTON_Y,"risk_wager":JOY_BUTTON_LEFT_SHOULDER,"boss_pulse":JOY_BUTTON_RIGHT_SHOULDER,"pause_game":JOY_BUTTON_START,"confirm_game":JOY_BUTTON_A,"toggle_map":JOY_BUTTON_BACK}
+	var pad={"p1_up":JOY_BUTTON_DPAD_UP,"p1_down":JOY_BUTTON_DPAD_DOWN,"p1_left":JOY_BUTTON_DPAD_LEFT,"p1_right":JOY_BUTTON_DPAD_RIGHT,"p1_dash":JOY_BUTTON_X,"shield":JOY_BUTTON_A,"magnet":JOY_BUTTON_Y,"risk_wager":JOY_BUTTON_LEFT_SHOULDER,"boss_pulse":JOY_BUTTON_RIGHT_SHOULDER,"pause_game":JOY_BUTTON_START,"confirm_game":JOY_BUTTON_A,"toggle_map":JOY_BUTTON_BACK,"bomb":JOY_BUTTON_B}
 	for action in pad:
 		var e:=InputEventJoypadButton.new();e.button_index=pad[action];InputMap.action_add_event(action,e)
 	for tuple in [["p1_left",JOY_AXIS_LEFT_X,-1.0],["p1_right",JOY_AXIS_LEFT_X,1.0],["p1_up",JOY_AXIS_LEFT_Y,-1.0],["p1_down",JOY_AXIS_LEFT_Y,1.0]]:
@@ -208,7 +215,9 @@ func rebuild_maze() -> void:
 	build_ghost_house(primary,secondary)
 	for row in sim.tunnel_rows():
 		for x in [0,16]:build_tunnel(Vector2i(x,row),primary if row==5 else secondary)
-	for c in sim.pickups:create_pickup(c,sim.pickups[c])
+	for c in sim.pickups:
+		create_pickup(c,sim.pickups[c])
+		pickup_nodes[c].visible=not sim.fusion.crates.has(c)
 
 func create_wall(cell:Vector2i,_mesh:Mesh,primary:Color,secondary:Color) -> MeshInstance3D:
 	# Inset exposed faces, keeping adjacent wall cells joined. This gives the
@@ -299,6 +308,7 @@ func _unhandled_input(event:InputEvent) -> void:
 	if event.is_action_pressed("shield"):sim.request_shield()
 	if event.is_action_pressed("magnet"):sim.request_magnet()
 	if event.is_action_pressed("boss_pulse"):sim.request_boss_pulse()
+	if event.is_action_pressed("bomb"):sim.request_bomb()
 
 func _notification(what:int) -> void:
 	if what==NOTIFICATION_APPLICATION_FOCUS_OUT:
@@ -312,7 +322,7 @@ func _physics_process(dt:float) -> void:
 	if current_screen!="playing":return
 	if demo:demo_input()
 	# The opening is safe: the phase clock and house release wait for direction.
-	if sim.time==0.0 and (sim.mode=="circuit" or sim.run_elapsed==0) and sim.player.dir==Vector2i.ZERO and sim.held_dir==Vector2i.ZERO and not sim.pickups.is_empty():return
+	if sim.time==0.0 and (sim.mode=="circuit" or sim.run_elapsed==0) and sim.player.dir==Vector2i.ZERO and sim.held_dir==Vector2i.ZERO and not sim.pickups.is_empty() and sim.fusion.bombs.is_empty():return
 	sim.tick(dt)
 	for event in sim.events:
 		observed_events[event.type]=observed_events.get(event.type,0)+1
@@ -337,6 +347,13 @@ func _physics_process(dt:float) -> void:
 				if not settings.reduced:hero.react("bonus_caught")
 				notify("BÔNUS +%d  •  +15 ENERGIA"%event.points)
 			"bonus_expired":notify("A FRUTA ESCAPOU  •  CONTINUE A LIMPEZA")
+			"bomb_placed":play_sound("bomb_place",1,-18)
+			"bomb_exploded":
+				play_sound("bomb_explode",1.1 if event.chain else 1,-16);burst(coord(event.pos,0.3),Color("ffbf73"),8)
+			"cache_open":burst(coord(event.pos,0.4),Color("ffd28a"),10)
+			"bomb_upgrade":
+				play_sound("bonus_caught",1.1,-17);notify({"capacity":"CAPACIDADE +1", "range":"ALCANCE +1", "shield":"CARGA DE ESCUDO +1", "energy":"ENERGIA COMPLETA"}.get(event.kind,"MELHORIA")+"  •  +100")
+			"ghost_stunned":burst(coord(event.pos,0.8),Color("bca6ff"),5)
 			"train_spawn":play_sound("pressure",1,-18);notify("TREM FANTASMA  •  %d SEGUIDORES"%event.count)
 			"overdrive_pulse":notify("OVERDRIVE  •  3s PARA CAÇAR")
 			"boss_intro":
@@ -374,7 +391,8 @@ func _physics_process(dt:float) -> void:
 		walls[sim.open_cell].visible=false;walls[sim.close_cell].visible=true;previous_graph=sim.graph_version
 	for cell in pickup_nodes.keys():
 		if not sim.pickups.has(cell):pickup_nodes[cell].queue_free();pickup_nodes.erase(cell)
-	if sim.status=="won" and sim.mode!="circuit":
+		elif sim.mode=="fusion":pickup_nodes[cell].visible=not sim.fusion.crates.has(cell)
+	if sim.status=="won" and sim.timed_mode():
 		var direction:Vector2i=sim.held_dir if sim.held_dir!=Vector2i.ZERO else sim.player.dir
 		var held:Array=key_stack.duplicate()
 		start_game((sim.stage_id+1)%6,{"mode":sim.mode,"score":sim.score,"lives":mini(3,sim.lives+1),"run_elapsed":sim.run_time(),"pulse_index":sim.pulse_index,"train_next_at":sim.train.next_at,"continuing":true,"best_before":best_before_run})
@@ -392,6 +410,7 @@ func _physics_process(dt:float) -> void:
 		Store.write_settings(settings);show_results()
 
 func _process(dt:float) -> void:
+	if fusion_visual!=null:fusion_visual.update()
 	elapsed+=dt;menu_clock+=dt
 	if current_screen=="playing" and not sim.paused:feedback.update(dt,sim)
 	var now_us:=Time.get_ticks_usec()
@@ -416,7 +435,7 @@ func _process(dt:float) -> void:
 	for i in ghosts.size():
 		var g:Dictionary=sim.ghosts[i]
 		ghosts[i].position=coord(g.previous.lerp(g.pos,alpha))
-		ghosts[i].animate(visual_time+i,g.dir,g.state,maxf(0,sim.power_until-sim.time),settings.reduced,animation_dt)
+		ghosts[i].animate(visual_time+i,g.dir,"stunned" if sim.time<g.get("stunned_until",-1.0) and g.state!="vulnerable" else g.state,maxf(0,sim.power_until-sim.time),settings.reduced,animation_dt)
 		# Expressive faces orient toward the camera; collision/direction stay planar.
 		var facing:Vector3=camera.position-ghosts[i].position
 		ghosts[i].rotation.y=-atan2(facing.z,facing.x)
@@ -485,7 +504,10 @@ func _process(dt:float) -> void:
 		for mark in [2,7]:
 			if sim.time>=mark and not screenshots_done.has(mark):screenshots_done[mark]=true;save_screenshot(mark)
 	if smoke and elapsed>=3.0:
-		print("NEOGRID_SMOKE_OK ",JSON.stringify({"score":sim.score,"time":sim.time,"ghosts":ghosts.size(),"pickups":pickup_nodes.size()}));get_tree().quit()
+		var explosions:int=observed_events.get("bomb_exploded",0)
+		if smoke_fusion and explosions<1:
+			push_error("FUSION_SMOKE_FAILED: no detonation observed");get_tree().quit(1);return
+		print("NEOGRID_SMOKE_OK ",JSON.stringify({"score":sim.score,"time":sim.time,"ghosts":ghosts.size(),"pickups":pickup_nodes.size(),"mode":sim.mode,"explosions":explosions}));get_tree().quit()
 
 func demo_input() -> void:
 	if sim.player.pos.x<0 or sim.player.pos.x>16:return
@@ -568,7 +590,7 @@ func setup_audio() -> void:
 		var voice:=AudioStreamPlayer.new();add_child(voice);voices.append(voice)
 	sound=voices[0]
 	music=AudioStreamPlayer.new();add_child(music)
-	for n in ["pellet","power","capture","dash","death","fruit","near_miss","pressure","power_warning","power_end","risk_start","risk_success","capture_1","capture_2","capture_3","capture_4","bonus_spawn","bonus_caught"]:sounds[n]=load("res://assets/audio/"+n+".wav")
+	for n in ["pellet","power","capture","dash","death","fruit","near_miss","pressure","power_warning","power_end","risk_start","risk_success","capture_1","capture_2","capture_3","capture_4","bonus_spawn","bonus_caught","bomb_place","bomb_explode"]:sounds[n]=load("res://assets/audio/"+n+".wav")
 	music.stream=load("res://assets/audio/pulse.wav")
 	if music.stream is AudioStreamWAV:music.stream.loop_mode=AudioStreamWAV.LOOP_FORWARD;music.stream.loop_end=roundi(music.stream.get_length()*music.stream.mix_rate)
 	music.volume_db=-15;music.play()
@@ -640,6 +662,7 @@ func show_title() -> void:
 	current_screen="title";sim.paused=true;hud.visible=false
 	clear_menu("NEO—GRID","MS. PAC-MAN  /  UMA NOVA ÓRBITA ARCADE")
 	menu_content.add_child(label("Corra entre luzes. Transforme a caçada.",13))
+	menu_content.add_child(button("NOVO · Fusão — Bomber Chase",func():start_mode("fusion")))
 	menu_content.add_child(button("Jogar Circuito Neon · 6 fases",start_game))
 	menu_content.add_child(button("Overdrive · 3 minutos",func():start_mode("overdrive")))
 	menu_content.add_child(button("Trem Fantasma · 3 minutos",func():start_mode("train")))
@@ -648,7 +671,7 @@ func show_title() -> void:
 	menu_content.add_child(button("Configurações",show_settings))
 	menu_content.add_child(button("Melhor pontuação · %06d"%settings.circuit_record,show_records))
 	menu_content.add_child(button("Sair",func():get_tree().quit()))
-	menu_content.add_child(label("MV 0.8  •  CIRCUITO VIVO",10,Color("7787a2")))
+	menu_content.add_child(label("MV 0.9  •  FUSÃO / BOMBER CHASE",10,Color("7787a2")))
 
 func start_game(level:int=0, carry:Dictionary={}) -> void:
 	key_stack.clear();first_frame=true
@@ -665,7 +688,7 @@ func start_game(level:int=0, carry:Dictionary={}) -> void:
 	bonus_visual.visible=false
 	observed_events.clear();first_frame=true
 	for track in [music,tension_music,hunt_music]:track.stop();track.stream_paused=false;track.play(0.0)
-	rebuild_maze()
+	rebuild_maze();fusion_visual.reset(self)
 	for entry in trail:entry.node.queue_free()
 	trail.clear();ribbon.visible=false
 	key_stack.clear();last_trail=0
@@ -676,7 +699,9 @@ func retry_run() -> void:
 	session_metrics.retries+=1;start_mode(sim.mode)
 func next_stage(choice:String="") -> void:
 	if sim.status!="won" or sim.stage_id>=5:return
-	start_game(sim.stage_id+1,{"mode":sim.mode,"score":sim.score,"lives":mini(3,sim.lives+1),"upgrade":choice,"continuing":true,"best_before":best_before_run})
+	var carry:Dictionary={"mode":sim.mode,"score":sim.score,"lives":mini(3,sim.lives+1),"upgrade":choice,"continuing":true,"best_before":best_before_run}
+	if sim.mode=="fusion":carry.merge(sim.fusion.carry())
+	start_game(sim.stage_id+1,carry)
 func show_upgrade_choice() -> void:
 	current_screen="upgrade";clear_menu("PREPARE A PRÓXIMA ROTA","Escolha uma melhoria válida apenas na próxima fase.")
 	for item in [["shield","Escudo reativo · 11 segundos"],["magnet","Ímã ampliado · 9s / até 2 células conectadas"],["dash","Dash econômico · custa 30 de energia"]]:
@@ -732,6 +757,9 @@ func show_help() -> void:
 	menu_content.add_child(label("Fantasmas que voltaram à cor original já são perigosos.",13))
 	menu_content.add_child(label("Fruta dourada móvel: bônus opcional. Não entra no contador.",13))
 	menu_content.add_child(label("Colosso: colete 3 núcleos e use F / RB na recuperação.",13))
+	menu_content.add_child(label("FUSÃO: B / botão B planta bomba. Pavio 2,3s; cruz bloqueada por paredes e caches; explosões encadeiam bombas.",13))
+	menu_content.add_child(label("Caches âmbar guardam pontos obrigatórios e melhorias: +B capacidade, +R alcance, E escudo. A explosão também atinge você, mesmo durante Power. E absorve um impacto.",13))
+	menu_content.add_child(label("Sem Power, bombas atordoam fantasmas por 1,8s. Com Power, capturam. Saia da marcação laranja antes da explosão; M pausa para planejar.",13))
 	menu_content.add_child(label("Controle: direcional/analógico; X dash; A escudo; Y ímã; LB aposta; RB pulso; Start pausa.",13))
 	menu_content.add_child(button("Voltar",show_title))
 
@@ -754,7 +782,7 @@ func expert_medals() -> int:
 	return count
 func show_records() -> void:
 	current_screen="records";clear_menu("SEUS RECORDES","Uma classificação separada para cada modo")
-	for item in [["Circuito",settings.circuit_record],["Overdrive",settings.overdrive_record],["Trem Fantasma",settings.train_record]]:menu_content.add_child(label("%s · %06d"%[item[0],item[1]],22))
+	for item in [["Circuito",settings.circuit_record],["Overdrive",settings.overdrive_record],["Trem Fantasma",settings.train_record],["Fusão",settings.fusion_record]]:menu_content.add_child(label("%s · %06d"%[item[0],item[1]],22))
 	menu_content.add_child(label("Circuito anterior de 3 fases: %06d"%settings.legacy_circuit_record,13))
 	menu_content.add_child(button("Voltar",show_title))
 func show_results() -> void:
@@ -762,15 +790,15 @@ func show_results() -> void:
 	var won:bool=sim.status=="won"
 	var title:String=("CIRCUITO CONCLUÍDO!" if sim.stage_id==5 else "FASE CONCLUÍDA!") if won else ("TEMPO ENCERRADO!" if sim.status=="time_up" else "FIM DE JOGO")
 	clear_menu(title,"%06d pontos  •  Melhor %06d"%[sim.score,settings[sim.mode+"_record"]])
-	if sim.mode!="circuit":
+	if sim.timed_mode():
 		var difference:int=sim.score-best_before_run
 		menu_content.add_child(label("NOVO RECORDE! +%d"%difference if difference>0 else ("Recorde igualado" if difference==0 else "Faltaram %d pontos para seu recorde"%-difference),20,Color("8affb9")))
 		menu_content.add_child(label("Tempo jogado: %.1fs / 180s"%sim.run_time(),14))
-	if won and sim.mode=="circuit":
+	if won and sim.mode in ["circuit","fusion"]:
 		var result:Dictionary=sim.stage_result()
 		menu_content.add_child(label("★".repeat(result.stars)+"☆".repeat(3-result.stars),32,Color("ffdb76")))
 		menu_content.add_child(label("Frutas móveis: %d / 2  •  +%d pontos"%[sim.bonus.caught,sim.bonus.earned],13,Color("b8e9d2")))
-		menu_content.add_child(label("Área limpa: +500\n%s: %s\nTempo %.1fs / alvo %.0fs: %s"%[Stages.INFO[sim.stage_id].challenge,"+250" if result.challenge else "tente novamente",sim.time,Stages.INFO[sim.stage_id].par,"+250" if result.fast else "tente novamente"],14))
+		menu_content.add_child(label("Área limpa: +500\n%s: %s\nTempo %.1fs / alvo %.0fs: %s"%[("Reação em cadeia" if sim.mode=="fusion" else Stages.INFO[sim.stage_id].challenge),"+250" if result.challenge else "tente novamente",sim.time,Stages.INFO[sim.stage_id].par,"+250" if result.fast else "tente novamente"],14))
 		menu_content.add_child(label("Extras desta fase: %s"%" • ".join(expert_names(result.expert_mask)),12,Color("b9c8ef")))
 		if sim.stage_id<5:menu_content.add_child(button("Próxima fase · escolher melhoria",show_upgrade_choice))
 	menu_content.add_child(button("Jogar novamente · Enter / A",retry_run));menu_content.add_child(button("Fases e extras",show_campaign));menu_content.add_child(button("Voltar à abertura",show_title))
@@ -810,7 +838,9 @@ func update_hud() -> void:
 	bonus_caption.visible=sim.bonus.active
 	bonus_caption.text="FRUTA MÓVEL · %.1fs\nBônus opcional · +%d × Flow"%[maxf(0,sim.bonus.end_at-sim.time),300+100*sim.stage_id] if sim.bonus.active else ""
 	phase_label.text="%d/6 · %s\n%s"%[sim.stage_id+1,Stages.INFO[sim.stage_id].name,"CAÇA / CADEIA %d"%sim.combo if hunting else "FUGA / RITMO %d"%sim.pressure_level]
-	if sim.mode!="circuit":phase_label.text=("OVERDRIVE" if sim.mode=="overdrive" else "TREM FANTASMA")+" · %02d:%02d"%[int(ceilf(180-sim.run_time()))/60,int(ceilf(180-sim.run_time()))%60]+"\nFLOW ×%.1f"%sim.flow
+	if sim.timed_mode():phase_label.text=("OVERDRIVE" if sim.mode=="overdrive" else "TREM FANTASMA")+" · %02d:%02d"%[int(ceilf(180-sim.run_time()))/60,int(ceilf(180-sim.run_time()))%60]+"\nFLOW ×%.1f"%sim.flow
+	if sim.mode=="fusion":
+		phase_label.text="FUSÃO · %d/6 · %s\n%s"%[sim.stage_id+1,Stages.INFO[sim.stage_id].name,"BOMBAS DE CAÇA" if hunting else "ABRA ROTAS / PREPARE A CAÇA"]
 	if sim.boss.active:
 		collection_label.text="COLOSSO · %d / 3"%sim.boss.hp
 		collection_caption.text="%d cargas · F / RB"%sim.boss.charges
@@ -827,6 +857,9 @@ func update_hud() -> void:
 	var magnet_text:String="ATIVO %.1fs"%maxf(0,sim.magnet_until-sim.time) if sim.time<sim.magnet_until else ("PRONTO" if sim.magnet_charges>0 else "SEM CARGA")
 	if sim.stage_id==0:magnet_text="LIBERA NA FASE 2"
 	ability_label.text="E · ESCUDO: %s\nR · ÍMÃ: %s"%[shield_text,magnet_text]
+	if sim.mode=="fusion":
+		ability_label.text+="\nB / B PAD · BOMBAS %d / %d\nALCANCE %d · PAVIO 2,3s"%[sim.fusion.capacity-sim.fusion.bombs.size(),sim.fusion.capacity,sim.fusion.radius]
+		mission_label.text="CACHES ABERTOS %d / %d\nReações em cadeia: %d\nPontos nos caches contam na limpeza."%[sim.fusion.broken,sim.fusion.total_crates,sim.fusion.chained]
 	phase_label.modulate=Color("76e9ff") if hunting else Color("ffcb79").lerp(Color("ff7c88"),feedback.threat*0.6)
 	power_caption.text="CAÇA  •  %.1fs"%maxf(0,sim.power_until-sim.time) if hunting else "POWER PELLET  /  BUSQUE A LUZ"
 	match sim.risk.state:

@@ -1,6 +1,13 @@
-# NeoGrid 0.8 — Circuito Vivo
+# NeoGrid 0.9 — Fusão / Bomber Chase
 
-Arcade 3D para Windows que preserva o visual neon aprovado da 0.5 e acrescenta:
+Arcade 3D para Windows com o visual neon aprovado e um novo modo híbrido:
+
+**Fusão — Bomber Chase**: bombas com pavio, cruz de explosão, reações em cadeia,
+caches destrutíveis, atalhos e melhorias de capacidade/alcance. Sem Power, a
+explosão atordoa fantasmas; com Power, captura com Flow. A própria explosão
+também atinge Ms. Pac-Man. B no teclado ou botão B no controle planta a bomba.
+
+Os recursos da 0.8 continuam disponíveis:
 
 - Capturas com quatro níveis sonoros, faíscas e animações expressivas.
 - Frutas móveis opcionais, com tempo limitado, recompensa e marcador próprio.
@@ -29,11 +36,12 @@ Godot 4.6.3 stable, templates oficiais 4.6.3.stable e Python 3.10+:
 python scripts/build.py --godot godot
 ```
 
-O builder exige sete suítes, realiza smoke, exporta Windows, aplica ícone/versão e
-abre o PCK embutido no motor do host fora das fontes. **340 verificações aprovadas.**
+O builder exige oito suítes, realiza smoke, exporta Windows, aplica ícone/versão e
+abre o PCK embutido no motor do host fora das fontes. **445 verificações aprovadas.**
 Capturas reais em Linux/X11, Forward+/Vulkan por software. Execução Windows,
 controle físico, GPU física e equilíbrio com jogadores ainda estão pendentes.
 
+- [Modo híbrido, benchmark e regras de bombas](docs/FUSAO_BOMBER_CHASE.md)
 - [Regras completas e condições de validação](docs/CIRCUITO_VIVO.md)
 - [Teste no Windows e relatório local](docs/VALIDACAO_WINDOWS.md)
 - [Direção visual aprovada da 0.5](docs/DIRECAO_VISUAL_NEON.md)
@@ -41,6 +49,6 @@ controle físico, GPU física e equilíbrio com jogadores ainda estão pendentes
 - [Créditos e licenças](docs/CREDITOS_E_LICENCAS.md)
 
 Save migrado sem perder medalhas anteriores. O recorde do Circuito de três fases
-fica arquivado em Recordes; os três modos novos usam placares separados. Não há
+fica arquivado em Recordes; os quatro modos usam placares separados. Não há
 telemetria em servidor. Implementação própria, sem ROMs/MAME. Entregas anteriores
 preservadas; binários, caches e credenciais ficam fora da branch de fontes.

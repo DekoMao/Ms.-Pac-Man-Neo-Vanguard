@@ -1,0 +1,10 @@
+{
+  "zip": "/workspace/scratch/7740f940f7a4/neogrid-map/entrega/NeoGrid_0.9_FusaoBomberChase_Windows_x64.zip",
+  "bytes": 39185869,
+  "sha256": "cbdb7f25606fb794f28d2a3a02b13b1dc4fa529e88be8b69c054815faada89dc",
+  "entries": 30,
+  "crc_valid": true,
+  "exe_sha256": "2aecca77e250e623cd4049ecbb9cd8483fe60812c68544464c2c2c17b4115876",
+  "tests": 445,
+  "native_windows_tested": false
+}

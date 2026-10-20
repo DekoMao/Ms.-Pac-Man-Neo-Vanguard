@@ -1,9 +1,17 @@
-NEO-GRID 0.8 — CIRCUITO VIVO
+NEO-GRID 0.9 — FUSAO / BOMBER CHASE
 
 Extraia o pacote inteiro e execute MsPacMan_Aperfeicoado.exe.
 O jogador nao precisa instalar Godot ou Python.
 
 MODOS
+NOVO: Fusao - seis fases com bombas, caches, atalhos e melhorias.
+B no teclado / botao B no controle planta bomba (pavio 2,3s, alcance 2).
+Fuja da cruz anunciada no piso. Sem Power atordoa; com Power captura fantasmas.
+A explosao tambem atinge voce. Escudo absorve um impacto.
+Caches ambar escondem pontos obrigatorios (ja incluidos no contador) e melhorias.
++B aumenta capacidade ate 4; +R alcance ate 5. Seguem durante a mesma partida.
+A revanche reinicia as bombas em capacidade 2 e alcance 2.
+
 Circuito: seis areas, escolha de melhoria entre fases, medalhas e Colosso final.
 Overdrive: tres minutos, pulsos de caca, recorde e revanche imediata.
 Trem Fantasma: tres minutos com seguidores em cadeia. Power permite capturas.
@@ -19,7 +27,8 @@ Start pausa; Back mapa. Enter/A: revanche na tela de resultado.
 Frutas com anel dourado sao bonus moveis opcionais; expirar nao tira vidas.
 O contador continua mostrando apenas os itens obrigatorios. Tres novos mapas
 completam o Circuito. Extras de habilidade nao bloqueiam o avanco.
-As melhorias valem apenas na area seguinte e nao se acumulam.
+As escolhas de escudo/ima/dash valem apenas na area seguinte.
+Melhorias de bombas da Fusao duram ate o fim da mesma partida.
 
 COLOSSO
 Depois da limpeza da sexta area, colete os tres nucleos Power.
@@ -28,11 +37,11 @@ para acertar o Colosso. Um acerto por ciclo; tres acertos vencem o confronto.
 
 PROGRESSO
 Medalhas e configuracoes anteriores sao preservadas. O recorde do circuito
-antigo de tres fases fica arquivado em Recordes. Os tres modos tem placares
+antigo de tres fases fica arquivado em Recordes. Os quatro modos tem placares
 separados. Nao apague o save user://neo_grid_mv.json ao atualizar.
 
 VALIDACAO
-340 verificacoes aprovadas no Godot/Linux. Windows x64 exportado e PCK
+445 verificacoes aprovadas no Godot/Linux. Windows x64 exportado e PCK
 embutido testado no motor Linux. Isso nao executa o PE nativamente no Windows.
 Execucao Windows, controle fisico, GPU fisica e equilibrio humano pendentes.
 TESTAR_WINDOWS.cmd abre o jogo e gera relatorio local ao sair pelo menu.
