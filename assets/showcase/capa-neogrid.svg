@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1280" height="460" viewBox="0 0 1280 460" role="img" aria-labelledby="title desc">
+  <title id="title">NeoGrid — Ms. Pac-Man Neo Vanguard</title>
+  <desc id="desc">Capa vetorial neon com labirinto, protagonista, fantasmas e bomba. Corra entre luzes. Transforme a caçada.</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="0.7"><stop stop-color="#060b17"/><stop offset="0.56" stop-color="#101329"/><stop offset="1" stop-color="#082333"/></linearGradient>
+    <linearGradient id="edge"><stop stop-color="#6ce8f5"/><stop offset="0.55" stop-color="#b09dff"/><stop offset="1" stop-color="#ff6cb8"/></linearGradient>
+    <radialGradient id="halo"><stop stop-color="#3ac9e9" stop-opacity=".17"/><stop offset="1" stop-color="#3ac9e9" stop-opacity="0"/></radialGradient>
+    <pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse"><path d="M36 0H0V36" fill="none" stroke="#6683a6" stroke-opacity=".1" stroke-width="1"/></pattern>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="4"/></filter>
+    <g id="maze" fill="none" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M18 28H118V60H192V28H312V112H278V153H326V252H226V214H164V270H50V214H12V136H54V96H18Z"/>
+      <path d="M84 28V28M53 61H85V96H125V136H90V180H50M162 96V60M230 60H278V76H230V112H192V153H126V193H89M226 153H278V186M202 193V232M164 232H126V270M278 219V252"/>
+    </g>
+  </defs>
+  <rect width="1280" height="460" rx="20" fill="url(#bg)"/>
+  <rect x="1" y="1" width="1278" height="458" rx="19" fill="none" stroke="#2a4159"/>
+  <rect x="640" y="18" width="620" height="424" rx="12" fill="url(#grid)"/>
+  <ellipse cx="1010" cy="215" rx="265" ry="230" fill="url(#halo)"/>
+  <path d="M36 40V20H152M1128 440H1244V420" stroke="url(#edge)" stroke-width="3" fill="none"/>
+  <path d="M760 52L705 405" stroke="#263c59" stroke-width="1"/>
+  <g font-family="DejaVu Sans,Arial,sans-serif">
+    <text x="67" y="86" fill="#9ac4d9" font-size="14" letter-spacing="2.6">MS. PAC-MAN / NEO VANGUARD</text>
+    <text x="61" y="192" fill="#f7eee0" font-size="83" font-weight="bold" letter-spacing="-3">NEO—GRID</text>
+    <rect x="68" y="216" width="67" height="4" rx="2" fill="#71e4f2"/>
+    <text x="67" y="267" fill="#ecf2fc" font-size="26">Corra entre luzes.</text>
+    <text x="67" y="305" fill="#81e8f2" font-size="26">Transforme a caçada.</text>
+    <text x="68" y="345" fill="#c3b4ea" font-size="13" letter-spacing="2.2">FUSÃO / BOMBER CHASE</text>
+    <g font-size="12" font-weight="bold" text-anchor="middle">
+      <rect x="67" y="374" width="139" height="33" rx="6" fill="#112c3d" stroke="#35637b"/><text x="136.5" y="395" fill="#9aeaf4">WINDOWS x64</text>
+      <rect x="217" y="374" width="119" height="33" rx="6" fill="#191d38" stroke="#4b4470"/><text x="276.5" y="395" fill="#c7bdff">ARCADE 3D</text>
+      <rect x="347" y="374" width="129" height="33" rx="6" fill="#29192f" stroke="#6c3e62"/><text x="411.5" y="395" fill="#f3b5db">GODOT 4.6.3</text>
+    </g>
+  </g>
+  <g transform="translate(823 62) rotate(-9 170 150)">
+    <use xlink:href="#maze" stroke="#39cbea" stroke-width="9" opacity=".45" filter="url(#glow)"/>
+    <use xlink:href="#maze" stroke="#0c1626" stroke-width="10"/>
+    <use xlink:href="#maze" stroke="url(#edge)" stroke-width="2.5"/>
+    <path d="M18 183H108V159H192V129H260" stroke="#ff7abf" stroke-width="3" fill="none" opacity=".8"/>
+    <g fill="#ffd28b"><circle cx="57" cy="119" r="3"/><circle cx="80" cy="119" r="3"/><circle cx="104" cy="119" r="3"/><circle cx="127" cy="119" r="3"/><circle cx="150" cy="119" r="3"/></g>
+    <g transform="translate(180 120)">
+      <circle r="23" fill="#ffc65e" opacity=".28" filter="url(#glow)"/>
+      <path d="M0 0L21-13A25 25 0 1 0 21 13Z" fill="#ffd374"/>
+      <circle cx="4" cy="-13" r="3" fill="#152437"/>
+      <ellipse cx="-9" cy="-28" rx="10" ry="6" transform="rotate(25 -9 -28)" fill="#ff6cae"/>
+      <ellipse cx="9" cy="-28" rx="10" ry="6" transform="rotate(-25 9 -28)" fill="#ff6cae"/>
+      <circle cy="-28" r="4" fill="#ffd0e6"/>
+    </g>
+    <g transform="translate(98 219)">
+      <path d="M-18 19V-3A18 18 0 0 1 18-3V19L9 14 0 20-9 14Z" fill="#5bd8ed"/>
+      <g fill="#fff5ef"><ellipse cx="-6" cy="-2" rx="5" ry="7"/><ellipse cx="7" cy="-2" rx="5" ry="7"/></g>
+      <g fill="#15243c"><circle cx="-4" cy="-1" r="2.5"/><circle cx="9" cy="-1" r="2.5"/></g>
+    </g>
+    <g transform="translate(54 52)">
+      <path d="M-15 15V-3A15 15 0 0 1 15-3V15L7 11 0 17-7 11Z" fill="#ee85c5"/>
+      <g fill="#fff5ef"><ellipse cx="-5" cy="-2" rx="4" ry="6"/><ellipse cx="6" cy="-2" rx="4" ry="6"/></g>
+      <g fill="#15243c"><circle cx="-3" cy="-1" r="2"/><circle cx="8" cy="-1" r="2"/></g>
+    </g>
+    <g transform="translate(276 185)">
+      <circle r="17" fill="#253149" stroke="#ffbd76" stroke-width="2"/>
+      <path d="M0-17V-23L7-29" fill="none" stroke="#ffbd76" stroke-width="3"/>
+      <circle cx="9" cy="-30" r="3" fill="#ffe2a4"/>
+      <path d="M-10 2H10" stroke="#ffbd76" stroke-width="2"/>
+    </g>
+  </g>
+  <text x="1218" y="413" text-anchor="end" fill="#779ab0" font-family="DejaVu Sans,Arial,sans-serif" font-size="10" letter-spacing="2">DEKO / ARCADE LAB</text>
+</svg>
