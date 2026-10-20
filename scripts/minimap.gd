@@ -24,7 +24,7 @@ func _draw() -> void:
 	var last_items:bool = sim.pickups.size() > 0 and sim.pickups.size() <= LAST_ITEMS
 	if sim.campaign:
 		draw_rect(Rect2(origin+Vector2(6.5,4.5)*cell,Vector2(3,2)*cell),Color("7b8ac5"),false,1.0)
-		for row in sim.TUNNEL_ROWS:
+		for row in sim.tunnel_rows():
 			for x in [0,16]:
 				var p:Vector2=origin+(Vector2(x,row)+Vector2.ONE*0.5)*cell
 				var sign:float=-1.0 if x==0 else 1.0
@@ -45,6 +45,15 @@ func _draw() -> void:
 					center+Vector2(0,r),center+Vector2(-r,0)]), Color("ff8bc7"))
 			_:
 				draw_circle(center, radius, Color("f8e5b0"))
+	if sim.bonus.active:
+		var center:Vector2=origin+(Vector2(clampf(sim.bonus.actor.pos.x,0,16),sim.bonus.actor.pos.y)+Vector2.ONE*0.5)*cell
+		var br:float=cell*0.37
+		draw_colored_polygon(PackedVector2Array([center+Vector2(0,-br),center+Vector2(br,0),center+Vector2(0,br),center+Vector2(-br,0)]),Color("ffe188"))
+		draw_circle(center,cell*0.47,Color("ffe188"),false,maxf(1.0,cell*0.07))
+	for g in sim.train.followers:
+		if g.state!="returning":draw_circle(origin+(Vector2(clampf(g.pos.x,0,16),g.pos.y)+Vector2.ONE*0.5)*cell,maxf(1,cell*0.14),Color("8fffe1") if g.state=="vulnerable" else Color("d5a1ff"))
+	if sim.boss.active and sim.boss.phase in ["warning","attack"]:
+		for c in sim.boss.cells:draw_rect(Rect2(origin+Vector2(c)*cell,Vector2.ONE*cell),Color(1,0.22,0.34,0.45))
 	for ghost in sim.ghosts:
 		var center:Vector2 = origin + (Vector2(clampf(ghost.pos.x,0,16),ghost.pos.y)+Vector2.ONE*0.5)*cell
 		var color := Color("75dfff") if ghost.state == "vulnerable" else Color("df7ca8")

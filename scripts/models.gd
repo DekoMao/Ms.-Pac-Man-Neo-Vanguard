@@ -167,3 +167,13 @@ static func reflected(source: Node3D, color: Color) -> Node3D:
 	duplicate.scale.y=-1.0
 	return duplicate
 
+
+static func bonus_fruit() -> Node3D:
+	var root:=Node3D.new();root.name="FrutaBonus"
+	for side in [-1.0,1.0]:
+		root.add_child(mesh_node(sphere(0.20),material(Color("ff609f"),0.3,0.2),Vector3(side*0.16,0.40,0)))
+		var stem:=CylinderMesh.new();stem.top_radius=0.018;stem.bottom_radius=0.018;stem.height=0.32
+		var n:=mesh_node(stem,material(Color("aaffb0"),0.3),Vector3(side*0.08,0.67,0));n.rotation.z=side*0.45;root.add_child(n)
+	var ring:=TorusMesh.new();ring.inner_radius=0.39;ring.outer_radius=0.42
+	var halo:=mesh_node(ring,material(Color("ffe188"),0.65),Vector3(0,0.08,0));halo.name="Halo";root.add_child(halo)
+	return root
