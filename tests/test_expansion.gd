@@ -94,6 +94,16 @@ func run() -> void:
 	check("OVERDRIVE-pulse-preserves-longer-power-and-chain",r.power_until==45 and r.combo==2)
 	r.reset(1,true,{"mode":"overdrive","run_elapsed":45,"score":2000,"lives":2});r.start();r.tick()
 	check("OVERDRIVE-wave-carries-time-and-score",r.run_time()>45 and r.score==2000 and r.lives==2 and r.pulse_index==1)
+	r=quiet(0,"overdrive");r.time=39.999;r.pickups.clear();r.tick(0.01)
+	var carry={"mode":"overdrive","run_elapsed":r.run_time(),"pulse_index":r.pulse_index}
+	r.reset(1,true,carry);r.start();r.tick()
+	check("OVERDRIVE-wave-boundary-does-not-skip-pulse",r.power_until>r.time and r.pulse_index==1)
+	r=quiet(0,"train");r.time=7.999;r.pickups.clear();r.tick(0.01)
+	carry={"mode":"train","run_elapsed":r.run_time(),"train_next_at":r.train.next_at}
+	r.reset(1,true,carry);r.start();r.tick()
+	check("TRAIN-wave-boundary-does-not-skip-followers",r.train.followers.size()==2)
+	r=quiet(0,"overdrive");r.time=179.9;r.status="respawning";r.respawn_until=181;r.tick(0.2)
+	check("TIMER-respawn-finishes-in-boundary-step",r.status=="time_up" and r.run_time()==180)
 	for choice in ["shield","magnet","dash"]:
 		r=quiet(1,"circuit",choice)
 		if choice=="shield":r.request_shield();check("UPGRADE-long-shield",r.shield_until==11)

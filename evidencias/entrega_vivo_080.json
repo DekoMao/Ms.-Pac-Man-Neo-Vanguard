@@ -1,0 +1,10 @@
+{
+  "zip": "/workspace/scratch/7740f940f7a4/neogrid-map/entrega/NeoGrid_0.8_CircuitoVivo_Windows_x64.zip",
+  "bytes": 40210345,
+  "sha256": "2d0c64e8730c926523f51b0ffb5746437085dbe8dee4260e1f5af9d6786b9769",
+  "entries": 29,
+  "crc_valid": true,
+  "exe_sha256": "dbd3b29da49a5954139e74fd9bd2c8950c5bffbf8cea301fc3150e561816342d",
+  "tests": 340,
+  "native_windows_tested": false
+}

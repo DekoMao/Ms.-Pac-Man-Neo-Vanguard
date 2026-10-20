@@ -1,3 +1,19 @@
+# 0.8.0 — Circuito Vivo (roteiro 0.6–0.8)
+
+- Capturas crescentes com quatro arpejos originais, faíscas e uma legenda por vez.
+- Curvas/dash/capturas com expressão; redução de movimento neutraliza efeitos extras.
+- Fruta bônus móvel, opcional, com coleta contínua e expiração sem bloquear conclusão.
+- Overdrive de 180s, pulsos de caça, continuidade entre mapas e revanche do mesmo modo.
+- Circuito com seis layouts, três pares de túneis no Anel e Mercado com fruta mais rápida.
+- Melhorias de escudo, ímã e dash válidas apenas para a próxima área.
+- Dezoito medalhas básicas e dezoito extras por habilidade; migração preserva progresso.
+- Trem Fantasma com limite de oito seguidores e Power/contato em ordem temporal.
+- Colosso final com aviso, varredura, recuperação e três pulsos carregados por núcleos.
+- Placares separados; recorde do Circuito anterior de três fases arquivado.
+- Gamepad com zona morta, diagnóstico local e roteiro para homologação Windows.
+- 340 verificações aprovadas, exportação Windows e smoke do PCK no host.
+- Capturas reais do motor em Forward+/Vulkan por software; homologação física pendente.
+
 # MV neon 0.5.0 — arquitetura e primeira direção
 
 - Interpretação corrigida: essência clássica no layout, com direção artística neon 3D.

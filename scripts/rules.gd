@@ -102,10 +102,11 @@ func reset(level:int=0, circuit:bool=false, carry:Dictionary={}) -> void:
 	mode=str(carry.get("mode","circuit"))
 	if mode not in ["circuit","overdrive","train"]:mode="circuit"
 	run_elapsed=maxf(0,float(carry.get("run_elapsed",0)))
-	pulse_index=floori(run_elapsed/40)
+	pulse_index=int(carry.get("pulse_index",floori(run_elapsed/40)))
 	upgrade=str(carry.get("upgrade",""))
 	if upgrade not in ["","shield","magnet","dash"]:upgrade=""
 	dash_uses=0;max_chain=0;bonus.reset();boss.reset();train.reset(run_elapsed)
+	train.next_at=float(carry.get("train_next_at",train.next_at))
 	campaign = circuit
 	grid = Stages.layout(stage_id) if campaign else GRID.duplicate()
 	open_cell = OPEN_CELL
@@ -227,6 +228,7 @@ func tick(dt: float = STEP) -> void:
 	if status == "respawning":
 		time += dt
 		if time >= respawn_until: status = "playing"
+		if campaign and mode!="circuit" and run_time()>=180:status="time_up";bonus.active=false
 		return
 	boss.update(self)
 	if mode=="overdrive" and floori(run_time()/40)>pulse_index:

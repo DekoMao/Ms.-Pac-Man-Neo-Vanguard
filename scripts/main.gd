@@ -377,7 +377,7 @@ func _physics_process(dt:float) -> void:
 	if sim.status=="won" and sim.mode!="circuit":
 		var direction:Vector2i=sim.held_dir if sim.held_dir!=Vector2i.ZERO else sim.player.dir
 		var held:Array=key_stack.duplicate()
-		start_game((sim.stage_id+1)%6,{"mode":sim.mode,"score":sim.score,"lives":mini(3,sim.lives+1),"run_elapsed":sim.run_time(),"continuing":true,"best_before":best_before_run})
+		start_game((sim.stage_id+1)%6,{"mode":sim.mode,"score":sim.score,"lives":mini(3,sim.lives+1),"run_elapsed":sim.run_time(),"pulse_index":sim.pulse_index,"train_next_at":sim.train.next_at,"continuing":true,"best_before":best_before_run})
 		key_stack=held
 		if direction!=Vector2i.ZERO:sim.request_direction(direction)
 		return

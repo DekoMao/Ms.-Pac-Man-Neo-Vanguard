@@ -1,50 +1,41 @@
-NEO-GRID 0.5 — NEON ARCHITECTURE
+NEO-GRID 0.8 — CIRCUITO VIVO
 
-Extraia o ZIP inteiro e execute MsPacMan_Aperfeicoado.exe.
-O jogo aguarda uma seta ou WASD para começar a movimentação.
-C alterna perspectiva/visão completa. M abre mapa e pausa.
-Espaço: dash. E: escudo. R: ímã a partir da fase 2. Q: aposta no Power.
-P/Esc: pausa. F11: tela cheia.
+Extraia o pacote inteiro e execute MsPacMan_Aperfeicoado.exe.
+O jogador nao precisa instalar Godot ou Python.
 
-Três fases, túneis laterais, caixa de regeneração e nove medalhas.
-A música, pontuação e poderes existentes foram preservados.
+MODOS
+Circuito: seis areas, escolha de melhoria entre fases, medalhas e Colosso final.
+Overdrive: tres minutos, pulsos de caca, recorde e revanche imediata.
+Trem Fantasma: tres minutos com seguidores em cadeia. Power permite capturas.
 
-CONTROLES E PODERES
-WASD/setas: mover. Espaco: dash (40E). Enter: iniciar.
-E: escudo por ate 8s, absorve um impacto; 1s de protecao para escapar.
-R: ima por 6s, apenas pontos normais vizinhos, sem atravessar paredes.
-Ima disponivel a partir da fase 2. Uma carga por poder por fase.
-Morrer encerra os efeitos sem repor cargas. Dash sozinho nao protege.
-Q: durante Power, com pelo menos 2s e 20E, aposte em duas capturas.
-M: mapa ampliado e pausa. M/Esc: retoma. C: camera. F11: tela cheia.
-P/Esc: pausa. Foco perdido pausa; escolha Continuar.
-Reiniciar circuito volta a fase 1.
+CONTROLES
+WASD/setas: mover. A partida aguarda sua primeira direcao.
+Espaco: dash. E: escudo. R: ima (fase 2+). Q: aposta durante Power.
+F: pulso do Colosso, com carga e durante a recuperacao.
+C: perspectiva/visao completa. M: mapa com pausa. P/Esc: pausa. F11: tela cheia.
+Controle: direcional/analogico; X dash; A escudo; Y ima; LB aposta; RB pulso.
+Start pausa; Back mapa. Enter/A: revanche na tela de resultado.
 
-FASES, DESAFIOS E EXTRAS
-Portico Neon: 103 itens; desafio de capturar 2 fantasmas; alvo 110s.
-Jardim Ionico: 107 itens; desafio de nao perder vidas; alvo 125s.
-Reator Solar: 101 itens; desafio de vencer uma aposta Q; alvo 140s.
-Colete tudo para avancar pelo botao Proxima fase. Fruta e Power contam.
-Avanco carrega os pontos e devolve uma vida ate o limite de tres.
-Desafio e tempo sao opcionais. Tres medalhas por fase: limpeza, desafio,
-tempo. Bonus: 500 pela limpeza e 250 por objetivo extra.
-Medalhas de tentativas diferentes se acumulam. Tres liberam rastro turquesa
-em Fases, medalhas e extras. O seletor inicia nova tentativa com zero pontos
-e tres vidas. Save guarda fases/medalhas/configuracoes, sem retomar partidas.
-O recorde anterior MV foi preservado, separado do recorde do Circuito Neon.
+Frutas com anel dourado sao bonus moveis opcionais; expirar nao tira vidas.
+O contador continua mostrando apenas os itens obrigatorios. Tres novos mapas
+completam o Circuito. Extras de habilidade nao bloqueiam o avanco.
+As melhorias valem apenas na area seguinte e nao se acumulam.
+
+COLOSSO
+Depois da limpeza da sexta area, colete os tres nucleos Power.
+Saia das rotas vermelhas durante o aviso. Na recuperacao, F/RB gasta uma carga
+para acertar o Colosso. Um acerto por ciclo; tres acertos vencem o confronto.
+
+PROGRESSO
+Medalhas e configuracoes anteriores sao preservadas. O recorde do circuito
+antigo de tres fases fica arquivado em Recordes. Os tres modos tem placares
+separados. Nao apague o save user://neo_grid_mv.json ao atualizar.
 
 VALIDACAO
-215 verificacoes automaticas aprovadas no Godot 4.6.3 / Linux.
-Inclui coleta dos tres mapas via movimento com inimigos desativados, testes
-de poderes, transicoes e migracao do save. Windows x64, PCK embutido, icone
-e versao 0.5.0.0, sem assinatura. Smoke do PCK passou no motor Linux:
-isso nao executa o PE no Windows. Windows nativo e GPU fisica pendentes.
-Dificuldade e tempos precisam de teste humano. Imagens sao preparacoes de
-QA no motor Linux Forward+/Vulkan/llvmpipe, com renderizacao por software.
+340 verificacoes aprovadas no Godot/Linux. Windows x64 exportado e PCK
+embutido testado no motor Linux. Isso nao executa o PE nativamente no Windows.
+Execucao Windows, controle fisico, GPU fisica e equilibrio humano pendentes.
+TESTAR_WINDOWS.cmd abre o jogo e gera relatorio local ao sair pelo menu.
+Nada e enviado pela rede. Veja docs/VALIDACAO_WINDOWS.md.
 
-Dados: user://neo_grid_mv.json (Godot/AppData). Ha backup .bak e copia de
-arquivo corrompido. Nao apague o save ao atualizar.
-Detalhes, creditos e licencas: docs/ e licencas/.
-Rebuild: Godot 4.6.3 + templates 4.6.3.stable + Python 3.10+.
-python scripts/build.py --godot godot
-
+Codigos, regras, creditos e licencas acompanham as fontes no GitHub.

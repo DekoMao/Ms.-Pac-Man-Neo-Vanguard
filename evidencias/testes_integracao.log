@@ -1,6 +1,6 @@
 Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
 
-NEOGRID_RUNTIME {"active_renderer":"forward_plus","adapter":"","display":"headless","driver":"vulkan","engine":"4.6.3-stable (official)","os":"Linux","requested_renderer":"forward_plus","version":"0.5.0-neon"}
+NEOGRID_RUNTIME {"active_renderer":"forward_plus","adapter":"","display":"headless","driver":"vulkan","engine":"4.6.3-stable (official)","os":"Linux","requested_renderer":"forward_plus","version":"0.8.0-living-arcade"}
 PASS AUDIO-01-full-musical-loop
 PASS UI-01-title-and-menu
 PASS SCENE-01-real-actors
@@ -47,9 +47,10 @@ PASS CIRCUIT-UI-06-rebuilds-visual-map
 PASS CIRCUIT-UI-07-second-phase-powers
 PASS CIRCUIT-UI-08-map-freezes-powers
 PASS CIRCUIT-UI-09-third-phase-unlocked
-PASS CIRCUIT-UI-10-campaign-finale
-PASS CIRCUIT-UI-11-final-phase-does-not-wrap
-PASS CIRCUIT-UI-12-extras-and-nine-medals
-PASS CIRCUIT-UI-13-phase-selector-callback
-PASS CIRCUIT-UI-14-restart-preserves-earned-progress
-MV_INTEGRATION_RESULT executed=51 failed=0
+PASS CIRCUIT-UI-10-third-is-intermediate
+PASS CIRCUIT-UI-11-fourth-phase-accessible
+PASS CIRCUIT-UI-12-six-phase-finale
+PASS CIRCUIT-UI-13-final-does-not-wrap
+PASS CIRCUIT-UI-14-selector-preserved
+PASS CIRCUIT-UI-15-progress-preserved
+MV_INTEGRATION_RESULT executed=52 failed=0
